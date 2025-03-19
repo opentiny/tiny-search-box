@@ -1,4 +1,61 @@
 {
-  "name": "root",
-  "private": true
+  "name": "@opentiny/vue-search-box",
+  "version": "1.0.0",
+  "private": true,
+  "description": "",
+  "homepage": "https://github.com/opentiny/tiny-search-box#readme",
+  "bugs": {
+    "url": "https://github.com/opentiny/tiny-search-box/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/opentiny/tiny-search-box.git"
+  },
+  "license": "MIT",
+  "author": "",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "build": "vite build"
+  },
+  "peerDependencies": {
+    "vue": "^3.4.0"
+  },
+  "dependencies": {
+    "vue": "^3.0.0",
+    "@opentiny/vue-tag": "^3.21.0",
+    "@opentiny/vue-input": "^3.21.0",
+    "@opentiny/vue-loading": "^3.21.0",
+    "@opentiny/vue-dropdown": "^3.21.0",
+    "@opentiny/vue-dropdown-menu": "^3.21.0",
+    "@opentiny/vue-dropdown-item": "^3.21.0",
+    "@opentiny/vue-checkbox": "^3.21.0",
+    "@opentiny/vue-checkbox-group": "^3.21.0",
+    "@opentiny/vue-button": "^3.21.0",
+    "@opentiny/vue-tooltip": "^3.21.0",
+    "@opentiny/vue-date-picker": "^3.21.0",
+    "@opentiny/vue-form": "^3.21.0",
+    "@opentiny/vue-form-item": "^3.21.0",
+    "@opentiny/vue-icon": "^3.21.0",
+    "@opentiny/vue-popover": "^3.21.0",
+    "@opentiny/vue-select": "^3.21.0",
+    "@opentiny/vue-option": "^3.21.0",
+    "@opentiny/vue-locale": "^3.21.0"
+  },
+  "devDependencies": {
+    "vite": "^6.2.2",
+    "less": "^4.2.2",
+    "typescript": "^5.8.2",
+    "@vitejs/plugin-vue": "^4.0.0"
+  },
+  "gitHooks": {
+    "pre-commit": "lint-staged",
+    "commit-msg": "node verifyCommit.js"
+  },
+  "lint-staged": {
+    "*.ts": [
+      "eslint --fix",
+      "git add"
+    ]
+  }
 }
