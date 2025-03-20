@@ -25,7 +25,7 @@ import TinyPopover from "@opentiny/vue-popover";
 import TinySelect from "@opentiny/vue-select";
 import TinyOption from "@opentiny/vue-option";
 import { iconSearch, iconClose, iconHelpQuery } from "@opentiny/vue-icon";
-import { t } from "@opentiny/vue-locale";
+import locale, { t } from "@opentiny/vue-locale";
 import { useTag } from "./composables/use-tag";
 import { useDropdown } from "./composables/use-dropdown";
 import { useMatch } from "./composables/use-match";
@@ -45,6 +45,18 @@ import { showDropdown, showPopover } from "./utils/dropdown";
 import "./index.less";
 import { deepClone } from "./utils/clone";
 import { format } from "./utils/date";
+import { zhCN } from "./utils/zh_CN";
+import { enUS } from "./utils/en_US";
+import { createI18n } from "vue-i18n";
+
+locale.initI18n({
+  i18n: "zhCN",
+  createI18n,
+  messages: {
+    zhCN: { ...zhCN },
+    enUS: { ...enUS },
+  },
+});
 
 defineOptions({
   name: "VueSearchBox",

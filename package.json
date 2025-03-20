@@ -1,7 +1,6 @@
 {
   "name": "@opentiny/vue-search-box",
-  "version": "1.0.0",
-  "private": true,
+  "version": "1.0.5",
   "description": "",
   "homepage": "https://github.com/opentiny/tiny-search-box#readme",
   "bugs": {
@@ -14,15 +13,25 @@
   "license": "MIT",
   "author": "",
   "type": "module",
-  "main": "index.js",
+  "main": "dist/index.es.umd.js",
+  "module": "dist/index.es.js",
+  "style": "dist/index.css" ,
+  "exports": {
+    ".": {
+      "import": "./dist/index.es.js",
+      "require": "./dist/index.umd.js"
+    }
+  },
   "scripts": {
-    "build": "vite build"
+    "build": "vite build",
+    "prepublish": "pnpm run build"
   },
   "peerDependencies": {
     "vue": "^3.4.0"
   },
   "dependencies": {
     "vue": "^3.0.0",
+    "vue-i18n": "^11.1.2",
     "@opentiny/vue-tag": "^3.21.0",
     "@opentiny/vue-input": "^3.21.0",
     "@opentiny/vue-loading": "^3.21.0",

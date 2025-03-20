@@ -1,10 +1,10 @@
-import { App } from 'vue'
-import TvpSearchBox from './src/index.vue'
+import { App } from 'vue';
+import VueSearchBox from './src/index.vue';
 
-export * from './src/index.type'
+export * from './src/index.type';
 
-TvpSearchBox.install = function (app: App) {
-  app.component(TvpSearchBox.name, TvpSearchBox)
-}
+VueSearchBox.install = function (app: App) {
+  app.component(VueSearchBox.name, VueSearchBox);
+};
 
-export default TvpSearchBox
+export default VueSearchBox;
