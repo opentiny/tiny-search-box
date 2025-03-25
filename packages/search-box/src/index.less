@@ -19,11 +19,13 @@
   .inject-SearchBox-vars();
   width: 232px;
   overflow: auto;
+  overflow-x: hidden;
 
   // 覆写select样式
   .@{form-tiny-cls}-item.is-error .@{search-box-prefix-cls}-select .@{select-tiny-cls}__tags-group {
     border-color: #f23030;
   }
+
   .@{search-box-prefix-cls}-select {
     .@{select-tiny-cls} {
       .@{svg-tiny-cls} {
@@ -38,6 +40,7 @@
         border: 1px solid #c2c2c2;
         border-radius: 6px;
       }
+
       &__tags.is-show-tag {
         max-width: 276px !important;
         width: calc(100% - 8px) !important;
@@ -61,13 +64,15 @@
   }
 
   input[type='number'] {
-    -moz-appearance: textfield; /* Firefox */
+    -moz-appearance: textfield;
+    /* Firefox */
     appearance: textfield;
   }
 
   input[type='number']::-webkit-inner-spin-button,
   input[type='number']::-webkit-outer-spin-button {
-    -webkit-appearance: none; /* Safari */
+    -webkit-appearance: none;
+    /* Safari */
     margin: 0;
   }
 }
@@ -104,7 +109,7 @@
     border-color: var(--tvp-SearchBox-focus-border-color);
   }
 
-  & > &__prefix {
+  &>&__prefix {
     position: absolute;
     top: calc((var(--tvp-SearchBox-min-height) - var(--tvp-SearchBox-left-icon-font-size)) / 2 - 1px);
     left: 12px;
@@ -125,7 +130,7 @@
     margin: 1px var(--tvp-SearchBox-tag-margin-right) 1px 0;
     max-width: 100%;
 
-    & > &-value {
+    &>&-value {
       overflow: hidden;
       text-overflow: ellipsis;
     }
@@ -281,21 +286,23 @@
   &__dropdown-item.@{dropdown-tiny-cls}-item {
     width: 100%;
     max-width: 100%;
+    --tv-DropdownItem-icon-color-hover: var(--tv-color-bg-active-control);
 
-    & > div {
+    &>div {
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
     }
 
     // 本地和线上优先级不同，修复复选框在dropdown中使用样式出现的问题
-    &.@{search-box-prefix-cls}__checkbox-item .@{checkbox-tiny-cls}__inner > .@{svg-tiny-cls} {
+    &.@{search-box-prefix-cls}__checkbox-item .@{checkbox-tiny-cls}__inner>.@{svg-tiny-cls} {
       margin-right: 0;
     }
   }
 
   // 空白处可以选中复选框
   &__checkbox-item {
+
     & &-label,
     .@{checkbox-tiny-cls},
     & .@{dropdown-tiny-cls}-item__label {
@@ -311,6 +318,7 @@
     .@{dropdown-tiny-cls}-item__wrap {
       padding: 0;
     }
+
     .@{checkbox-tiny-cls} {
       padding: 6px 10px;
     }
@@ -345,7 +353,7 @@
     margin-bottom: 0;
     width: 200px;
 
-    & > div {
+    &>div {
       width: 100%;
       white-space: nowrap;
     }

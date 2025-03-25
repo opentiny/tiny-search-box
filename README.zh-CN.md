@@ -17,14 +17,12 @@ TinySearchBox 主要有以下特点和优势：
 - 包含多种类型条件筛选，开箱即用。
 - 强大的搜索功能，支持模糊搜索，单选、多选，时间，时间区间，数字大小，数字区间，以及自定义搜索等。
 
-![TinyEditor](fluent-editor.png)
-
 ## 快速入门
 
 安装 TinySearchBox
 
 ```shell
-npm i @opentiny/tiny-search-box
+npm i @opentiny/vue-search-box
 ```
 
 编写 html：
@@ -79,7 +77,7 @@ npm i @opentiny/tiny-search-box
 </script>
 
 <template>
-  <VueSearchBox v-model="tags" :items="items"></VueSearchBox>
+  <TinySearchBox v-model="tags" :items="items"></TinySearchBox>
 </template>
 ```
 
@@ -89,10 +87,10 @@ npm i @opentiny/tiny-search-box
 @import '@opentiny/vue-search-box/index.css';
 ```
 
-初始化 VueSearchBox 综合搜索：
+初始化 TinySearchBox 综合搜索：
 
 ```javascript
-import VueSearchBox from '@opentiny/vue-search-box';
+import TinySearchBox from '@opentiny/vue-search-box';
 ```
 
 ## 本地开发

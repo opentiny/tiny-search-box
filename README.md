@@ -17,14 +17,12 @@ TinySearchBox has the following characteristics and advantages:
 -Contains multiple types of conditional filtering, ready to use out of the box.
 -Powerful search function, supporting fuzzy search, single choice, multiple choice, time, time interval, number size, number interval, as well as custom search, etc.
 
-![TinyEditor](fluent-editor.png)
-
 ## quick start
 
 install TinySearchBox
 
 ```shell
-npm i @opentiny/tiny-search-box
+npm i @opentiny/vue-search-box
 ```
 
 html：
@@ -79,7 +77,7 @@ html：
 </script>
 
 <template>
-  <VueSearchBox v-model="tags" :items="items"></VueSearchBox>
+  <TinySearchBox v-model="tags" :items="items"></TinySearchBox>
 </template>
 ```
 
@@ -89,10 +87,10 @@ import styles:
 @import '@opentiny/vue-search-box/index.css';
 ```
 
-Initialize VueSearchBox:
+Initialize TinySearchBox:
 
 ```javascript
-import VueSearchBox from '@opentiny/vue-search-box';
+import TinySearchBox from '@opentiny/vue-search-box';
 ```
 
 ## Local development

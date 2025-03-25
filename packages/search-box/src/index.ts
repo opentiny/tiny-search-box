@@ -1,11 +1,11 @@
 import { App } from 'vue';
-import VueSearchBox from './index.vue';
+import TinySearchBox from './index.vue';
 import './index.less';
 
 export * from './index.type';
 
-VueSearchBox.install = function (app: App) {
-  app.component(VueSearchBox.name, VueSearchBox);
+TinySearchBox.install = function (app: App) {
+  app.component(TinySearchBox.name, TinySearchBox);
 };
 
-export default VueSearchBox;
+export default TinySearchBox;
