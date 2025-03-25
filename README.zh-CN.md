@@ -1,4 +1,4 @@
-# TinySearchBox comprehensive search
+# TinySearchBox 综合搜索
 
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
 
@@ -6,28 +6,28 @@
 
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 
-TinySearchBox is a powerful and easy-to-use comprehensive search component developed based on tiny Vue. Support multiple criteria filtering such as single choice, multiple choice, time, and time interval.
+TinySearchBox 是一个基于 tiny-vue 开发的强大而简单易用的综合搜索组件。支持单选、多选，时间，时间区间等多条件筛选。
 
 [English](README.md) | 简体中文
 
-## Project advantages
+## 项目优势
 
-TinySearchBox has the following characteristics and advantages:
+TinySearchBox 主要有以下特点和优势：
 
--Contains multiple types of conditional filtering, ready to use out of the box.
--Powerful search function, supporting fuzzy search, single choice, multiple choice, time, time interval, number size, number interval, as well as custom search, etc.
+- 包含多种类型条件筛选，开箱即用。
+- 强大的搜索功能，支持模糊搜索，单选、多选，时间，时间区间，数字大小，数字区间，以及自定义搜索等。
 
 ![TinyEditor](fluent-editor.png)
 
-## quick start
+## 快速入门
 
-install TinySearchBox
+安装 TinySearchBox
 
 ```shell
 npm i @opentiny/tiny-search-box
 ```
 
-html：
+编写 html：
 
 ```html
 <script setup>
@@ -83,19 +83,19 @@ html：
 </template>
 ```
 
-import styles:
+引入样式：
 
 ```css
 @import '@opentiny/vue-search-box/index.css';
 ```
 
-Initialize VueSearchBox:
+初始化 VueSearchBox 综合搜索：
 
 ```javascript
 import VueSearchBox from '@opentiny/vue-search-box';
 ```
 
-## Local development
+## 本地开发
 
 ```shell
 git clone git@github.com:opentiny/tiny-search-box.git
@@ -104,7 +104,7 @@ pnpm i
 pnpm dev
 ```
 
-Open a browser to access：[http://localhost:5173/](http://localhost:5173/)
+打开浏览器访问：[http://localhost:5173/tiny-search-box/](http://localhost:5173/tiny-editor/)
 
 ## License
 

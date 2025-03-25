@@ -1,7 +1,8 @@
 import { App } from 'vue';
-import VueSearchBox from './src/index.vue';
+import VueSearchBox from './index.vue';
+import './index.less';
 
-export * from './src/index.type';
+export * from './index.type';
 
 VueSearchBox.install = function (app: App) {
   app.component(VueSearchBox.name, VueSearchBox);
