@@ -1,28 +1,37 @@
-# TinySearchBox comprehensive search
+# TinySearchBox
 
-<!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
+TinySearchBox is a comprehensive search component based on Vue3. It uses the TinyVue component library and follows the OpenTiny design specifications. It is easy to use and powerful. It supports single selection, multiple selection, time, time range and so on.
 
-[![All Contributors](https://img.shields.io/badge/all_contributors-6-orange.svg?style=flat-square)](#contributors-)
+English | [简体中文](README.zh-CN.md)
 
-<!-- ALL-CONTRIBUTORS-BADGE:END -->
+## Advantages
 
-TinySearchBox is a powerful and easy-to-use comprehensive search component developed based on tiny Vue. Support multiple criteria filtering such as single choice, multiple choice, time, and time interval.
+TinySearchBox has the following advantages:
 
-[English](README.md) | 简体中文
+- Gather the filtering criteria into one input box for higher filtering efficiency and a better user experience
+- Supports multiple types of conditional filtering such as single selection, multiple selection, time, time interval, number size, and number interval
+- Powerful search functions, supporting fuzzy search, custom search, etc.
 
-## Project advantages
+![TinySearchBox](TinySearchBox.png)
 
-TinySearchBox has the following characteristics and advantages:
+## Quick Start
 
--Contains multiple types of conditional filtering, ready to use out of the box.
--Powerful search function, supporting fuzzy search, single choice, multiple choice, time, time interval, number size, number interval, as well as custom search, etc.
-
-## quick start
-
-install TinySearchBox
+Install TinySearchBox:
 
 ```shell
 npm i @opentiny/vue-search-box
+```
+
+Import TinySearchBox:
+
+```javascript
+import TinySearchBox from '@opentiny/vue-search-box';
+```
+
+Import styles:
+
+```css
+@import '@opentiny/vue-search-box/index.css';
 ```
 
 html：
@@ -81,19 +90,7 @@ html：
 </template>
 ```
 
-import styles:
-
-```css
-@import '@opentiny/vue-search-box/index.css';
-```
-
-Initialize TinySearchBox:
-
-```javascript
-import TinySearchBox from '@opentiny/vue-search-box';
-```
-
-## Local development
+## Development
 
 ```shell
 git clone git@github.com:opentiny/tiny-search-box.git
@@ -102,7 +99,7 @@ pnpm i
 pnpm dev
 ```
 
-Open a browser to access：[http://localhost:5173/](http://localhost:5173/)
+Open a browser to access：[http://localhost:5173/tiny-search-box/](http://localhost:5173/tiny-search-box/)
 
 ## License
 
