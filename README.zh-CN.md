@@ -1,12 +1,6 @@
-# TinySearchBox 综合搜索
+# TinySearchBox 综合搜索组件
 
-<!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-
-[![All Contributors](https://img.shields.io/badge/all_contributors-6-orange.svg?style=flat-square)](#contributors-)
-
-<!-- ALL-CONTRIBUTORS-BADGE:END -->
-
-TinySearchBox 是一个基于 tiny-vue 开发的强大而简单易用的综合搜索组件。支持单选、多选，时间，时间区间等多条件筛选。
+TinySearchBox 是一个基于 Vue3 的综合搜索组件，使用 TinyVue 组件库，遵循 OpenTiny 设计规范，简单易用、功能强大，支持单选、多选、时间、时间区间等多条件筛选。
 
 [English](README.md) | 简体中文
 
@@ -14,18 +8,34 @@ TinySearchBox 是一个基于 tiny-vue 开发的强大而简单易用的综合�
 
 TinySearchBox 主要有以下特点和优势：
 
-- 包含多种类型条件筛选，开箱即用。
-- 强大的搜索功能，支持模糊搜索，单选、多选，时间，时间区间，数字大小，数字区间，以及自定义搜索等。
+- 将筛选条件聚拢在一个输入框中，筛选效率更高、用户体验更好
+- 支持单选、多选、时间、时间区间、数字大小、数字区间等多种类型条件筛选
+- 强大的搜索功能，支持模糊搜索、自定义搜索等
 
-## 快速入门
+![TinySearchBox](TinySearchBox.png)
+
+## 快速上手
 
 安装 TinySearchBox
 
 ```shell
 npm i @opentiny/vue-search-box
 ```
+```
 
-编写 html：
+导入 TinySearchBox 综合搜索：
+
+```javascript
+import TinySearchBox from '@opentiny/vue-search-box';
+```
+
+引入样式：
+
+```css
+@import '@opentiny/vue-search-box/index.css';
+```
+
+在模板中使用：
 
 ```html
 <script setup>
@@ -77,20 +87,8 @@ npm i @opentiny/vue-search-box
 </script>
 
 <template>
-  <TinySearchBox v-model="tags" :items="items"></TinySearchBox>
+  <tiny-search-box v-model="tags" :items="items"></tiny-search-box>
 </template>
-```
-
-引入样式：
-
-```css
-@import '@opentiny/vue-search-box/index.css';
-```
-
-初始化 TinySearchBox 综合搜索：
-
-```javascript
-import TinySearchBox from '@opentiny/vue-search-box';
 ```
 
 ## 本地开发
@@ -102,7 +100,7 @@ pnpm i
 pnpm dev
 ```
 
-打开浏览器访问：[http://localhost:5173/tiny-search-box/](http://localhost:5173/tiny-editor/)
+打开浏览器访问：[http://localhost:5173/tiny-search-box/](http://localhost:5173/tiny-search-box/)
 
 ## License
 
