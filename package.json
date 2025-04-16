@@ -3,7 +3,8 @@
   "description": "",
   "license": "MIT",
   "scripts": {
-    "build": "pnpm -F @opentiny/vue-search-box build"
+    "build": "pnpm -F @opentiny/vue-search-box build",
+    "pub": "pnpm -F @opentiny/vue-search-box publish --no-git-checks"
   },
   "dependencies": {
     "vue": "^3.0.0"
@@ -11,7 +12,6 @@
   "devDependencies": {
     "less": "^4.2.2",
     "vite": "^6.2.2"
-    
   },
   "gitHooks": {
     "pre-commit": "lint-staged",
