@@ -1,12 +1,22 @@
 {
   "files": [
-    "README.md"
+    "README.md",
+    "README.zh-CN.md"
   ],
   "imageSize": 100,
   "commit": false,
   "commitType": "docs",
   "commitConvention": "angular",
   "contributors": [
+    {
+      "login": "chenxi-20",
+      "name": "chenxi-20",
+      "avatar_url": "https://avatars.githubusercontent.com/u/76168465?v=4",
+      "profile": "https://github.com/chenxi-20",
+      "contributions": [
+        "code"
+      ]
+    },
     {
       "login": "kagol",
       "name": "Kagol",
@@ -24,9 +34,18 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "discreted66",
+      "name": "liukun",
+      "avatar_url": "https://avatars.githubusercontent.com/u/190872652?v=4",
+      "profile": "https://github.com/discreted66",
+      "contributions": [
+        "code"
+      ]
     }
   ],
-  "contributorsPerLine": 7,
+  "contributorsPerLine": 8,
   "skipCi": true,
   "repoType": "github",
   "repoHost": "https://github.com",
