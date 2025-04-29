@@ -17,7 +17,7 @@ import TinyPopover from '@opentiny/vue-popover'
 import TinySelect from '@opentiny/vue-select'
 import TinyOption from '@opentiny/vue-option'
 import { iconSearch, iconClose, iconHelpQuery } from '@opentiny/vue-icon'
-import { t } from '@opentiny/vue-locale'
+import { t } from './index.ts'
 import { useTag } from './composables/use-tag'
 import { useDropdown } from './composables/use-dropdown'
 import { useMatch } from './composables/use-match'
@@ -51,7 +51,7 @@ const props = defineProps({
   },
   emptyPlaceholder: {
     type: String,
-    default: t('tvp.tvpSearchbox.defaultPlaceholder')
+    default: ''
   },
   potentialOptions: {
     type: Object as PropType<ISearchBoxMatchOptions>,
@@ -260,7 +260,7 @@ watch(
       })
       showPopover(state, false)
       if (newVal.length === 0) {
-        setPlaceholder(props.emptyPlaceholder)
+        setPlaceholder(props.emptyPlaceholder || t('tvp.tvpSearchbox.defaultPlaceholder'))
       }
 
       if (props.editable && !state.inputEditValue.length && newVal[0]) {

@@ -1,4 +1,4 @@
-export const zhCN = {
+export default {
   tvp: {
     tvpSearchbox: {
       defaultPlaceholder: '请选择属性筛选，或输入关键字',
@@ -38,4 +38,4 @@ export const zhCN = {
       notContain: '不包含'
     }
   }
-};
+}
