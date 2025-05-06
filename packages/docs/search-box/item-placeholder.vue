@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { TinySearchBox } from '@opentiny/tiny-search-box'
 
 const items = ref([
   {
@@ -113,5 +112,5 @@ const tags = ref([
 </script>
 
 <template>
-  <tvp-search-box v-model="tags" :items="items" editable />
+  <tiny-search-box v-model="tags" :items="items" editable />
 </template>

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { reactive, ref } from 'vue'
-import { TinySearchBox } from '@opentiny/tiny-search-box'
-import { Autocomplete as TinyAutocomplete, Button as TinyButton } from '@opentiny/vue'
+import TinyButton from '@opentiny/vue-button'
+import TinyAutocomplete from '@opentiny/vue-autocomplete'
 
 const tags = ref([
   {
@@ -95,7 +95,7 @@ const handleConfirm = (scope, isComfirm = true) => {
 </script>
 
 <template>
-  <tvp-search-box v-model="tags" :items="items" editable @change="onChange">
+  <tiny-search-box v-model="tags" :items="items" editable @change="onChange">
     <!-- autocomplete对应的自定义二级面板 -->
     <template #autocomplete="scope">
       <div class="tvp-search-box__date-wrap">
@@ -140,5 +140,5 @@ const handleConfirm = (scope, isComfirm = true) => {
     <template #other-edit="scope">
       <span @click="scope.onConfirm({ value: 'other' })">我是other对应的编辑态自定义面板</span>
     </template>
-  </tvp-search-box>
+  </tiny-search-box>
 </template>

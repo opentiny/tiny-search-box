@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { TinySearchBox } from '@opentiny/tiny-search-box'
+
 import { dataSource } from './data-source'
 
 const items = dataSource
@@ -8,7 +8,7 @@ const items = dataSource
 const tags = ref([])
 
 const asyncObtain = (keyword: string) =>
-  new Promise(resolve => {
+  new Promise((resolve) => {
     setTimeout(() => {
       resolve([
         {
@@ -40,5 +40,5 @@ const potentialOptions = ref({
 </script>
 
 <template>
-  <tvp-search-box :items="items" v-model="tags" :potential-options="potentialOptions" />
+  <tiny-search-box :items="items" v-model="tags" :potential-options="potentialOptions" />
 </template>

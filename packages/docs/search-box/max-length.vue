@@ -1,7 +1,5 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { TinySearchBox } from '@opentiny/tiny-search-box'
-import { Modal } from '@opentiny/vue'
 
 const tags = ref([])
 const maxlength = ref(8)
@@ -19,10 +17,10 @@ const dataSource = [
 ]
 
 const handleExceed = (number) => {
-  Modal.message({ message: `不能超过${number}个字符`, status: 'warning' })
+  console.log(`不能超过${number}个字符`)
 }
 </script>
 
 <template>
-  <tvp-search-box v-model="tags" :items="dataSource" :maxlength="maxlength" @exceed="handleExceed" />
+  <tiny-search-box v-model="tags" :items="dataSource" :maxlength="maxlength" @exceed="handleExceed" />
 </template>

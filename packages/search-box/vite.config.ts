@@ -1,29 +1,27 @@
-import { readFileSync } from 'node:fs';
-import { resolve } from 'node:path';
-import * as glob from 'glob';
-import { defineConfig } from 'vite';
-import vue from '@vitejs/plugin-vue';
-import dts from 'vite-plugin-dts';
+import { readFileSync } from 'node:fs'
+import { resolve } from 'node:path'
+import * as glob from 'glob'
+import { defineConfig } from 'vite'
+import vue from '@vitejs/plugin-vue'
+import dts from 'vite-plugin-dts'
 
 interface Manifest {
-  version: string;
-  dependencies?: Record<string, string>;
-  peerDependencies?: Record<string, string>;
+  version: string
+  dependencies?: Record<string, string>
+  peerDependencies?: Record<string, string>
 }
 export function getPackageManifest(pkgPath: string): Manifest {
-  return JSON.parse(readFileSync(pkgPath, 'utf8')) as Manifest;
+  return JSON.parse(readFileSync(pkgPath, 'utf8')) as Manifest
 }
 export function rollupExternalFromPackage(pkgPath: string) {
-  const { dependencies, peerDependencies } = getPackageManifest(pkgPath);
-  const dependenciesKeys = Object.keys(dependencies ?? {});
-  const peerDependenciesKeys = Object.keys(peerDependencies ?? {});
+  const { dependencies, peerDependencies } = getPackageManifest(pkgPath)
+  const dependenciesKeys = Object.keys(dependencies ?? {})
+  const peerDependenciesKeys = Object.keys(peerDependencies ?? {})
 
   return (id: string) => {
-    const packages = new Set([...peerDependenciesKeys, ...dependenciesKeys]);
-    return Array.from(packages).some(
-      (pkg) => id === pkg || id.startsWith(`${pkg}/`)
-    );
-  };
+    const packages = new Set([...peerDependenciesKeys, ...dependenciesKeys])
+    return Array.from(packages).some((pkg) => id === pkg || id.startsWith(`${pkg}/`))
+  }
 }
 
 function rollupOutput(target: string, format: string): any {
@@ -34,13 +32,13 @@ function rollupOutput(target: string, format: string): any {
     dir: resolve(__dirname, 'dist', format),
     preserveModulesRoot: resolve(__dirname, 'src'),
     exports: 'named'
-  };
+  }
 }
 
 const input = glob.sync('./src/**/*.ts', {
   cwd: __dirname,
   absolute: true
-});
+})
 
 export default defineConfig({
   plugins: [dts({ outDir: './dist/types' }), vue()],
@@ -57,4 +55,4 @@ export default defineConfig({
       output: [rollupOutput('es', 'es'), rollupOutput('cjs', 'lib')]
     }
   }
-});
+})
