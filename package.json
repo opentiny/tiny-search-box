@@ -2,6 +2,7 @@
   "name": "root",
   "description": "",
   "license": "MIT",
+  "packageManager": "pnpm@9.14.4",
   "scripts": {
     "build": "pnpm -F @opentiny/vue-search-box build",
     "pub": "pnpm -F @opentiny/vue-search-box publish --no-git-checks"
