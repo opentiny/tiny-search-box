@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { TinySearchBox } from '@opentiny/tiny-search-box'
+
 import { dataSource } from './data-source'
 
 const tags = ref([
@@ -19,5 +19,5 @@ const tags = ref([
 </script>
 
 <template>
-  <tvp-search-box :items="dataSource" v-model="tags" default-field="ip" />
+  <tiny-search-box :items="dataSource" v-model="tags" default-field="ip" />
 </template>

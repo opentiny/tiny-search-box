@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { TinySearchBox } from '@opentiny/tiny-search-box'
+
 import { dataSource } from './data-source'
 
 const items = dataSource
@@ -17,5 +17,5 @@ const onChange = (newFilters, oldFilters) => {
 </script>
 
 <template>
-  <tvp-search-box v-model="tags" :items="items" :show-no-data-tip="false" @search="onSearch" @change="onChange" />
+  <tiny-search-box v-model="tags" :items="items" :show-no-data-tip="false" @search="onSearch" @change="onChange" />
 </template>

@@ -2,7 +2,7 @@ import { test, expect } from '@playwright/test'
 
 test('自定义默认搜索项', async ({ page }) => {
   page.on('pageerror', (exception) => expect(exception).toBeNull())
-  await page.goto('search-box#settings')
+  await page.goto('search-box#default-field')
 
   const tags = page.locator('.tvp-search-box__tag')
 

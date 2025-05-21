@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { TinySearchBox } from '@opentiny/tiny-search-box'
 
 const items = ref([
   {
@@ -30,5 +29,5 @@ const FirstLevelSelect = (field) => {
 </script>
 
 <template>
-  <tvp-search-box v-model="tags" :items="items" split-input-value="|" @first-level-select="FirstLevelSelect" />
+  <tiny-search-box v-model="tags" :items="items" split-input-value="|" @first-level-select="FirstLevelSelect" />
 </template>
