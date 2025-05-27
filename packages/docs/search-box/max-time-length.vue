@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { reactive, ref } from 'vue'
-import { TinySearchBox } from '@opentiny/tiny-search-box'
 
 const tags = ref([])
 
@@ -43,5 +42,5 @@ const onChange = (newFilters, oldFilters) => {
 </script>
 
 <template>
-  <tvp-search-box v-model="tags" :items="items" @change="onChange" />
+  <tiny-search-box v-model="tags" :items="items" @change="onChange" />
 </template>

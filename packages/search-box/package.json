@@ -40,7 +40,6 @@
   },
   "dependencies": {
     "@opentiny/vue-button": "^3.22.0",
-    "@opentiny/utils": "^3.22.0",
     "@opentiny/vue-checkbox": "^3.22.0",
     "@opentiny/vue-checkbox-group": "^3.22.0",
     "@opentiny/vue-date-picker": "^3.22.0",
