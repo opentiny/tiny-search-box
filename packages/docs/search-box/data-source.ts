@@ -86,8 +86,6 @@ export const dataSource = [
   },
   {
     label: '产品规格',
-    // 规格正则各服务不统一，服务使用需要自己定义
-    regexp: /^\w+\.\w+\.\w$/,
     field: 'product',
     options: [
       {
@@ -125,8 +123,6 @@ export const dataSource = [
   {
     label: '个人IP地址',
     field: 'ip',
-    // 组件内置ip正则，如果不满足需求可以自己定义
-    regexp: /^(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])(\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])){3}$/,
     // 单选此类可以设置此参数为true
     replace: true,
     options: [
@@ -146,15 +142,14 @@ export const dataSource = [
   },
   {
     label: '实例ID',
-    regexp: /^\w+-\w+-\w+-\w+-\w$/,
     field: 'id',
     options: [
       {
-        label: 'yun-ID',
+        label: 'huaweiyun-ID',
         allValues: false
       },
       {
-        label: 'tuandui-ID'
+        label: 'yunlingtuandui-ID'
       },
       {
         label: 'tiny-vue-plus-search-box-ID'

@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
+import { Modal } from '@opentiny/vue'
 
 const tags = ref([])
 const maxlength = ref(8)
@@ -17,7 +18,7 @@ const dataSource = [
 ]
 
 const handleExceed = (number) => {
-  console.log(`不能超过${number}个字符`)
+  Modal.message({ message: `不能超过${number}个字符`, status: 'warning' })
 }
 </script>
 

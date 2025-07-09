@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { reactive, ref } from 'vue'
-
 import { data } from './editable-data'
 
 const tags = ref([

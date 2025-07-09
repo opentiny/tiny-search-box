@@ -2,4 +2,4 @@
 
 通过 items 配置搜索数据项
 
-<preview path="../search-box/basic-usage.vue" title="" description=""></preview>
+<preview path="../search-box/basic-usage.vue"></preview>

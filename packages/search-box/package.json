@@ -55,7 +55,8 @@
     "@opentiny/vue-popover": "^3.22.0",
     "@opentiny/vue-select": "^3.22.0",
     "@opentiny/vue-tag": "^3.22.0",
-    "@opentiny/vue-tooltip": "^3.22.0"
+    "@opentiny/vue-tooltip": "^3.22.0",
+    "@opentiny/utils": "^3.22.0"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^4.0.0",

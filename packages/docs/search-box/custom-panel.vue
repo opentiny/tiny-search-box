@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { reactive, ref } from 'vue'
-import TinyButton from '@opentiny/vue-button'
-import TinyAutocomplete from '@opentiny/vue-autocomplete'
+import {TinyAutocomplete, TinyButton } from '@opentiny/vue'
 
 const tags = ref([
   {
@@ -111,8 +110,8 @@ const handleConfirm = (scope, isComfirm = true) => {
       </div>
       <div class="tvp-search-box__bottom-btn">
         <!-- 确认时阻止点击事件冒泡 -->
-        <tiny-button size="mini" @click.stop="handleConfirm(scope)"> 确认 </tiny-button>
         <tiny-button size="mini" @click.stop="handleConfirm(scope, false)"> 取消 </tiny-button>
+        <tiny-button size="mini" @click.stop="handleConfirm(scope)"> 确认 </tiny-button>
       </div>
     </template>
     <!-- other对应的自定义二级面板 -->

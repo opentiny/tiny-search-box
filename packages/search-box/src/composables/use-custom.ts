@@ -3,6 +3,7 @@ import { showDropdown, showPopover } from '../utils/dropdown'
 
 export function useCustom({ state, emits }) {
   const updateCustomValue = (customTag) => {
+    showDropdown(state, false)
     const { prevItem, indexMap } = state
     const { replace, label } = prevItem
 

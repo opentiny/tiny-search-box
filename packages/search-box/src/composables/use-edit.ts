@@ -54,6 +54,7 @@ export function useEdit({ props, state, t, nextTick, format, emits }) {
     state.selectValue = tag.label
     state.currentModelValueIndex = index
 
+    emits('tagClick', tag)
     setDropdownProps(tag)
   }
 
@@ -84,8 +85,9 @@ export function useEdit({ props, state, t, nextTick, format, emits }) {
     }
 
     if (newTag) {
-      emitChangeModelEvent({ emits, state, index, newTag, isEdit: true })
+      showDropdown(state, false)
       state.popoverVisible = false
+      emitChangeModelEvent({ emits, state, index, newTag, isEdit: true })
     } else {
       state.popoverVisible = true
     }

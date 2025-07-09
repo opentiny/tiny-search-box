@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
+import { TvpSearchBox } from '@huawei/tiny-vue-plus'
 
 const items = ref([
   {
@@ -30,6 +31,7 @@ const items = ref([
     field: 'testRegion',
     type: 'checkbox',
     mergeTag: true,
+    allowCreate: true,
     placeholder: '我是自定义可选地区的占位符',
     editAttrDisabled: true, // 编辑状态此属性禁用，不可变更
     options: [

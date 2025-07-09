@@ -5,9 +5,6 @@ import TinyTag from '@opentiny/vue-tag'
 import TinyInput from '@opentiny/vue-input'
 import TinyDropdown from '@opentiny/vue-dropdown'
 import TinyDropdownMenu from '@opentiny/vue-dropdown-menu'
-import TinyDropdownItem from '@opentiny/vue-dropdown-item'
-import TinyCheckbox from '@opentiny/vue-checkbox'
-import TinyCheckboxGroup from '@opentiny/vue-checkbox-group'
 import TinyButton from '@opentiny/vue-button'
 import TinyTooltip from '@opentiny/vue-tooltip'
 import TinyDatePicker from '@opentiny/vue-date-picker'
@@ -17,6 +14,7 @@ import TinyPopover from '@opentiny/vue-popover'
 import TinySelect from '@opentiny/vue-select'
 import TinyOption from '@opentiny/vue-option'
 import { iconSearch, iconClose, iconHelpQuery } from '@opentiny/vue-icon'
+import { formatDateByPattern as format } from '@opentiny/utils'
 import { t } from './index.ts'
 import { useTag } from './composables/use-tag'
 import { useDropdown } from './composables/use-dropdown'
@@ -30,9 +28,11 @@ import { useInit } from './composables/use-init'
 import { usePlaceholder } from './composables/use-placeholder'
 import type { ISearchBoxItem, ISearchBoxTag, ISearchBoxMatchOptions } from './index.type'
 import { showDropdown, showPopover } from './utils/dropdown'
+import TinySearchBoxFirstLevelPanel from './components/first-level-panel.vue'
+import TinySearchBoxSecondLevelPanel from './components/second-level-panel.vue'
 import './index.less'
 import { deepClone } from './utils/clone'
-import { format } from './utils/date'
+import { resetInput } from './utils/tag'
 
 defineOptions({
   name: 'TinySearchBox'
@@ -90,15 +90,10 @@ const props = defineProps({
   splitInputValue: {
     type: String,
     default: ','
-  },
-  // 3.18.0新增
-  showNoDataTip: {
-    type: Boolean,
-    default: true
   }
 })
 
-const emits = defineEmits(['update:modelValue', 'change', 'search', 'exceed', 'first-level-select'])
+const emits = defineEmits(['update:modelValue', 'change', 'search', 'exceed', 'first-level-select', 'clear'])
 
 const state = reactive({
   innerModelValue: [...props.modelValue],
@@ -109,7 +104,7 @@ const state = reactive({
   propItem: {},
   backupList: [],
   filterList: [],
-  checkboxGroup: [],
+  checkboxGroup: [] as string[],
   prevItem: {},
   backupPrevItem: '',
   formRules: null,
@@ -121,44 +116,48 @@ const state = reactive({
   endDateTime: null,
   isShowTagKey: true,
   potentialOptions: null,
-  hiden: true,
   dateRangeFormat: 'yyyy/MM/dd',
   datetimeRangeFormat: 'yyyy/MM/dd HH:mm:ss',
   indexMap: new Map(),
   valueMap: new Map(),
   popoverVisible: false,
   selectValue: '',
-  allTypeAttri: {
-    label: t('tvp.tvpSearchbox.rulekeyword1'),
-    field: 'tvpKeyword',
-    type: 'radio'
-  },
+  allTypeAttri: { label: t('tvp.tvpSearchbox.rulekeyword1'), field: 'tvpKeyword', type: 'radio' },
   operatorValue: ':', // 当前操作符值
   inputEditValue: '',
   currentOperators: '',
   currentEditValue: '',
-  isShowDropdown: true, // 控制有匹配数据展示开关
-  isShowPanel: true, // 控制面板显隐
   currentModelValueIndex: -1, // 当前编辑的标签索引
   curMinNumVar: '', // numRange最小值变量
   curMaxNumVar: '', // numRange最大值变量
   instance: getCurrentInstance(),
   isMouseDown: false,
-  isResetFlag: true, // 输入框触发源重置
-  currentEditSelectTags: [] // 当前编辑多选的标签值
+  currentEditSelectTags: [], // 当前编辑多选的标签值
+  visible: false,
+  visibleTimer: null,
+  hasBackupList: computed(
+    (): boolean => state.propItem.label && [undefined, 'radio', 'checkbox', 'map'].includes(state.prevItem.type)
+  ),
+  isIndeterminate: computed(
+    (): boolean => state.checkboxGroup.length > 0 && state.checkboxGroup.length !== state.filterList.length
+  ),
+  checkAll: computed({
+    get: (): boolean => state.checkboxGroup.length && state.checkboxGroup.length === state.filterList.length,
+    set: (val) => {
+      if (val) {
+        state.checkboxGroup = state.filterList.flatMap((item) => `${state.prevItem.label}${item.label}`)
+      } else {
+        state.checkboxGroup = []
+      }
+    }
+  })
 })
-state.isShowPanel = computed(
-  () =>
-    state.isResetFlag &&
-    (props.showNoDataTip || (!props.showNoDataTip && state.isShowDropdown)) &&
-    (state.prevItem.type || !state.propItem.label || state.backupList.length || state.currentOperators?.length)
-)
 
 const TinyIconSearch = iconSearch()
 const TinyIconClose = iconClose()
 const TinyIconHelpQuery = iconHelpQuery()
 
-const { selectPropItem, selectRadioItem, createTag, helpClick, setOperator } = useDropdown({
+const { selectPropItem, selectRadioItem, selectInputValue, createTag, helpClick, setOperator } = useDropdown({
   props,
   emits,
   state,
@@ -189,7 +188,7 @@ const { handleInput, selectFirstMap } = useMatch({
 
 const { placeholder, setPlaceholder } = usePlaceholder({ props, state, t })
 
-const { selectCheckbox, isIndeterminate, checkAll, isShowClose } = useCheckbox({
+const { selectCheckbox, isShowClose } = useCheckbox({
   props,
   state,
   emits
@@ -240,7 +239,6 @@ watch(
     immediate: true
   }
 )
-
 watch(
   () => props.modelValue,
   (newVal) => {
@@ -260,7 +258,7 @@ watch(
       })
       showPopover(state, false)
       if (newVal.length === 0) {
-        setPlaceholder(props.emptyPlaceholder || t('tvp.tvpSearchbox.defaultPlaceholder'))
+        setPlaceholder(props.emptyPlaceholder)
       }
 
       if (props.editable && !state.inputEditValue.length && newVal[0]) {
@@ -287,8 +285,25 @@ onBeforeUnmount(() => {
   document.removeEventListener('mousemove', watchMouseMove)
 })
 
+const eventsMap = {
+  selectInputValue,
+  selectPropItem,
+  selectRadioItem,
+  setOperator,
+  selectCheckbox,
+  sizeChange,
+  onConfirmDate,
+  selectFirstMap,
+  handleDateShow
+}
+
+const handleEvents = (eventName, p1, p2) => {
+  eventsMap[eventName](p1, p2)
+}
+
 defineExpose({
-  state
+  state,
+  handleEvents
 })
 </script>
 
@@ -326,9 +341,9 @@ defineExpose({
         </section>
         <tiny-dropdown
           ref="dropdownRef"
+          v-model:visible="state.visible"
           trigger="click"
           class="tvp-search-box__dropdown"
-          :hide-on-click="state.hiden"
           :show-icon="false"
           lazy-show-popper
         >
@@ -341,13 +356,12 @@ defineExpose({
             @keydown.delete.stop="backspaceDeleteTag"
             @keydown.enter.stop="createTag"
             @input="handleInput"
-            @focus="showPopover(state, false)"
             @click="handleClick"
           >
             <template #suffix>
               <tiny-icon-close v-show="isShowClose" class="tvp-search-box__input-close" @click.stop="clearTag" />
               <span v-show="isShowClose" class="tvp-search-box__input-separator"></span>
-              <tiny-tooltip v-if="showHelp" effect="dark" :content="t('tvp.tvpSearchbox.help')" placement="top">
+              <tiny-tooltip v-if="showHelp" effect="light" :content="t('tvp.tvpSearchbox.help')" placement="top">
                 <tiny-icon-help-query class="tvp-search-box__input-help" @click.stop="helpClick" />
               </tiny-tooltip>
               <tiny-icon-search class="tvp-search-box__input-search" @click.stop="createTag" />
@@ -360,325 +374,38 @@ defineExpose({
               :style="{ 'max-height': panelMaxHeight }"
               @mouseup.stop="() => {}"
             >
-              <div v-show="state.isResetFlag && !state.propItem.label && state.inputValue.trim()">
-                <template v-for="(value, key) in state.matchItems" :key="key">
-                  <template v-if="value['attr'].length">
-                    <span class="tvp-search-box__filter-type">{{
-                      key === '0' ? t('tvp.tvpSearchbox.attributeType') : key
-                    }}</span>
-                    <tiny-dropdown-item
-                      v-for="(item, index) in value['attr']"
-                      :key="item.label + index"
-                      class="tvp-search-box__filter-item tvp-search-box__dropdown-item"
-                      @click="selectPropItem(item)"
-                    >
-                      <span>
-                        <template v-for="text in item.match" :key="text">
-                          <span v-if="Array.isArray(text)" class="tvp-search-box__text-highlight">{{ text[0] }}</span>
-                          <template v-else>{{ text }}</template>
-                        </template>
-                      </span>
-                    </tiny-dropdown-item>
-                  </template>
-                  <template v-if="value['attrValue'].length">
-                    <span class="tvp-search-box__filter-type">{{
-                      t('tvp.tvpSearchbox.propertyValue', [key === '0' ? t('tvp.tvpSearchbox.attributeType') : key])
-                    }}</span>
-                    <tiny-dropdown-item
-                      v-for="(item, index) in value['attrValue']"
-                      :key="item.label + index"
-                      :disabled="item.isChecked"
-                      class="tvp-search-box__filter-item tvp-search-box__dropdown-item"
-                      @click="selectRadioItem(item, true)"
-                    >
-                      <span>
-                        <template v-for="text in item.match" :key="text">
-                          <span v-if="Array.isArray(text)" class="tvp-search-box__text-highlight">{{ text[0] }}</span>
-                          <template v-else>{{ text }}</template>
-                        </template>
-                      </span>
-                    </tiny-dropdown-item>
-                  </template>
-                </template>
-                <tiny-dropdown-item v-if="showNoDataTip && !state.isShowDropdown">
-                  <div>{{ t('tvp.tvpSearchbox.noData') }}</div>
-                </tiny-dropdown-item>
-                <div v-show="props.potentialOptions">
-                  <span class="tvp-search-box__filter-type">{{ t('tvp.tvpSearchbox.matched') }}</span>
-                  <div id="potential-loading" class="tvp-search-box__potential-box">
-                    <div v-if="state.potentialOptions">
-                      <tiny-dropdown-item
-                        v-for="(item, index) in state.potentialOptions"
-                        :key="item.label + index"
-                        class="tvp-search-box__filter-item tvp-search-box__dropdown-item"
-                        @click="selectRadioItem(item, true)"
-                      >
-                        {{ item.label }}：
-                        <span class="tvp-search-box__text-highlight">{{ item.value }}</span>
-                      </tiny-dropdown-item>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div
-                v-show="state.isResetFlag && !state.propItem.label && !state.inputValue.trim()"
-                class="tvp-search-box__first-panel"
-              >
-                <template v-for="(group, key) in state.groupItems" :key="key">
-                  <span v-if="group.length" class="tvp-search-box__filter-type">{{
-                    key === '0' ? t('tvp.tvpSearchbox.attributeType') : key
-                  }}</span>
-                  <tiny-dropdown-item
-                    v-for="(item, index) in group"
-                    :key="(item.field || item.label) + index"
-                    class="tvp-search-box__dropdown-item"
-                    @click="selectPropItem(item)"
-                  >
-                    <span :title="item.label">{{ item.label }}</span>
-                  </tiny-dropdown-item>
-                </template>
+              <div v-show="!state.propItem.label || state.inputValue.trim()">
+                <slot
+                  v-if="state.instance?.slots['first-panel']"
+                  name="first-panel"
+                  v-bind="{
+                    state,
+                    handleEvents
+                  }"
+                  @click.stop
+                ></slot>
+                <TinySearchBoxFirstLevelPanel v-else :state="state" @events="handleEvents"></TinySearchBoxFirstLevelPanel>
               </div>
               <!-- 有label的情况 -->
-              <div v-show="state.isResetFlag && state.propItem.label">
-                <div v-if="state.currentOperators?.length">
-                  <span class="tvp-search-box__filter-type">{{ t('tvp.tvpSearchbox.operator') }}</span>
-                  <tiny-dropdown-item
-                    v-for="(item, index) in state.currentOperators"
-                    v-show="item.includes(state.inputValue)"
-                    :key="item + index"
-                    class="tvp-search-box__dropdown-item"
-                    @click="setOperator(item)"
-                  >
-                    {{ item }}
-                  </tiny-dropdown-item>
-                </div>
-                <div
-                  v-else-if="!state.prevItem.type || state.prevItem.type === 'radio'"
-                  class="tvp-search-box__radio-wrap"
-                >
-                  <tiny-dropdown-item
-                    v-for="(item, index) in state.backupList"
-                    v-show="!item.isFilter || !state.inputValue"
-                    :key="index + (item.field || item.label)"
-                    :disabled="item.isChecked"
-                    class="tvp-search-box__dropdown-item"
-                    @click="selectRadioItem(item)"
-                  >
-                    <span v-if="item.match" :title="item.label">
-                      <template v-for="text in item.match" :key="text">
-                        <span v-if="Array.isArray(text)" class="tvp-search-box__text-highlight">{{ text[0] }}</span>
-                        <template v-else>{{ text }}</template></template
-                      >
-                    </span>
-                    <span v-else :title="item.label">{{ item.label }}</span>
-                  </tiny-dropdown-item>
-                </div>
-                <div v-else-if="state.isResetFlag && state.prevItem.type === 'checkbox'">
-                  <div class="tvp-search-box__checkbox-wrap">
-                    <tiny-checkbox-group v-model="checkAll" class="tvp-search-box__checkbox">
-                      <tiny-dropdown-item class="tvp-search-box__dropdown-item tvp-search-box__checkbox-item">
-                        <tiny-checkbox v-model="checkAll" :indeterminate="isIndeterminate">
-                          {{ t('tvp.tvpSearchbox.selectAll') }}
-                        </tiny-checkbox>
-                      </tiny-dropdown-item>
-                    </tiny-checkbox-group>
-                    <tiny-checkbox-group v-model="state.checkboxGroup" class="tvp-search-box__checkbox">
-                      <tiny-dropdown-item
-                        v-for="(item, index) in state.backupList"
-                        v-show="!item.isFilter"
-                        :key="(item.field || item.label) + index"
-                        class="tvp-search-box__dropdown-item tvp-search-box__checkbox-item"
-                      >
-                        <tiny-checkbox
-                          :label="state.prevItem.label + item.label"
-                          :title="item.label"
-                          class="tvp-search-box__checkbox-item-label"
-                        >
-                          {{ item.label }}
-                        </tiny-checkbox>
-                      </tiny-dropdown-item>
-                    </tiny-checkbox-group>
-                  </div>
-                  <div class="tvp-search-box__checkbox-btn">
-                    <tiny-button size="mini" @click="selectCheckbox(true)">
-                      {{ t('tvp.tvpSearchbox.confirm') }}
-                    </tiny-button>
-                    <tiny-button size="mini" @click="selectCheckbox(false)">
-                      {{ t('tvp.tvpSearchbox.cancel') }}
-                    </tiny-button>
-                  </div>
-                </div>
-                <div v-else-if="state.prevItem.type === 'numRange'" class="tvp-search-box__panel-box">
-                  <div class="tvp-search-box__number">
-                    <div class="tvp-search-box__dropdown-title">
-                      {{ t('tvp.tvpSearchbox.rangeNumberTitle') }}
-                    </div>
-                    <div class="tvp-search-box__dropdown-start">
-                      {{ t('tvp.tvpSearchbox.minValueText') }}({{ state.prevItem.unit }})
-                    </div>
-                    <tiny-form-item
-                      :prop="state.curMinNumVar"
-                      class="tvp-search-box__number-item"
-                      :show-message="state.numberShowMessage"
-                    >
-                      <tiny-input
-                        v-model="state[state.curMinNumVar]"
-                        type="number"
-                        class="tvp-search-box__number-input"
-                      ></tiny-input>
-                    </tiny-form-item>
-                    <div class="tvp-search-box__dropdown-end">
-                      {{ t('tvp.tvpSearchbox.maxValueText') }}({{ state.prevItem.unit }})
-                    </div>
-                    <tiny-form-item :prop="state.curMaxNumVar" class="tvp-search-box__number-item">
-                      <tiny-input
-                        v-model="state[state.curMaxNumVar]"
-                        type="number"
-                        class="tvp-search-box__number-input"
-                      ></tiny-input>
-                    </tiny-form-item>
-                  </div>
-                  <div class="tvp-search-box__bottom-btn">
-                    <tiny-button size="mini" @click.stop="sizeChange(true)">
-                      {{ t('tvp.tvpSearchbox.confirm') }}
-                    </tiny-button>
-                    <tiny-button size="mini" @click="sizeChange(false)">{{ t('tvp.tvpSearchbox.cancel') }}</tiny-button>
-                  </div>
-                </div>
-
-                <div v-else-if="state.prevItem.type === 'dateRange'" class="tvp-search-box__panel-box">
-                  <div class="tvp-search-box__date-wrap">
-                    <div class="tvp-search-box__dropdown-title">
-                      {{
-                        state.prevItem.maxTimeLength > 0
-                          ? t('tvp.tvpSearchbox.timeLengthTitle', {
-                              value: (state.prevItem.maxTimeLength / 86400000).toFixed(1)
-                            })
-                          : t('tvp.tvpSearchbox.rangeDateTitle')
-                      }}
-                    </div>
-                    <div class="tvp-search-box__dropdown-start">
-                      {{ t('tvp.tvpSearchbox.rangeBeginLabel') }}
-                    </div>
-                    <tiny-form-item
-                      prop="startDate"
-                      :show-message="Boolean(state.prevItem.maxTimeLength)"
-                      class="tvp-search-box__date-item"
-                    >
-                      <tiny-date-picker
-                        v-model="state.startDate"
-                        :format="state.prevItem.format || state.dateRangeFormat"
-                        :value-format="state.prevItem.format || state.dateRangeFormat"
-                        :picker-options="pickerOptions(state.startDate, 'endDate')"
-                        class="tvp-search-box__date-picker"
-                        @change="handleDateShow"
-                        @blur="handleDateShow"
-                      ></tiny-date-picker>
-                    </tiny-form-item>
-                    <div class="tvp-search-box__dropdown-end">
-                      {{ t('tvp.tvpSearchbox.rangeEndLabel') }}
-                    </div>
-                    <tiny-form-item prop="endDate" class="tvp-search-box__date-item">
-                      <tiny-date-picker
-                        v-model="state.endDate"
-                        :format="state.prevItem.format || state.dateRangeFormat"
-                        :value-format="state.prevItem.format || state.dateRangeFormat"
-                        :picker-options="pickerOptions(state.startDate)"
-                        class="tvp-search-box__date-picker"
-                        @change="handleDateShow"
-                        @blur="handleDateShow"
-                      ></tiny-date-picker>
-                    </tiny-form-item>
-                  </div>
-                  <div class="tvp-search-box__bottom-btn">
-                    <tiny-button size="mini" @click="onConfirmDate(true)">
-                      {{ t('tvp.tvpSearchbox.confirm') }}
-                    </tiny-button>
-                    <tiny-button size="mini" @click="onConfirmDate(false)">
-                      {{ t('tvp.tvpSearchbox.cancel') }}
-                    </tiny-button>
-                  </div>
-                </div>
-
-                <div v-else-if="state.prevItem.type === 'datetimeRange'" class="tvp-search-box__panel-box">
-                  <div class="tvp-search-box__date-wrap">
-                    <div class="tvp-search-box__dropdown-title">
-                      {{
-                        state.prevItem.maxTimeLength > 0
-                          ? t('tvp.tvpSearchbox.timeLengthTitle', {
-                              value: (state.prevItem.maxTimeLength / 86400000).toFixed(1)
-                            })
-                          : t('tvp.tvpSearchbox.rangeDateTitle')
-                      }}
-                    </div>
-                    <div class="tvp-search-box__dropdown-start">
-                      {{ t('tvp.tvpSearchbox.rangeBeginLabel') }}
-                    </div>
-                    <tiny-form-item
-                      prop="startDateTime"
-                      :show-message="Boolean(state.prevItem.maxTimeLength)"
-                      class="tvp-search-box__date-item"
-                    >
-                      <tiny-date-picker
-                        v-model="state.startDateTime"
-                        type="datetime"
-                        :isutc8="true"
-                        :format="state.prevItem.format || state.datetimeRangeFormat"
-                        :value-format="state.prevItem.format || state.datetimeRangeFormat"
-                        :picker-options="pickerOptions(state.startDateTime, 'endDateTime')"
-                        class="tvp-search-box__date-picker"
-                        @change="handleDateShow"
-                        @blur="handleDateShow"
-                      ></tiny-date-picker>
-                    </tiny-form-item>
-                    <div class="tvp-search-box__dropdown-end">
-                      {{ t('tvp.tvpSearchbox.rangeEndLabel') }}
-                    </div>
-                    <tiny-form-item prop="endDateTime" class="tvp-search-box__date-item">
-                      <tiny-date-picker
-                        v-model="state.endDateTime"
-                        type="datetime"
-                        :isutc8="true"
-                        :format="state.prevItem.format || state.datetimeRangeFormat"
-                        :value-format="state.prevItem.format || state.datetimeRangeFormat"
-                        :picker-options="pickerOptions(state.startDateTime)"
-                        class="tvp-search-box__date-picker"
-                        @change="handleDateShow"
-                        @blur="handleDateShow"
-                      ></tiny-date-picker>
-                    </tiny-form-item>
-                  </div>
-                  <div class="tvp-search-box__bottom-btn">
-                    <tiny-button size="mini" @click="onConfirmDate(true, true)">
-                      {{ t('tvp.tvpSearchbox.confirm') }}
-                    </tiny-button>
-                    <tiny-button size="mini" @click="onConfirmDate(false, true)">
-                      {{ t('tvp.tvpSearchbox.cancel') }}
-                    </tiny-button>
-                  </div>
-                </div>
-
-                <div v-else-if="state.prevItem.type === 'map'">
-                  <span v-if="state.isShowTagKey" class="tvp-search-box__filter-type">{{
-                    t('tvp.tvpSearchbox.tagKey')
-                  }}</span>
-                  <span v-else class="tvp-search-box__filter-type">{{ t('tvp.tvpSearchbox.tagValue') }}</span>
-                  <tiny-dropdown-item
-                    v-for="(item, index) in state.backupList"
-                    v-show="!item.isFilter"
-                    :key="item.label + item.value + index"
-                    :disabled="item.isChecked"
-                    class="tvp-search-box__dropdown-item"
-                    @click="selectFirstMap(item, state.isShowTagKey)"
-                  >
-                    <span :title="item.label">{{ item.label }}</span>
-                  </tiny-dropdown-item>
-                </div>
-                <div
-                  v-else-if="state.prevItem.type === 'custom'"
-                  class="tvp-search-box__panel-box"
-                  @click="showDropdown(state)"
-                >
+              <div v-show="state.propItem.label">
+                <slot
+                  v-if="state.instance?.slots['second-panel']"
+                  name="second-panel"
+                  v-bind="{
+                    state,
+                    pickerOptions,
+                    handleEvents,
+                    back: () => resetInput(state)
+                  }"
+                  @click.stop
+                ></slot>
+                <TinySearchBoxSecondLevelPanel 
+                  v-else-if="state.prevItem.type !== 'custom'"
+                  :state="state"
+                  :picker-options="pickerOptions"
+                  @events="handleEvents"
+                ></TinySearchBoxSecondLevelPanel>
+                <div v-else class="tvp-search-box__panel-box" @click="showDropdown(state)">
                   <slot
                     :name="state.prevItem.slotName"
                     v-bind="{
@@ -688,9 +415,6 @@ defineExpose({
                     @click.stop
                   ></slot>
                 </div>
-                <tiny-dropdown-item v-if="showNoDataTip && !state.isShowDropdown">
-                  <div>{{ t('tvp.tvpSearchbox.noData') }}</div>
-                </tiny-dropdown-item>
               </div>
             </tiny-dropdown-menu>
           </template>
@@ -755,7 +479,7 @@ defineExpose({
                   v-model="state.inputEditValue"
                   class="tvp-search-box-select"
                   :multiple="Boolean(state.prevItem.mergeTag)"
-                  allow-create
+                  :allow-create="state.prevItem?.allowCreate"
                   filterable
                   default-first-option
                   clearable
@@ -806,9 +530,7 @@ defineExpose({
                       : t('tvp.tvpSearchbox.rangeDateTitle')
                   }}
                 </div>
-                <div class="tvp-search-box__dropdown-start">
-                  {{ t('tvp.tvpSearchbox.rangeBeginLabel') }}
-                </div>
+                <div class="tvp-search-box__dropdown-start">{{ t('tvp.tvpSearchbox.rangeBeginLabel') }}</div>
                 <tiny-form-item
                   prop="startDate"
                   :show-message="Boolean(state.prevItem.maxTimeLength)"
@@ -822,9 +544,7 @@ defineExpose({
                     class="tvp-search-box__date-picker"
                   ></tiny-date-picker>
                 </tiny-form-item>
-                <div class="tvp-search-box__dropdown-end">
-                  {{ t('tvp.tvpSearchbox.rangeEndLabel') }}
-                </div>
+                <div class="tvp-search-box__dropdown-end">{{ t('tvp.tvpSearchbox.rangeEndLabel') }}</div>
                 <tiny-form-item prop="endDate" class="tvp-search-box__date-item">
                   <tiny-date-picker
                     v-model="state.endDate"
@@ -845,9 +565,7 @@ defineExpose({
                       : t('tvp.tvpSearchbox.rangeDateTitle')
                   }}
                 </div>
-                <div class="tvp-search-box__dropdown-start">
-                  {{ t('tvp.tvpSearchbox.rangeBeginLabel') }}
-                </div>
+                <div class="tvp-search-box__dropdown-start">{{ t('tvp.tvpSearchbox.rangeBeginLabel') }}</div>
                 <tiny-form-item
                   prop="startDateTime"
                   :show-message="Boolean(state.prevItem.maxTimeLength)"
@@ -863,9 +581,7 @@ defineExpose({
                     class="tvp-search-box__date-picker"
                   ></tiny-date-picker>
                 </tiny-form-item>
-                <div class="tvp-search-box__dropdown-end">
-                  {{ t('tvp.tvpSearchbox.rangeEndLabel') }}
-                </div>
+                <div class="tvp-search-box__dropdown-end">{{ t('tvp.tvpSearchbox.rangeEndLabel') }}</div>
                 <tiny-form-item prop="endDateTime" class="tvp-search-box__date-item">
                   <tiny-date-picker
                     v-model="state.endDateTime"
@@ -880,11 +596,11 @@ defineExpose({
               </div>
             </div>
             <div class="tvp-search-box__bottom-btn">
-              <tiny-button size="mini" @click="confirmEditTag(true)">
-                {{ t('tvp.tvpSearchbox.confirm') }}
-              </tiny-button>
               <tiny-button size="mini" @click="confirmEditTag(false)">
                 {{ t('tvp.tvpSearchbox.cancel') }}
+              </tiny-button>
+              <tiny-button size="mini" @click="confirmEditTag(true)">
+                {{ t('tvp.tvpSearchbox.confirm') }}
               </tiny-button>
             </div>
           </template>

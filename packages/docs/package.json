@@ -9,10 +9,9 @@
     "docs:preview": "vitepress preview"
   },
   "dependencies": {
+    "@opentiny/vue": "^3.22.0",
     "@opentiny/vue-search-box": "workspace:^",
     "@opentiny/vue-theme": "^3.22.0",
-    "@opentiny/vue-button": "^3.22.0",
-    "@opentiny/vue-autocomplete": "^3.22.0",
     "@vitepress-demo-preview/component": "^2.3.2"
   },
   "devDependencies": {

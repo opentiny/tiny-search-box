@@ -7,10 +7,9 @@ export function useDropdown({ props, emits, state, t, format }) {
   const { instance } = state
   const showValueItem = (item) => {
     const { start, end, type } = item
-    state.backupList = item.options?.length ? item.options : []
+    state.backupList = item.options
     if (type === 'numRange') {
       setStateNumRange(state, item, t)
-      state.hiden = false
     } else if (type === 'dateRange') {
       const { dateRangeFormat } = state
       if (!state.startDate && start) {
@@ -21,7 +20,6 @@ export function useDropdown({ props, emits, state, t, format }) {
         const newEnd = format(end, dateRangeFormat)
         state.endDate = newEnd < state.startDate ? null : newEnd
       }
-      state.hiden = false
     } else if (type === 'datetimeRange') {
       const { datetimeRangeFormat } = state
       if (!state.startDateTime && start) {
@@ -32,36 +30,34 @@ export function useDropdown({ props, emits, state, t, format }) {
         const newEnd = format(end, datetimeRangeFormat)
         state.endDateTime = newEnd < state.startDateTime ? null : newEnd
       }
-      state.hiden = false
     } else if (state.backupList && type === 'checkbox') {
       state.filterList = state.backupList
       state.checkboxGroup = []
-      state.backupList.forEach((subItem) => {
+      state.backupList?.forEach((subItem) => {
         if (hasTagItem(state, subItem.label)) {
           state.checkboxGroup.push(`${item.label}${subItem.label}`)
         }
         subItem.isFilter = false
       })
-      state.hiden = false
-    } else if (type === 'custom') {
-      state.hiden = false
     }
 
-    if (state.backupList.length && type !== 'checkbox') {
-      state.backupList.forEach((option) => {
+    if (type !== 'checkbox' && state.backupList?.length) {
+      state.backupList?.forEach((option) => {
         option.isFilter = false
         option.isChecked = hasTagItem(state, option.label)
       })
     }
 
     state.currentOperators = null
-
-    if (!((type === 'radio' || !type) && !state.backupList.length)) {
+    if (!state.backupList && !['dateRange', 'datetimeRange', 'numRange', 'custom'].includes(type)) {
+      showDropdown(state, false)
+    } else {
       showDropdown(state)
     }
   }
 
   const selectPropItem = (item) => {
+    showDropdown(state, false)
     const { field, label } = item
     state.propItem.label = label
 
@@ -74,7 +70,6 @@ export function useDropdown({ props, emits, state, t, format }) {
     if (operators?.length) {
       state.operatorValue = ''
       state.currentOperators = operators
-      state.isResetFlag = true
       showDropdown(state)
     } else {
       state.operatorValue = ':'
@@ -121,6 +116,7 @@ export function useDropdown({ props, emits, state, t, format }) {
       resetInput(state)
       return
     }
+    showDropdown(state, false)
 
     const oldValue = deepClone(state.innerModelValue)
     if ((replace || mergeTag) && index >= 0) {
@@ -132,11 +128,25 @@ export function useDropdown({ props, emits, state, t, format }) {
   }
 
   /**
+   * 使用输入选项
+   * @param val 输入框的值
+   *
+   */
+  const selectInputValue = (val: string) => {
+    if (state.propItem?.label) {
+      selectRadioItem({ label: val })
+    } else {
+      createTag()
+    }
+  }
+
+  /**
    * 选中单选标签
    * @param item 选中的标签option项
    * @param isPotential 是否为选择潜在匹配项，默认否。参数可选
    */
   const selectRadioItem = (item, isPotential = false) => {
+    showDropdown(state, false)
     // 潜在匹配项没有prevItem
     if (isPotential) {
       state.prevItem = item
@@ -173,7 +183,7 @@ export function useDropdown({ props, emits, state, t, format }) {
   }
 
   const newTagUpdateModelValue = (prevItem, propItem, tag) => {
-    const item = state.backupList.find((subItem) => subItem.label === tag)
+    const item = state.backupList?.find((subItem) => subItem.label === tag)
     updateModelValue(prevItem, item, propItem.label, tag)
   }
 
@@ -201,7 +211,11 @@ export function useDropdown({ props, emits, state, t, format }) {
       // 无label的情况
     } else {
       const { items, defaultField } = props
-      const currentItem = defaultField ? items.find((item) => item.field === defaultField) : state.allTypeAttri
+      const currentItem =
+        items.find((item) => {
+          const { regexp } = item
+          return regexp && regexp.test(state.inputValue)
+        }) || (defaultField ? items.find((item) => item.field === defaultField) : state.allTypeAttri)
       const { replace, type, mergeTag } = currentItem
       const tagList =
         (type !== 'checkbox' && replace) || (type === 'checkbox' && mergeTag)
@@ -210,7 +224,7 @@ export function useDropdown({ props, emits, state, t, format }) {
 
       if (currentItem?.options?.length) {
         state.backupList = [...currentItem.options]
-        state.backupList.forEach((item) => {
+        state.backupList?.forEach((item) => {
           const label = item.value || item.label
           if (tagList.includes(label)) {
             item.isChecked = true
@@ -247,5 +261,5 @@ export function useDropdown({ props, emits, state, t, format }) {
     emits('help')
   }
 
-  return { selectPropItem, selectRadioItem, createTag, helpClick, setOperator }
+  return { selectPropItem, selectRadioItem, selectInputValue, createTag, helpClick, setOperator }
 }
