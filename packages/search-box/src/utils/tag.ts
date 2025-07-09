@@ -1,6 +1,6 @@
 import type { ISearchBoxNewTag } from '../index.type'
 import { deepClone } from './clone'
-import { showDropdown, showPopover } from './dropdown'
+import { showPopover } from './dropdown'
 
 /**
  * 判断是否已选择此标签
@@ -20,7 +20,6 @@ export const hasTagItem = (state, itemValue, itemLabel = '') => {
  * @param state searchbox的state变量
  */
 export const resetInput = (state) => {
-  state.isResetFlag = false
   state.propItem = {}
   state.inputValue = ''
 }
@@ -37,6 +36,7 @@ export const resetInput = (state) => {
  * @param oldValue 表示旧的model-value值
  */
 export const emitChangeModelEvent = ({ emits, state, ...args }) => {
+  showPopover(state, false)
   const { tagList = null, index = -1, newTag = null, newValue = null, oldValue = null, isEdit } = args
   if (!isEdit) {
     resetInput(state)
@@ -54,8 +54,6 @@ export const emitChangeModelEvent = ({ emits, state, ...args }) => {
     state.innerModelValue.push(...tagList)
   }
   const { innerModelValue } = state
-  showDropdown(state, false)
-  showPopover(state, false)
   emits('update:modelValue', innerModelValue)
   emits('change', deepClone(state.innerModelValue), oldVal)
 }

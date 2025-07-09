@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-
 import { dataSource } from './data-source'
 
 const tags = ref([

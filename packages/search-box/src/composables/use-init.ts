@@ -1,7 +1,7 @@
 import { showDropdown, showPopover } from '../utils/dropdown'
+import { hasTagItem } from '../utils/tag'
 
 export function useInit({ props, state }) {
-  const { instance } = state
   const initItems = () => {
     state.groupItems = {}
     state.recordItems.forEach((item) => {
@@ -12,13 +12,31 @@ export function useInit({ props, state }) {
         state.groupItems[groupKey] = [{ ...item }]
         state.matchItems[groupKey] = { attr: [], attrValue: [] }
       }
+      if (state.prevItem && item.field === state.prevItem.field && item !== state.prevItem) {
+        const { options, type } = item
+        state.prevItem = item
+        if (options?.length) {
+          state.backupList = options
+        }
+        if (type === 'checkbox') {
+          state.filterList = state.backupList
+          state.checkboxGroup = []
+          state.backupList?.forEach((subItem) => {
+            const { label } = subItem
+            if (hasTagItem(state, label)) {
+              state.checkboxGroup.push(`${item.label}${label}`)
+            }
+            subItem.isFilter = false
+          })
+        }
+        showDropdown(state)
+      }
     })
   }
 
   const handleClick = (e) => {
     const { backupPrevItem, prevItem } = state
     e.stopPropagation()
-    state.isResetFlag = true
     if (props.editable) {
       state.popoverVisible = false
       state.currentEditValue = []
@@ -27,7 +45,10 @@ export function useInit({ props, state }) {
       }
     }
 
-    if (!state.isShowPanel || props.items.length === 0) {
+    if (
+      (state.hasBackupList && (state.backupList?.length === 0 || !state.backupList) && !state.inputValue) ||
+      props.items.length === 0
+    ) {
       showDropdown(state, false)
     } else {
       showDropdown(state)
@@ -44,9 +65,7 @@ export function useInit({ props, state }) {
     }
 
     state.isMouseDown = false
-    if (instance?.refs?.dropdownRef?.state?.visible) {
-      showDropdown(state, false)
-    }
+    showDropdown(state, false)
   }
 
   const watchMouseDown = () => {

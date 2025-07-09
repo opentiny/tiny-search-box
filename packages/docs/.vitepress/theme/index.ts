@@ -1,4 +1,3 @@
-import { use } from './../../../../.history/packages/search-box/src/index_20250428162116'
 import DefaultTheme from 'vitepress/theme'
 import { NaiveUIContainer } from '@vitepress-demo-preview/component'
 import '@vitepress-demo-preview/component/dist/style.css' // 导入 Font Awesome 图标

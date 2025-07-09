@@ -20,7 +20,7 @@ export function usePlaceholder({ props, state, t }) {
           setPlaceholder(placeholder)
         } else if (type === 'map') {
           setPlaceholder(t('tvp.tvpSearchbox.tagPlaceholder'))
-        } else if (state.backupList.length) {
+        } else if (state.backupList?.length) {
           setPlaceholder(t('tvp.tvpSearchbox.dynamicPlaceholder', { newValue }))
         } else {
           setPlaceholder(t('tvp.tvpSearchbox.addPlaceholder'))
@@ -31,7 +31,6 @@ export function usePlaceholder({ props, state, t }) {
         } else {
           setPlaceholder(props.emptyPlaceholder)
         }
-        !state.hiden && (state.hiden = true)
       }
     }
   )

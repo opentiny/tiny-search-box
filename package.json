@@ -4,7 +4,7 @@
   "license": "MIT",
   "packageManager": "pnpm@9.14.4",
   "scripts": {
-    "dev:docs": "pnpm -F @opentiny/vue-search-box-docs docs:dev",
+    "dev": "pnpm -F @opentiny/vue-search-box-docs docs:dev",
     "build:docs": "pnpm -F @opentiny/vue-search-box-docs docs:build",
     "build": "pnpm -F @opentiny/vue-search-box build",
     "pub": "pnpm -F @opentiny/vue-search-box publish --no-git-checks"

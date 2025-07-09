@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { reactive, ref } from 'vue'
-
 import { data } from './group-key-data'
 
 const tags = ref([])

@@ -13,13 +13,6 @@ test('时间长度限制', async ({ page }) => {
     .nth(1)
     .click()
   await page.getByRole('textbox').nth(3).click()
-  await page.getByRole('button', { name: '下个月' }).dblclick()
-  await page.getByRole('button', { name: '下个月' }).click()
-  await page.getByRole('button', { name: '下个月' }).click()
-  await page.getByRole('button', { name: '下个月' }).click()
-  await page.getByRole('button', { name: '下个月' }).click()
-  await page.getByRole('button', { name: '下个月' }).click()
-  await page.getByRole('button', { name: '下个月' }).click()
   await page.getByRole('button', { name: '下个月' }).click()
   await page.getByRole('cell', { name: '12' }).locator('div').click()
   await page.getByRole('button', { name: '确认' }).click()
@@ -27,7 +20,7 @@ test('时间长度限制', async ({ page }) => {
 
   await page.getByText('可选时间跨度为366.0天内').isVisible
   await page.getByTitle('值不能为空').isVisible
-  await page.locator('rect').nth(1).click()
+  await page.getByRole('textbox').nth(3).click()
   await page.getByRole('cell', { name: '11' }).locator('span').click()
   await page.getByRole('button', { name: '确认' }).click()
 
@@ -56,5 +49,5 @@ test('时间长度限制', async ({ page }) => {
   await page.getByRole('rowgroup').getByText('30').nth(1).click()
   await page.getByRole('button', { name: '确定' }).click()
   await page.getByRole('button', { name: '确认' }).click()
-  await expect(tags.last()).toHaveText('时间日期 : 2024/07/01 00:00:00-2024/12/30 00:00:00')
+  await expect(tags.last()).toHaveText('时间日期 : 2025/03/01 00:00:00-2025/08/30 00:00:00')
 })

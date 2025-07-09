@@ -12,10 +12,10 @@ export function useNumRange({ props, state, t, emits }) {
 
     const newTag = await getVerifyNumTag(instance, state, props)
     if (newTag) {
+      showDropdown(state, false)
       const newValue = props.modelValue.filter((prev) => prev.type !== newTag.type || prev.field !== newTag.field)
       newValue.push(newTag)
       emitChangeModelEvent({ emits, state, newValue })
-      showDropdown(state, false)
     } else {
       showDropdown(state)
     }

@@ -12,10 +12,10 @@ export function useDatePicker({ props, state, emits }) {
     }
     const newTag = await getVerifyDateTag(instance, state, props, isDateTimeType)
     if (newTag) {
+      showDropdown(state, false)
       const newValue = props.modelValue.filter((prev) => prev.type !== newTag.type || prev.field !== newTag.field)
       newValue.push(newTag)
       emitChangeModelEvent({ emits, state, newValue })
-      showDropdown(state, false)
     } else {
       showDropdown(state)
     }

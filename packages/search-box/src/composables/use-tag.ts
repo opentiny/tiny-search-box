@@ -16,17 +16,19 @@ export function useTag({ props, state, emits }) {
   }
 
   const deleteTag = (tag) => {
+    showDropdown(state, false)
     changeIsChecked(tag)
     const newValue = props.modelValue.filter((item) => item !== tag)
     emitChangeModelEvent({ emits, state, newValue })
   }
 
   const clearTag = () => {
+    showDropdown(state, false)
     props.modelValue.forEach((item) => changeIsChecked(item))
     state.propItem = {}
     state.inputValue = ''
     emitChangeModelEvent({ emits, state, newValue: [] })
-    showDropdown(state, false)
+    emits('clear')
   }
 
   const backspaceDeleteTag = () => {
@@ -38,12 +40,14 @@ export function useTag({ props, state, emits }) {
       return
     }
     if (lastInputValue.value === '' && state.inputValue === '') {
+      showDropdown(state, false)
       const lastIndex = props.modelValue.length - 1
       changeIsChecked(props.modelValue[lastIndex])
       const newValue = state.innerModelValue.slice(0, props.modelValue.length - 1)
       emitChangeModelEvent({ emits, state, newValue })
     }
     lastInputValue.value = state.inputValue
+    state?.instance?.refs?.inputRef.$el.click()
   }
 
   return {

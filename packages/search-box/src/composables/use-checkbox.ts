@@ -1,12 +1,13 @@
 import { computed } from 'vue'
 import { hasTagItem, createNewTag, getTagId, emitChangeModelEvent } from '../utils/tag'
 import { deepClone, omitObj } from '../utils/clone'
+import { showDropdown } from '../utils/dropdown'
 
 export function useCheckbox({ props, state, emits }) {
   const selectCheckbox = (confirm: boolean) => {
+    showDropdown(state, false)
     const { checkboxGroup, prevItem, propItem } = state
     const rest = omitObj(prevItem)
-    state.hiden = true
     if (confirm) {
       const tagList = []
       const oldValue = deepClone(state.innerModelValue)
@@ -18,7 +19,7 @@ export function useCheckbox({ props, state, emits }) {
         const hasTagIndex = indexMap.get(prevLabel)
         hasTagIndex !== undefined && state.innerModelValue.splice(hasTagIndex, 1)
 
-        state.backupList.forEach((item) => {
+        state.backupList?.forEach((item) => {
           const { label } = item
           const checkboxLabel = `${prevLabel}${label}`
           const hasItem = checkboxGroup.includes(checkboxLabel)
@@ -37,7 +38,7 @@ export function useCheckbox({ props, state, emits }) {
       } else {
         const { valueMap } = state
         const indexList = []
-        state.backupList.forEach((item) => {
+        state.backupList?.forEach((item) => {
           const { label } = item
           const value = `${prevLabel}${label}`
           const hasItem = checkboxGroup.includes(value)
@@ -64,27 +65,10 @@ export function useCheckbox({ props, state, emits }) {
     }
   }
 
-  const isIndeterminate = computed(
-    () => state.checkboxGroup.length > 0 && state.checkboxGroup.length !== state.filterList.length
-  )
-
-  const checkAll = computed({
-    get: () => state.checkboxGroup.length && state.checkboxGroup.length === state.filterList.length,
-    set: (val) => {
-      if (val) {
-        state.checkboxGroup = state.filterList.flatMap((item) => `${state.prevItem.label}${item.label}`)
-      } else {
-        state.checkboxGroup = []
-      }
-    }
-  })
-
   const isShowClose = computed(() => props.modelValue.length || state.propItem.label || state.inputValue)
 
   return {
     selectCheckbox,
-    isIndeterminate,
-    checkAll,
     isShowClose
   }
 }
