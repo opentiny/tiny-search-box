@@ -38,8 +38,6 @@ jobs:
         run: pnpm i --no-frozen-lockfile
       - name: Build site
         run: pnpm build:docs
-      - name: Build projects
-        run: pnpm build:projects
       - name: Setup Pages
         uses: actions/configure-pages@v2
       - name: Build with Jekyll
