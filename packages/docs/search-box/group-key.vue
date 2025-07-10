@@ -7,5 +7,7 @@ const items = reactive(data)
 </script>
 
 <template>
-  <tiny-search-box v-model="tags" :items="items" />
+  <ClientOnly>
+    <tiny-search-box v-model="tags" :items="items" />
+  </ClientOnly>
 </template>

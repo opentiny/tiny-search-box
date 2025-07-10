@@ -14,7 +14,7 @@ import TinyPopover from '@opentiny/vue-popover'
 import TinySelect from '@opentiny/vue-select'
 import TinyOption from '@opentiny/vue-option'
 import { iconSearch, iconClose, iconHelpQuery } from '@opentiny/vue-icon'
-import { formatDateByPattern as format } from '@opentiny/utils'
+import { format } from './utils/date.ts'
 import { t } from './index.ts'
 import { useTag } from './composables/use-tag'
 import { useDropdown } from './composables/use-dropdown'
@@ -274,15 +274,19 @@ watch(
 )
 
 onMounted(() => {
-  document.addEventListener('click', watchOutsideClick)
-  document.addEventListener('mousedown', watchMouseDown)
-  document.addEventListener('mousemove', watchMouseMove)
+  if (typeof document !== 'undefined') {
+    document.addEventListener('click', watchOutsideClick)
+    document.addEventListener('mousedown', watchMouseDown)
+    document.addEventListener('mousemove', watchMouseMove)
+  }
 })
 
 onBeforeUnmount(() => {
-  document.removeEventListener('click', watchOutsideClick)
-  document.removeEventListener('mousedown', watchMouseDown)
-  document.removeEventListener('mousemove', watchMouseMove)
+  if (typeof document !== 'undefined') {
+    document.removeEventListener('click', watchOutsideClick)
+    document.removeEventListener('mousedown', watchMouseDown)
+    document.removeEventListener('mousemove', watchMouseMove)
+  }
 })
 
 const eventsMap = {
@@ -346,6 +350,7 @@ defineExpose({
           class="tvp-search-box__dropdown"
           :show-icon="false"
           lazy-show-popper
+          :close-on-click-outside="true"
         >
           <tiny-input
             ref="inputRef"
@@ -384,7 +389,11 @@ defineExpose({
                   }"
                   @click.stop
                 ></slot>
-                <TinySearchBoxFirstLevelPanel v-else :state="state" @events="handleEvents"></TinySearchBoxFirstLevelPanel>
+                <TinySearchBoxFirstLevelPanel
+                  v-else
+                  :state="state"
+                  @events="handleEvents"
+                ></TinySearchBoxFirstLevelPanel>
               </div>
               <!-- 有label的情况 -->
               <div v-show="state.propItem.label">
@@ -399,7 +408,7 @@ defineExpose({
                   }"
                   @click.stop
                 ></slot>
-                <TinySearchBoxSecondLevelPanel 
+                <TinySearchBoxSecondLevelPanel
                   v-else-if="state.prevItem.type !== 'custom'"
                   :state="state"
                   :picker-options="pickerOptions"

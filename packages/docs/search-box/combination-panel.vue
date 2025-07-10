@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { ref, reactive } from 'vue'
 import { TinySearchBoxFirstLevelPanel, TinySearchBoxSecondLevelPanel } from '@opentiny/vue-search-box'
-import { TinyInput } from '@opentiny/vue'
-import { iconChevronLeft, iconSearch, } from '@opentiny/vue-icon'
+import TinyInput from '@opentiny/vue-input'
+import { iconChevronLeft, iconSearch } from '@opentiny/vue-icon'
 
 const TinyIconChevronLeft = iconChevronLeft()
 const TinyIconSearch = iconSearch()
@@ -59,33 +59,35 @@ const items = reactive([
 </script>
 
 <template>
-  <tiny-search-box v-model="tags" :items="items">
-    <!-- 一级自由组合面板 -->
-    <template #first-panel="{ state, handleEvents }">
-      <div class="slot-header">
-        <tiny-input
-          v-model="input1"
-          placeholder="搜索筛选条件"
-          :prefix-icon="TinyIconSearch"
-          input-box-type="underline"
-        ></tiny-input>
-      </div>
-      <TinySearchBoxFirstLevelPanel :state="state" @events="handleEvents" />
-    </template>
-    <!-- 二级自由组合面板，优先级高于type=custom -->
-    <template #second-panel="{ state, pickerOptions, handleEvents, back }">
-      <div class="slot-header">
-        <TinyIconChevronLeft class="back-svg" @click="back" />
-        <tiny-input
-          v-model="input2"
-          placeholder="输入关键字搜索"
-          :prefix-icon="TinyIconSearch"
-          input-box-type="underline"
-        ></tiny-input>
-      </div>
-      <TinySearchBoxSecondLevelPanel :state="state" :picker-options="pickerOptions" @events="handleEvents" />
-    </template>
-  </tiny-search-box>
+  <ClientOnly>
+    <tiny-search-box v-model="tags" :items="items">
+      <!-- 一级自由组合面板 -->
+      <template #first-panel="{ state, handleEvents }">
+        <div class="slot-header">
+          <tiny-input
+            v-model="input1"
+            placeholder="搜索筛选条件"
+            :prefix-icon="TinyIconSearch"
+            input-box-type="underline"
+          ></tiny-input>
+        </div>
+        <TinySearchBoxFirstLevelPanel :state="state" @events="handleEvents" />
+      </template>
+      <!-- 二级自由组合面板，优先级高于type=custom -->
+      <template #second-panel="{ state, pickerOptions, handleEvents, back }">
+        <div class="slot-header">
+          <TinyIconChevronLeft class="back-svg" @click="back" />
+          <tiny-input
+            v-model="input2"
+            placeholder="输入关键字搜索"
+            :prefix-icon="TinyIconSearch"
+            input-box-type="underline"
+          ></tiny-input>
+        </div>
+        <TinySearchBoxSecondLevelPanel :state="state" :picker-options="pickerOptions" @events="handleEvents" />
+      </template>
+    </tiny-search-box>
+  </ClientOnly>
 </template>
 
 <style scoped>
