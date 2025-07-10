@@ -57,7 +57,6 @@ export function useDropdown({ props, emits, state, t, format }) {
   }
 
   const selectPropItem = (item) => {
-    showDropdown(state, false)
     const { field, label } = item
     state.propItem.label = label
 

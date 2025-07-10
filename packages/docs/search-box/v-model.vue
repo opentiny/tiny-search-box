@@ -18,5 +18,7 @@ const tags = ref([
 </script>
 
 <template>
-  <tiny-search-box :items="dataSource" v-model="tags" default-field="ip" />
+  <ClientOnly>
+    <tiny-search-box :items="dataSource" v-model="tags" default-field="ip" />
+  </ClientOnly>
 </template>

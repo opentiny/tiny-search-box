@@ -6,5 +6,7 @@ const tags = ref([])
 </script>
 
 <template>
-  <tiny-search-box v-model="tags" :items="dataSource" />
+  <ClientOnly>
+    <tiny-search-box v-model="tags" :items="dataSource" />
+  </ClientOnly>
 </template>

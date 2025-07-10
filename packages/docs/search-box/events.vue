@@ -146,14 +146,16 @@ const tagClick = (tag) => {
 </script>
 
 <template>
-  <tiny-search-box
-    v-model="tags"
-    :items="items"
-    editable
-    @first-level-select="FirstLevelSelect"
-    @search="onSearch"
-    @change="onChange"
-    @clear="onClear"
-    @tag-click="tagClick"
-  />
+  <ClientOnly>
+    <tiny-search-box
+      v-model="tags"
+      :items="items"
+      editable
+      @first-level-select="FirstLevelSelect"
+      @search="onSearch"
+      @change="onChange"
+      @clear="onClear"
+      @tag-click="tagClick"
+    />
+  </ClientOnly>
 </template>

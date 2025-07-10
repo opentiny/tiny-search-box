@@ -7,5 +7,7 @@ const defaultField = ref('testRegion')
 </script>
 
 <template>
-  <tiny-search-box v-model="tags" :default-field="defaultField" :items="dataSource" />
+  <ClientOnly>
+    <tiny-search-box v-model="tags" :default-field="defaultField" :items="dataSource" />
+  </ClientOnly>
 </template>

@@ -29,7 +29,7 @@ export function useInit({ props, state }) {
             subItem.isFilter = false
           })
         }
-        showDropdown(state)
+        showDropdown(state, item.field === state.prevItem.field && item !== state.prevItem)
       }
     })
   }
@@ -56,10 +56,6 @@ export function useInit({ props, state }) {
   }
 
   const watchOutsideClick = () => {
-    if (!state.isMouseDown) {
-      return
-    }
-
     if (props.editable) {
       showPopover(state, false)
     }

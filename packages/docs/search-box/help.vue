@@ -9,6 +9,8 @@ const handleHelp = () => {
 </script>
 
 <template>
-  <tiny-search-box class="mb10" v-model="tags" :items="dataSource" :show-help="false" @help="handleHelp" />
-  <tiny-search-box v-model="tags" :items="dataSource" @help="handleHelp" />
+  <ClientOnly>
+    <tiny-search-box class="mb10" v-model="tags" :items="dataSource" :show-help="false" @help="handleHelp" />
+    <tiny-search-box v-model="tags" :items="dataSource" @help="handleHelp" />
+  </ClientOnly>
 </template>
