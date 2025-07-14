@@ -52,5 +52,7 @@ const onChange = (newFilters, oldFilters) => {
 </script>
 
 <template>
-  <tiny-search-box v-model="tags" :items="items" @change="onChange" />
+  <ClientOnly>
+    <tiny-search-box v-model="tags" :items="items" @change="onChange" />
+  </ClientOnly>
 </template>

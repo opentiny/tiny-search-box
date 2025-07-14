@@ -39,5 +39,7 @@ const potentialOptions = ref({
 </script>
 
 <template>
-  <tiny-search-box :items="items" v-model="tags" :potential-options="potentialOptions" />
+  <ClientOnly>
+    <tiny-search-box :items="items" v-model="tags" :potential-options="potentialOptions" />
+  </ClientOnly>
 </template>
