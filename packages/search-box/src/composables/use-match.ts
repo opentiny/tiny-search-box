@@ -134,6 +134,7 @@ export function useMatch({ props, state, emits }) {
           state.matchItems[groupKey].attrValue.push({
             ...option,
             ...rest,
+            options,
             hightlighStr,
             value: option.label,
             match
