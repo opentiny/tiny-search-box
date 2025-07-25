@@ -116,7 +116,7 @@ const selectPropItem = (e) => {
   events('selectPropItem', e)
 }
 
-const selectRadioItem = (e) => {
-  events('selectRadioItem', e)
+const selectRadioItem = (e, v) => {
+  events('selectRadioItem', e, v)
 }
 </script>
