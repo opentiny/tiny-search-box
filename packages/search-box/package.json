@@ -1,6 +1,6 @@
 {
   "name": "@opentiny/vue-search-box",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "",
   "homepage": "https://github.com/opentiny/tiny-search-box#readme",
   "bugs": {
@@ -24,7 +24,9 @@
     "types": "dist/types/index.d.ts",
     "style": "dist/index.less"
   },
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "keywords": [
     "search",
     "comprehensive search",
