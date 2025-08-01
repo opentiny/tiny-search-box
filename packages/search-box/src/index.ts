@@ -1,5 +1,4 @@
 import { App } from 'vue'
-import { watch } from 'vue'
 import TinySearchBox from './index.vue'
 import TinySearchBoxFirstLevelPanel from './components/first-level-panel.vue'
 import TinySearchBoxSecondLevelPanel from './components/second-level-panel.vue'
@@ -10,15 +9,18 @@ export * from './index.type'
 
 let apps
 TinySearchBox.install = function (app: App) {
-  console.info('TinySearchBox.install', app)
   apps = app
   app.component(TinySearchBox.name, TinySearchBox)
 }
 
-export const t = (key, n1) => {
-  console.info('TinySearchBox.App', apps)
-  const array = key.split('.')
-  return apps?.config?.globalProperties?.$t ? apps?.config?.globalProperties?.$t(key) : customTranslate(key, n1, 'zhCN')
+export const t = (key, params) => {
+  // 优先用全局 $t
+  if (apps?.config?.globalProperties?.$t) {
+    return apps.config.globalProperties.$t(key, params)
+  }
+  // 获取全局 lang
+  const lang = apps?.config?.globalProperties?.$i18n?.locale || 'zhCN'
+  return customTranslate(key, params, lang)
 }
 
 function customTranslate(key: string, params?: Record<string, any>, lang: 'zhCN' | 'enUS' = 'zhCN') {

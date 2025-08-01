@@ -214,6 +214,8 @@ const { initItems, watchOutsideClick, watchMouseDown, watchMouseMove, handleClic
   state
 })
 
+const lang = inject('lang')
+
 // 处理异步items数据渲染
 watch(
   () => props.items,
