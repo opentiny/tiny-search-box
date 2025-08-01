@@ -70,7 +70,6 @@ const items = reactive([
             :prefix-icon="TinyIconSearch"
             input-box-type="underline"
           ></tiny-input>
-          414444
         </div>
         <TinySearchBoxFirstLevelPanel :state="state" @events="handleEvents" />
       </template>
