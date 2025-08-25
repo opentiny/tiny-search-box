@@ -35,7 +35,8 @@ export default {
       equal: '等于',
       notEqual: '不等于',
       contain: '包含',
-      notContain: '不包含'
+      notContain: '不包含',
+      initUse: '搜索'
     }
   }
 }
