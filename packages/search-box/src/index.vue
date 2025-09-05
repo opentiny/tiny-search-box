@@ -26,7 +26,7 @@ import { useEdit } from './composables/use-edit'
 import { useCustom } from './composables/use-custom'
 import { useInit } from './composables/use-init'
 import { usePlaceholder } from './composables/use-placeholder'
-import type { ISearchBoxItem, ISearchBoxTag, ISearchBoxMatchOptions } from './index.type'
+import type { ISearchBoxItem, ISearchBoxTag, ISearchBoxMatchOptions, ISearchBoxSize } from './index.type'
 import { showDropdown, showPopover } from './utils/dropdown'
 import TinySearchBoxFirstLevelPanel from './components/first-level-panel.vue'
 import TinySearchBoxSecondLevelPanel from './components/second-level-panel.vue'
@@ -90,6 +90,11 @@ const props = defineProps({
   splitInputValue: {
     type: String,
     default: ','
+  },
+  // 尺寸
+  size: {
+    type: String as PropType<ISearchBoxSize>,
+    default: ''
   }
 })
 
@@ -312,12 +317,16 @@ defineExpose({
 </script>
 
 <template>
-  <div class="tvp-search-box" @click.stop="showPopover(state, false)">
+  <div 
+    :class="['tvp-search-box', size === 'small' ? 'tvp-search-box--small' : '']"
+    @click.stop="showPopover(state, false)"
+  >
     <tiny-icon-search class="tvp-search-box__prefix" />
     <tiny-tag
       v-for="(tag, index) in modelValue"
       :key="tag.field + index"
       closable
+      :size="size === 'small' ? 'small' : ''"
       :class="['tvp-search-box__tag', editable && tag.type !== 'map' ? 'tvp-search-box__tag-editor' : '']"
       :title="`${tag.label} ${tag.operator || ':'} ${tag.value}`"
       @close="deleteTag(tag)"
@@ -332,6 +341,7 @@ defineExpose({
       :model="state"
       :rules="state.formRules"
       :validate-type="state.validType"
+      :size="size === 'small' ? 'small' : ''"
       label-width="0px"
       message-type="block"
       class="tvp-search-box__form"
@@ -349,6 +359,7 @@ defineExpose({
           trigger="click"
           class="tvp-search-box__dropdown"
           :show-icon="false"
+          :size="size === 'small' ? 'small' : ''"
           lazy-show-popper
           :close-on-click-outside="true"
         >

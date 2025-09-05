@@ -57,6 +57,7 @@ export default defineConfig({
           { text: '潜在匹配项', link: '/examples/potential-match' },
           { text: '自定义默认搜索项', link: '/examples/default-field' },
           { text: '切分输入值', link: '/examples/split-input-value' },
+          { text: '尺寸', link: '/examples/size' },
           { text: '事件', link: '/examples/events' }
         ]
       },

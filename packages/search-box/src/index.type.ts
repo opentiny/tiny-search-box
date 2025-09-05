@@ -190,3 +190,6 @@ export interface ISearchBoxNewTag {
    */
   options?: ISearchBoxTag[]
 }
+
+// SearchBox 尺寸
+export type ISearchBoxSize = '' | 'small'
