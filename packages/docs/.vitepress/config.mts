@@ -43,6 +43,7 @@ export default defineConfig({
           { text: '默认包含筛选项', link: '/examples/v-model' },
           { text: '自动匹配', link: '/examples/auto-match' },
           { text: '自定义二级下拉面板', link: '/examples/custom-panel' },
+          { text: '自由组合面板插槽', link: '/examples/combination-panel' },
           { text: '可编辑', link: '/examples/editable' },
           { text: '没有筛选项时的占位文本', link: '/examples/empty-placeholder' },
           { text: '自定义属性分组', link: '/examples/group-key' },
