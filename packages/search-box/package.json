@@ -1,6 +1,6 @@
 {
   "name": "@opentiny/vue-search-box",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "",
   "homepage": "https://github.com/opentiny/tiny-search-box#readme",
   "bugs": {
@@ -19,7 +19,7 @@
   "style": "src/index.less",
   "publishConfig": {
     "access": "public",
-    "main": "dist/lib/index.cjs.js",
+    "main": "dist/es/index.es.js",
     "module": "dist/es/index.es.js",
     "types": "dist/types/index.d.ts",
     "style": "dist/index.less"
