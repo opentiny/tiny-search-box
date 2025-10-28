@@ -1,6 +1,6 @@
 # TinySearchBox
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-5-orange.svg?style=flat-square)](#contributors-)
+[![All Contributors](https://img.shields.io/badge/all_contributors-6-orange.svg?style=flat-square)](#contributors-)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 
 TinySearchBox is a comprehensive search component based on Vue3. It uses the TinyVue component library and follows the OpenTiny design specifications. It is easy to use and powerful. It supports single selection, multiple selection, time, time range and so on.
@@ -123,6 +123,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
       <td align="center" valign="top" width="12.5%"><a href="https://github.com/zzcr"><img src="https://avatars.githubusercontent.com/u/18521562?v=4?s=100" width="100px;" alt="ajaxzheng"/><br /><sub><b>ajaxzheng</b></sub></a><br /><a href="https://github.com/opentiny/tiny-search-box/commits?author=zzcr" title="Code">💻</a></td>
       <td align="center" valign="top" width="12.5%"><a href="https://github.com/discreted66"><img src="https://avatars.githubusercontent.com/u/190872652?v=4?s=100" width="100px;" alt="liukun"/><br /><sub><b>liukun</b></sub></a><br /><a href="https://github.com/opentiny/tiny-search-box/commits?author=discreted66" title="Code">💻</a></td>
       <td align="center" valign="top" width="12.5%"><a href="https://github.com/liangguanhui0117"><img src="https://avatars.githubusercontent.com/u/28801619?v=4?s=100" width="100px;" alt="LiangGuanhui"/><br /><sub><b>LiangGuanhui</b></sub></a><br /><a href="https://github.com/opentiny/tiny-search-box/commits?author=liangguanhui0117" title="Code">💻</a></td>
+      <td align="center" valign="top" width="12.5%"><a href="https://github.com/sf-think"><img src="https://avatars.githubusercontent.com/u/49143768?v=4?s=100" width="100px;" alt="murphy"/><br /><sub><b>murphy</b></sub></a><br /><a href="https://github.com/opentiny/tiny-search-box/commits?author=sf-think" title="Code">💻</a></td>
     </tr>
   </tbody>
 </table>
