@@ -1,9 +1,8 @@
-import { computed } from 'vue'
-import { hasTagItem, createNewTag, getTagId, emitChangeModelEvent } from '../utils/tag'
-import { deepClone, omitObj } from '../utils/clone'
-import { showDropdown } from '../utils/dropdown'
+import { hasTagItem, createNewTag, getTagId, emitChangeModelEvent } from '../utils/tag.ts'
+import { deepClone, omitObj } from '../utils/index.ts'
+import { showDropdown } from '../utils/dropdown.ts'
 
-export function useCheckbox({ props, state, emits }) {
+export function useCheckbox({ props, state, emit }) {
   const selectCheckbox = (confirm: boolean) => {
     showDropdown(state, false)
     const { checkboxGroup, prevItem, propItem } = state
@@ -58,17 +57,16 @@ export function useCheckbox({ props, state, emits }) {
           state.innerModelValue = state.innerModelValue.filter((item, index) => item && !indexList.includes(index))
         }
       }
-      emitChangeModelEvent({ emits, state, tagList, oldValue })
+      emitChangeModelEvent({ emit, state, tagList, oldValue })
     } else {
       propItem.label = ''
       state.inputValue = ''
     }
   }
 
-  const isShowClose = computed(() => props.modelValue.length || state.propItem.label || state.inputValue)
 
   return {
     selectCheckbox,
-    isShowClose
+
   }
 }

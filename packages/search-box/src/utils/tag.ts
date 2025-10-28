@@ -1,13 +1,13 @@
-import type { ISearchBoxNewTag } from '../index.type'
-import { deepClone } from './clone'
-import { showPopover } from './dropdown'
+import type { ISearchBoxNewTag } from '../index.type.ts'
+import { deepClone } from './index.ts'
+import { showPopover } from './dropdown.ts'
 
 /**
  * 判断是否已选择此标签
  * @param state searchbox的state变量
  * @param itemValue 标签的value值
  * @param itemLabel 标签的label值，可选参数，默认为空字符串，一般用于当prevItem.label为空时
- * @return 已选择则返回true，未选择则相反
+ * @return 已选择则返回true，未选择则返回false
  */
 export const hasTagItem = (state, itemValue, itemLabel = '') => {
   const { valueMap, prevItem } = state
@@ -26,7 +26,7 @@ export const resetInput = (state) => {
 
 /**
  * update:modelValue和change事件
- * @param emits vue的api
+ * @param emit vue的api
  * @param state searchbox的state变量
  * @param args 其他可选参数：
  * @param tagList 尾部添加的新标签数组
@@ -35,7 +35,7 @@ export const resetInput = (state) => {
  * @param newValue 表示替换全部的model-value值
  * @param oldValue 表示旧的model-value值
  */
-export const emitChangeModelEvent = ({ emits, state, ...args }) => {
+export const emitChangeModelEvent = ({ emit, state, ...args }) => {
   showPopover(state, false)
   const { tagList = null, index = -1, newTag = null, newValue = null, oldValue = null, isEdit } = args
   if (!isEdit) {
@@ -54,8 +54,9 @@ export const emitChangeModelEvent = ({ emits, state, ...args }) => {
     state.innerModelValue.push(...tagList)
   }
   const { innerModelValue } = state
-  emits('update:modelValue', innerModelValue)
-  emits('change', deepClone(state.innerModelValue), oldVal)
+  console.info('更新',emit,  state, innerModelValue)
+  emit('update:modelValue', innerModelValue)
+  emit('change', deepClone(state.innerModelValue), oldVal)
 }
 
 /**

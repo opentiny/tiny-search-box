@@ -1,9 +1,9 @@
-import { ref } from 'vue'
-import { showDropdown } from '../utils/dropdown'
-import { emitChangeModelEvent } from '../utils/tag'
+import { showDropdown } from '../utils/dropdown.ts'
+import { emitChangeModelEvent } from '../utils/tag.ts'
+import { deepClone } from '../utils/index.ts'
 
-export function useTag({ props, state, emits }) {
-  const lastInputValue = ref(state.inputValue)
+export function useTag({ props, state, emit }) {
+  let lastInputValue = deepClone(state.inputValue)
 
   const changeIsChecked = (tag) => {
     if (tag) {
@@ -19,7 +19,7 @@ export function useTag({ props, state, emits }) {
     showDropdown(state, false)
     changeIsChecked(tag)
     const newValue = props.modelValue.filter((item) => item !== tag)
-    emitChangeModelEvent({ emits, state, newValue })
+    emitChangeModelEvent({ emit, state, newValue })
   }
 
   const clearTag = () => {
@@ -27,8 +27,8 @@ export function useTag({ props, state, emits }) {
     props.modelValue.forEach((item) => changeIsChecked(item))
     state.propItem = {}
     state.inputValue = ''
-    emitChangeModelEvent({ emits, state, newValue: [] })
-    emits('clear')
+    emitChangeModelEvent({ emit, state, newValue: [] })
+    emit('clear')
   }
 
   const backspaceDeleteTag = () => {
@@ -39,14 +39,14 @@ export function useTag({ props, state, emits }) {
       state.propItem = {}
       return
     }
-    if (lastInputValue.value === '' && state.inputValue === '') {
+    if (lastInputValue === '' && state.inputValue === '') {
       showDropdown(state, false)
       const lastIndex = props.modelValue.length - 1
       changeIsChecked(props.modelValue[lastIndex])
       const newValue = state.innerModelValue.slice(0, props.modelValue.length - 1)
-      emitChangeModelEvent({ emits, state, newValue })
+      emitChangeModelEvent({ emit, state, newValue })
     }
-    lastInputValue.value = state.inputValue
+    lastInputValue = state.inputValue
     state?.instance?.refs?.inputRef.$el.click()
   }
 

@@ -1,6 +1,5 @@
-import { createNewTag, getTagId } from './tag'
-import { isNumber } from './type'
-import { omitObj } from './clone'
+import { createNewTag, getTagId } from './tag.ts'
+import { isNumber, omitObj } from './index.ts'
 
 /**
  * 校验正常标签的值，并返回相应的新标签
@@ -16,7 +15,7 @@ export const getVerifyTag = async (instance, state, props) => {
   let newTag = null
   let isPass = true
 
-  await instance.refs.formRef.validateField(['inputEditValue'], (errMsg) => {
+  await instance.$refs.formRef.validateField(['inputEditValue'], (errMsg) => {
     if (errMsg) {
       isPass = false
     }
@@ -70,7 +69,7 @@ export const getVerifyNumTag = async (instance, state, props) => {
   const verifyProps = [minNum, maxNum]
   let isPass = true
   let newTag = null
-  await instance.refs.formRef.validateField(verifyProps, (errMsg) => {
+  await instance.$refs.formRef.validateField(verifyProps, (errMsg) => {
     if (errMsg) {
       isPass = false
     }
@@ -118,7 +117,7 @@ export const getVerifyDateTag = async (instance, state, props, isDateTimeType) =
     verifyProps = ['startDate', 'endDate']
   }
 
-  await instance.refs.formRef.validateField(verifyProps, (errMsg) => {
+  await instance.$refs.formRef.validateField(verifyProps, (errMsg) => {
     if (errMsg) {
       isPass = false
     }

@@ -1,5 +1,5 @@
-import { showDropdown, showPopover } from '../utils/dropdown'
-import { hasTagItem } from '../utils/tag'
+import { showDropdown, showPopover } from '../utils/dropdown.ts'
+import { hasTagItem } from '../utils/tag.ts'
 
 export function useInit({ props, state }) {
   const initItems = () => {
@@ -53,6 +53,7 @@ export function useInit({ props, state }) {
     } else {
       showDropdown(state)
     }
+    console.info(22222222)
   }
 
   const watchOutsideClick = () => {

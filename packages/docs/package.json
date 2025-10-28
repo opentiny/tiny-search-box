@@ -11,8 +11,13 @@
   "dependencies": {
     "@opentiny/vue-button": "^3.22.0",
     "@opentiny/vue-input": "^3.22.0",
-    "@opentiny/vue-search-box": "workspace:^",
+    "@opentiny/vue-common": "^3.26.0",
+    "@discreted/vue-search-box": "workspace:^",
     "@opentiny/vue-theme": "^3.22.0",
+    "@opentiny/vue-theme-saas": "latest",
+    "@opentiny/vue-icon-saas": "latest",
+    "@opentiny/vue-design-saas": "latest",
+    "@opentiny/vue-config-provider": "latest",
     "@vitepress-demo-preview/component": "^2.3.2"
   },
   "devDependencies": {

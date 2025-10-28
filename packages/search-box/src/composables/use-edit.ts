@@ -1,8 +1,8 @@
-import { emitChangeModelEvent } from '../utils/tag'
-import { getVerifyNumTag, getVerifyDateTag, setStateNumRange, getVerifyTag } from '../utils/validate'
-import { showDropdown } from '../utils/dropdown'
+import { emitChangeModelEvent } from '../utils/tag.ts'
+import { getVerifyNumTag, getVerifyDateTag, setStateNumRange, getVerifyTag } from '../utils/validate.ts'
+import { showDropdown } from '../utils/dropdown.ts'
 
-export function useEdit({ props, state, t, nextTick, format, emits }) {
+export function useEdit({ props, state, t, nextTick, format, emit }) {
   const { instance } = state
   const setDropdownProps = (curTag) => {
     const { operator, value, start, end } = curTag
@@ -54,7 +54,7 @@ export function useEdit({ props, state, t, nextTick, format, emits }) {
     state.selectValue = tag.label
     state.currentModelValueIndex = index
 
-    emits('tagClick', tag)
+    emit('tagClick', tag)
     setDropdownProps(tag)
   }
 
@@ -87,7 +87,7 @@ export function useEdit({ props, state, t, nextTick, format, emits }) {
     if (newTag) {
       showDropdown(state, false)
       state.popoverVisible = false
-      emitChangeModelEvent({ emits, state, index, newTag, isEdit: true })
+      emitChangeModelEvent({ emit, state, index, newTag, isEdit: true })
     } else {
       state.popoverVisible = true
     }

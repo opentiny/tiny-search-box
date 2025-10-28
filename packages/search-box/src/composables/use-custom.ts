@@ -1,7 +1,7 @@
-import { resetInput, emitChangeModelEvent, hasTagItem } from '../utils/tag'
-import { showDropdown, showPopover } from '../utils/dropdown'
+import { resetInput, emitChangeModelEvent, hasTagItem } from '../utils/tag.ts'
+import { showDropdown, showPopover } from '../utils/dropdown.ts'
 
-export function useCustom({ state, emits }) {
+export function useCustom({ state, emit }) {
   const updateCustomValue = (customTag) => {
     showDropdown(state, false)
     const { prevItem, indexMap } = state
@@ -11,7 +11,7 @@ export function useCustom({ state, emits }) {
     if (replace && indexMap.has(label)) {
       const index = indexMap.get(label)
       const newTag = { ...prevItem, ...customTag }
-      emitChangeModelEvent({ emits, state, newTag, index })
+      emitChangeModelEvent({ emit, state, newTag, index })
 
       return
     } else if (!replace && Array.isArray(customTag)) {
@@ -25,7 +25,7 @@ export function useCustom({ state, emits }) {
         tagList.push({ ...prevItem, ...customTag })
       }
     }
-    emitChangeModelEvent({ emits, state, tagList })
+    emitChangeModelEvent({ emit, state, tagList })
   }
 
   const handleConfirm = (customTag) => {
