@@ -35,7 +35,8 @@ export default {
       equal: 'Equal',
       notEqual: 'Not equal',
       contain: 'Contain',
-      notContain: 'Does not contain'
+      notContain: 'Does not contain',
+      initUse: 'Search'
     }
   }
 }
