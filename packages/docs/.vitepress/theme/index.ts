@@ -1,7 +1,7 @@
 import DefaultTheme from 'vitepress/theme'
 import { NaiveUIContainer } from '@vitepress-demo-preview/component'
 import '@vitepress-demo-preview/component/dist/style.css' // 导入 Font Awesome 图标
-import '@opentiny/vue-search-box/src/index.less' // 导入搜索框样式
+import '@opentiny/vue-search-box-theme'
 import './index.less'
 export default {
   ...DefaultTheme,

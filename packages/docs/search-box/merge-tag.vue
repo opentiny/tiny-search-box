@@ -1,3 +1,9 @@
+<template>
+  <ClientOnly>
+    <tiny-search-box v-model="tags" :items="items" @change="onChange" />
+  </ClientOnly>
+</template>
+
 <script setup lang="ts">
 import { reactive, ref } from 'vue'
 
@@ -50,9 +56,3 @@ const onChange = (newFilters, oldFilters) => {
   console.log('changeEvent:', newFilters, oldFilters)
 }
 </script>
-
-<template>
-  <ClientOnly>
-    <tiny-search-box v-model="tags" :items="items" @change="onChange" />
-  </ClientOnly>
-</template>

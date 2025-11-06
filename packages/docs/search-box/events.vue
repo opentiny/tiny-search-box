@@ -1,3 +1,19 @@
+
+<template>
+  <ClientOnly>
+    <tiny-search-box
+      v-model="tags"
+      :items="items"
+      editable
+      @first-level-select="FirstLevelSelect"
+      @search="onSearch"
+      @change="onChange"
+      @clear="onClear"
+      @tag-click="tagClick"
+    />
+  </ClientOnly>
+</template>
+
 <script setup lang="ts">
 import { reactive, ref } from 'vue'
 
@@ -144,18 +160,3 @@ const tagClick = (tag) => {
   console.log('tagClick', tag)
 }
 </script>
-
-<template>
-  <ClientOnly>
-    <tiny-search-box
-      v-model="tags"
-      :items="items"
-      editable
-      @first-level-select="FirstLevelSelect"
-      @search="onSearch"
-      @change="onChange"
-      @clear="onClear"
-      @tag-click="tagClick"
-    />
-  </ClientOnly>
-</template>
