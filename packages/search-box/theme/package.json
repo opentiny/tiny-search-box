@@ -1,0 +1,32 @@
+{
+  "name": "@opentiny/vue-search-box-theme",
+  "version": "3.27.0",
+  "description": "Theme styles for @opentiny/vue-search-box",
+  "main": "index.css",
+  "files": [
+    "index.css"
+  ],
+  "sideEffects": [
+    "*.css"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "keywords": [
+    "search",
+    "comprehensive search",
+    "opentiny",
+    "theme",
+    "css",
+    "styles"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/opentiny/tiny-search-box.git"
+  },
+  "homepage": "https://github.com/opentiny/tiny-search-box#readme",
+  "bugs": {
+    "url": "https://github.com/opentiny/tiny-search-box/issues"
+  }
+}

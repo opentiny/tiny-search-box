@@ -43,6 +43,7 @@ export default defineConfig({
           { text: '默认包含筛选项', link: '/examples/v-model' },
           { text: '自动匹配', link: '/examples/auto-match' },
           { text: '自定义二级下拉面板', link: '/examples/custom-panel' },
+          { text: '自由组合面板插槽', link: '/examples/combination-panel' },
           { text: '可编辑', link: '/examples/editable' },
           { text: '没有筛选项时的占位文本', link: '/examples/empty-placeholder' },
           { text: '自定义属性分组', link: '/examples/group-key' },
@@ -56,6 +57,7 @@ export default defineConfig({
           { text: '潜在匹配项', link: '/examples/potential-match' },
           { text: '自定义默认搜索项', link: '/examples/default-field' },
           { text: '切分输入值', link: '/examples/split-input-value' },
+          { text: '尺寸', link: '/examples/size' },
           { text: '事件', link: '/examples/events' }
         ]
       },
