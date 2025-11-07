@@ -4,10 +4,10 @@
   </ClientOnly>
 </template>
 <script setup lang="ts">
-import { ref } from 'vue'
-import TinySearchBox from '@opentiny/vue-search-box'
-import { dataSource } from './data-source'
+import { ref } from "vue";
 
-const tags = ref([])
-const defaultField = ref('testRegion')
+import { dataSource } from "./data-source";
+
+const tags = ref([]);
+const defaultField = ref("testRegion");
 </script>

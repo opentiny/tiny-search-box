@@ -27,7 +27,7 @@ TinySearchBox.install = function (Vue) {
 TinySearchBox.version = version;
 
 /* istanbul ignore next */
-if (typeof window !== "undefined" && window.Vue) {
+if (window && typeof window !== "undefined" && window.Vue) {
   TinySearchBox.install(window.Vue);
 }
 

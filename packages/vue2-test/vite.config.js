@@ -1,10 +1,14 @@
-import { resolve } from 'path'
+import { resolve, dirname } from 'path'
+import { fileURLToPath } from 'url'
 import scriptSetupPlugin from 'unplugin-vue2-script-setup/vite'
 import { defineConfig, loadEnv } from 'vite'
 import dynamicImportPlugin from 'vite-plugin-dynamic-import'
 import { createVuePlugin as vue2Plugin } from 'vite-plugin-vue2'
 import { createSvgPlugin as vue2SvgPlugin } from 'vite-plugin-vue2-svg'
 
+const __dirname = dirname(fileURLToPath(import.meta.url))
+console.log('__dirname', __dirname)
+console.log('resolve("node_modules/vue/dist/vue.esm.js")', resolve('node_modules/vue/dist/vue.esm.js'))
 
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '')
@@ -57,10 +61,11 @@ export default defineConfig(({ mode }) => {
     resolve: {
       extensions: ['.js', '.ts', '.tsx', '.vue'],
       alias: {
-        'vue': resolve('node_modules/vue/dist/vue.esm.js'),
-        'vue$': resolve('node_modules/vue/dist/vue.esm.js'),
-        '@demos': resolve('../../packages/docs/search-box'),
-        "@opentiny/vue-button": resolve('../search-box/node_modules/@opentiny/vue-button'),
+        'vue': resolve(__dirname, 'node_modules/vue/dist/vue.esm.js'),
+        'vue$': resolve(__dirname, 'node_modules/vue/dist/vue.esm.js'),
+        'vue-template-compiler': resolve(__dirname, 'node_modules/vue-template-compiler'),
+        '@demos': resolve(__dirname, '../../packages/docs/search-box'),
+        "@opentiny/vue-button": resolve(__dirname, '../search-box/node_modules/@opentiny/vue-button'),
         "@opentiny/vue-button-group": resolve('../search-box/node_modules/@opentiny/vue-button-group'),
         "@opentiny/vue-checkbox": resolve('../search-box/node_modules/@opentiny/vue-checkbox'),
         "@opentiny/vue-checkbox-group": resolve('../search-box/node_modules/@opentiny/vue-checkbox-group'),

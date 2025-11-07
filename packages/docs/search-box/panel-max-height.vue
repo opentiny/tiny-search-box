@@ -5,10 +5,9 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
-import TinySearchBox from '@opentiny/vue-search-box'
-import { dataSource } from './data-source'
+import { ref } from "vue";
+import { dataSource } from "./data-source";
 
-const items = dataSource
-const tags = ref([])
+const items = dataSource;
+const tags = ref([]);
 </script>
