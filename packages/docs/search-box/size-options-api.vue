@@ -6,8 +6,19 @@
   </ClientOnly>
 </template>
 
-<script setup lang="ts">
-import { ref } from 'vue'
+<script>
+import TinySearchBox from '@opentiny/vue-search-box'
 import { dataSource } from './data-source'
-const tags = ref([])
+
+export default {
+  components: {
+    TinySearchBox
+  },
+  data() {
+    return {
+      tags: [],
+      dataSource
+    }
+  }
+}
 </script>

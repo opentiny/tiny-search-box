@@ -1,16 +1,21 @@
+<template>
+  <ClientOnly>
+    <tiny-search-box
+      v-model="tags"
+      :show-help="true"
+      :items="dataSource"
+      @help="handleHelp"
+    />
+  </ClientOnly>
+</template>
+  
 <script setup lang="ts">
 import { ref } from 'vue'
 import { dataSource } from './data-source'
-
 const tags = ref([])
 const handleHelp = () => {
   console.log('Help Event')
 }
 </script>
 
-<template>
-  <ClientOnly>
-    <tiny-search-box class="mb10" v-model="tags" :items="dataSource" :show-help="false" @help="handleHelp" />
-    <tiny-search-box v-model="tags" :items="dataSource" @help="handleHelp" />
-  </ClientOnly>
-</template>
+

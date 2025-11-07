@@ -1,3 +1,9 @@
+<template>
+  <ClientOnly>
+    <tiny-search-box v-model="tags" :items="dataSource" @change="onChange" />
+  </ClientOnly>
+</template>
+
 <script setup lang="ts">
 import { reactive, ref } from 'vue'
 
@@ -123,8 +129,3 @@ const onChange = (newFilters, oldFilters) => {
 }
 </script>
 
-<template>
-  <ClientOnly>
-    <tiny-search-box v-model="tags" :items="dataSource" @change="onChange" />
-  </ClientOnly>
-</template>

@@ -1,8 +1,10 @@
 import { fileURLToPath, URL } from 'node:url'
+import path from 'node:path'
 import { defineConfig, loadEnv } from 'vitepress'
 import { containerPreview, componentPreview } from '@vitepress-demo-preview/plugin'
 
 const env = loadEnv(process.env.VITE_BASE_URL!, fileURLToPath(new URL('../', import.meta.url)))
+const __dirname = fileURLToPath(new URL('.', import.meta.url))
 // https://vitepress.dev/reference/site-co nfig
 export default defineConfig({
   title: 'TinySearchBox',
@@ -10,6 +12,41 @@ export default defineConfig({
   base: env.VITE_BASE_URL || '/tiny-search-box/',
   cleanUrls: true,
   vite: {
+    resolve: {
+      alias: {
+        'vue': path.resolve(__dirname, '../node_modules/vue/dist/vue.runtime.esm-bundler.js'),
+        '@opentiny/vue-search-box': path.resolve(__dirname, '../../search-box/index.ts'),
+        '@opentiny/vue-search-box-theme': path.resolve(__dirname, '../../search-box/theme/index.less'),
+        '@opentiny/vue-button': path.resolve(__dirname, '../node_modules/@opentiny/vue-button'),
+        '@opentiny/vue-button-group': path.resolve(__dirname, '../node_modules/@opentiny/vue-button-group'),
+        '@opentiny/vue-checkbox': path.resolve(__dirname, '../node_modules/@opentiny/vue-checkbox'),
+        '@opentiny/vue-checkbox-group': path.resolve(__dirname, '../node_modules/@opentiny/vue-checkbox-group'),
+        '@opentiny/vue-date-picker': path.resolve(__dirname, '../node_modules/@opentiny/vue-date-picker'),
+        '@opentiny/vue-dropdown': path.resolve(__dirname, '../node_modules/@opentiny/vue-dropdown'),
+        '@opentiny/vue-dropdown-item': path.resolve(__dirname, '../node_modules/@opentiny/vue-dropdown-item'),
+        '@opentiny/vue-dropdown-menu': path.resolve(__dirname, '../node_modules/@opentiny/vue-dropdown-menu'),
+        '@opentiny/vue-form': path.resolve(__dirname, '../node_modules/@opentiny/vue-form'),
+        '@opentiny/vue-form-item': path.resolve(__dirname, '../node_modules/@opentiny/vue-form-item'),
+        '@opentiny/vue-icon': path.resolve(__dirname, '../node_modules/@opentiny/vue-icon'),
+        '@opentiny/vue-input': path.resolve(__dirname, '../node_modules/@opentiny/vue-input'),
+        '@opentiny/vue-loading': path.resolve(__dirname, '../node_modules/@opentiny/vue-loading'),
+        '@opentiny/vue-option': path.resolve(__dirname, '../node_modules/@opentiny/vue-option'),
+        '@opentiny/vue-popover': path.resolve(__dirname, '../node_modules/@opentiny/vue-popover'),
+        '@opentiny/vue-select': path.resolve(__dirname, '../node_modules/@opentiny/vue-select'),
+        '@opentiny/vue-tag': path.resolve(__dirname, '../node_modules/@opentiny/vue-tag'),
+        '@opentiny/vue-tooltip': path.resolve(__dirname, '../node_modules/@opentiny/vue-tooltip'),
+        '@opentiny/vue-common': path.resolve(__dirname, '../node_modules/@opentiny/vue-common'),
+        '@opentiny/vue-theme': path.resolve(__dirname, '../node_modules/@opentiny/vue-theme'),
+      }
+    },
+    optimizeDeps: {
+      exclude: ['@opentiny/vue-search-box']
+    },
+    build: {
+      rollupOptions: {
+        external: ['vue']
+      }
+    },
     ssr: {
       noExternal: [/@opentiny\//, '@opentiny/vue-search-box']
     }
@@ -34,7 +71,17 @@ export default defineConfig({
     sidebar: [
       {
         text: '简介',
-        items: [{ text: '快速开始', link: '/usage' }]
+        items: [
+          { text: '快速开始', link: '/usage' },
+          { text: '使用指南', link: '/guide/usage' }
+        ]
+      },
+      {
+        text: '指南',
+        items: [
+          { text: '国际化支持', link: '/guide/i18n' },
+          { text: 'SaaS 模式开发', link: '/guide/saas' }
+        ]
       },
       {
         text: '案例',

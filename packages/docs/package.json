@@ -9,17 +9,34 @@
     "docs:preview": "vitepress preview"
   },
   "dependencies": {
-    "@opentiny/vue-button": "^3.22.0",
-    "@opentiny/vue-input": "^3.22.0",
-    "@opentiny/vue-icon": "^3.22.0",
-    "@opentiny/vue-search-box": "workspace:^",
-    "@opentiny/vue-theme": "^3.22.0",
-    "@vitepress-demo-preview/component": "^2.3.2"
+    "@opentiny/vue-button": "^3.27.0",
+    "@opentiny/vue-button-group": "^3.27.0",
+    "@opentiny/vue-checkbox": "^3.27.0",
+    "@opentiny/vue-checkbox-group": "^3.27.0",
+    "@opentiny/vue-date-picker": "^3.27.0",
+    "@opentiny/vue-dropdown": "^3.27.0",
+    "@opentiny/vue-dropdown-item": "^3.27.0",
+    "@opentiny/vue-dropdown-menu": "^3.27.0",
+    "@opentiny/vue-form": "^3.27.0",
+    "@opentiny/vue-form-item": "^3.27.0",
+    "@opentiny/vue-icon": "^3.27.0",
+    "@opentiny/vue-input": "^3.27.0",
+    "@opentiny/vue-loading": "^3.27.0",
+    "@opentiny/vue-option": "^3.27.0",
+    "@opentiny/vue-popover": "^3.27.0",
+    "@opentiny/vue-select": "^3.27.0",
+    "@opentiny/vue-tag": "^3.27.0",
+    "@opentiny/vue-tooltip": "^3.27.0",
+    "@opentiny/vue-common": "^3.27.0",
+    "@opentiny/vue-theme": "^3.27.0",
+    "@vitepress-demo-preview/component": "^2.3.2",
+    "less": "^4.3.0"
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "^28.0.3",
     "@types/node": "^22.15.12",
     "@vitepress-demo-preview/plugin": "^1.4.0",
-    "vitepress": "^1.6.3"
+    "vitepress": "^1.6.3",
+    "vue": "^3.5.13"
   }
 }
