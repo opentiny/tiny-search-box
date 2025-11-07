@@ -1,0 +1,46 @@
+{
+  "name": "vue3-test",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "dev:saas": "vite --mode saas",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@opentiny/vue-radio-group": "^3.27.0",
+    "@opentiny/vue-config-provider": "^3.27.0",
+    "@opentiny/vue-button": "^3.27.0",
+    "@opentiny/vue-button-group": "^3.27.0",
+    "@opentiny/vue-checkbox": "^3.27.0",
+    "@opentiny/vue-checkbox-group": "^3.27.0",
+    "@opentiny/vue-date-picker": "^3.27.0",
+    "@opentiny/vue-dropdown": "^3.27.0",
+    "@opentiny/vue-dropdown-item": "^3.27.0",
+    "@opentiny/vue-dropdown-menu": "^3.27.0",
+    "@opentiny/vue-form": "^3.27.0",
+    "@opentiny/vue-form-item": "^3.27.0",
+    "@opentiny/vue-icon": "^3.27.0",
+    "@opentiny/vue-input": "^3.27.0",
+    "@opentiny/vue-loading": "^3.27.0",
+    "@opentiny/vue-option": "^3.27.0",
+    "@opentiny/vue-popover": "^3.27.0",
+    "@opentiny/vue-select": "^3.27.0",
+    "@opentiny/vue-tag": "^3.27.0",
+    "@opentiny/vue-tooltip": "^3.27.0",
+    "@opentiny/vue-common": "^3.27.0",
+    "@opentiny/vue-theme": "^3.27.0",
+    "@opentiny/vue-theme-saas": "^3.27.0",
+    "@opentiny/vue-icon-saas": "^3.27.0",
+    "@opentiny/vue-design-saas": "^3.27.0",
+    "vue-i18n": "^9.4.1",
+    "vue": "^3.5.13",
+    "less": "4.3.0"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^5.2.1",
+    "vite": "^6.2.0"
+  }
+}
