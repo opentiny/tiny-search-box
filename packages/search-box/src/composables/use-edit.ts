@@ -1,9 +1,8 @@
-import { emitChangeModelEvent } from '../utils/tag'
-import { getVerifyNumTag, getVerifyDateTag, setStateNumRange, getVerifyTag } from '../utils/validate'
-import { showDropdown } from '../utils/dropdown'
+import { emitChangeModelEvent } from '../utils/tag.ts'
+import { getVerifyNumTag, getVerifyDateTag, setStateNumRange, getVerifyTag } from '../utils/validate.ts'
+import { showDropdown } from '../utils/dropdown.ts'
 
-export function useEdit({ props, state, t, nextTick, format, emits }) {
-  const { instance } = state
+export function useEdit({ props, state, t, nextTick, format, emit, vm }) {
   const setDropdownProps = (curTag) => {
     const { operator, value, start, end } = curTag
     const { options, operators, type, mergeTag } = state.prevItem
@@ -19,15 +18,18 @@ export function useEdit({ props, state, t, nextTick, format, emits }) {
       const { datetimeRangeFormat } = state
       state.startDateTime = format(start, datetimeRangeFormat)
       state.endDateTime = format(end, datetimeRangeFormat)
-    } else {
-      if (mergeTag) {
-        state.inputEditValue = curTag.options?.flatMap((item) => item.label)
-        state.currentEditSelectTags = state.inputEditValue
       } else {
-        state.inputEditValue = value
+        if (mergeTag) {
+          const labels = curTag.options?.flatMap((item) => item.label) || []
+          // 多选编辑态，tiny-select multiple 需要数组
+          state.inputEditValue = labels
+          state.currentEditSelectTags = labels
+        } else {
+          // 其他场景使用字符串
+          state.inputEditValue = Array.isArray(value) ? value.join(',') : (value || '')
+        }
+        state.currentEditValue = options
       }
-      state.currentEditValue = options
-    }
     state.operatorValue = operator
     state.currentOperators = operators
   }
@@ -42,7 +44,7 @@ export function useEdit({ props, state, t, nextTick, format, emits }) {
     const dom = e.target.classList.contains('tiny-tag') ? e.target : e.srcElement.parentElement
 
     nextTick(() => {
-      const { popoverRef } = instance.refs
+      const { popoverRef } = state.instance.$refs
       popoverRef.state.referenceElm = dom
       popoverRef.state.popperElm && (popoverRef.state.popperElm.style.display = 'none')
       popoverRef.doDestroy()
@@ -54,7 +56,7 @@ export function useEdit({ props, state, t, nextTick, format, emits }) {
     state.selectValue = tag.label
     state.currentModelValueIndex = index
 
-    emits('tagClick', tag)
+    emit('tagClick', tag)
     setDropdownProps(tag)
   }
 
@@ -75,19 +77,19 @@ export function useEdit({ props, state, t, nextTick, format, emits }) {
 
     let newTag = null
     if (prevItem.type === 'numRange') {
-      newTag = await getVerifyNumTag(instance, state, props)
+      newTag = await getVerifyNumTag(state.instance, state, props)
     } else if (prevItem.type === 'dateRange') {
-      newTag = await getVerifyDateTag(instance, state, props, false)
+      newTag = await getVerifyDateTag(state.instance, state, props, false)
     } else if (prevItem.type === 'datetimeRange') {
-      newTag = await getVerifyDateTag(instance, state, props, true)
+      newTag = await getVerifyDateTag(state.instance, state, props, true)
     } else {
-      newTag = await getVerifyTag(instance, state, props)
+      newTag = await getVerifyTag(state.instance, state, props)
     }
 
     if (newTag) {
       showDropdown(state, false)
       state.popoverVisible = false
-      emitChangeModelEvent({ emits, state, index, newTag, isEdit: true })
+      emitChangeModelEvent({ emit, state, nextTick, index, newTag, isEdit: true })
     } else {
       state.popoverVisible = true
     }

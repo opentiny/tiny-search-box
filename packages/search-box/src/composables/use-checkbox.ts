@@ -1,9 +1,8 @@
-import { computed } from 'vue'
-import { hasTagItem, createNewTag, getTagId, emitChangeModelEvent } from '../utils/tag'
-import { deepClone, omitObj } from '../utils/clone'
-import { showDropdown } from '../utils/dropdown'
+import { hasTagItem, createNewTag, getTagId, emitChangeModelEvent } from '../utils/tag.ts'
+import { deepClone, omitObj } from '../utils/index.ts'
+import { showDropdown } from '../utils/dropdown.ts'
 
-export function useCheckbox({ props, state, emits }) {
+export function useCheckbox({ props, state, emit, nextTick }) {
   const selectCheckbox = (confirm: boolean) => {
     showDropdown(state, false)
     const { checkboxGroup, prevItem, propItem } = state
@@ -55,20 +54,22 @@ export function useCheckbox({ props, state, emits }) {
           }
         })
         if (indexList.length) {
-          state.innerModelValue = state.innerModelValue.filter((item, index) => item && !indexList.includes(index))
+          const filtered = state.innerModelValue.filter((item, index) => item && !indexList.includes(index))
+          // 直接通过 newValue 强制同步到 modelValue（Vue2 需要显式触发）
+          emitChangeModelEvent({ emit, state, nextTick, newValue: filtered, oldValue })
+          return
         }
       }
-      emitChangeModelEvent({ emits, state, tagList, oldValue })
+      emitChangeModelEvent({ emit, state, nextTick, tagList, oldValue })
     } else {
-      propItem.label = ''
+      state.propItem = { ...propItem, label: '' }
       state.inputValue = ''
     }
   }
 
-  const isShowClose = computed(() => props.modelValue.length || state.propItem.label || state.inputValue)
 
   return {
     selectCheckbox,
-    isShowClose
+
   }
 }

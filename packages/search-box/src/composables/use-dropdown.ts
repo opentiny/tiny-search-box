@@ -1,10 +1,10 @@
-import { hasTagItem, resetInput, createNewTag, getTagId, emitChangeModelEvent } from '../utils/tag'
-import { showDropdown } from '../utils/dropdown'
-import { setStateNumRange } from '../utils/validate'
-import { deepClone, omitObj } from '../utils/clone'
+import { hasTagItem, resetInput, createNewTag, getTagId, emitChangeModelEvent } from '../utils/tag.ts'
+import { showDropdown } from '../utils/dropdown.ts'
+import { setStateNumRange } from '../utils/validate.ts'
+import { deepClone, omitObj } from '../utils/index.ts'
 
-export function useDropdown({ props, emits, state, t, format }) {
-  const { instance } = state
+export function useDropdown({ props, emit, state, t, format, nextTick, vm }) {
+  const instance = vm || state.instance
   const showValueItem = (item) => {
     const { start, end, type } = item
     state.backupList = item.options
@@ -58,11 +58,13 @@ export function useDropdown({ props, emits, state, t, format }) {
 
   const selectPropItem = (item) => {
     const { field, label } = item
-    state.propItem.label = label
 
-    emits('first-level-select', field)
+    // 创建新对象而不是直接修改属性，确保 Vue 2 响应式检测
+    state.propItem = { ...state.propItem, label }
 
-    const inputRef = instance.refs.inputRef
+    emit('first-level-select', field)
+
+    const inputRef = instance.$refs?.inputRef
     state.prevItem = item
     state.backupPrevItem = item
     const { operators } = item
@@ -118,14 +120,16 @@ export function useDropdown({ props, emits, state, t, format }) {
     showDropdown(state, false)
 
     const oldValue = deepClone(state.innerModelValue)
+    let newValue = [] as any[]
     if ((replace || mergeTag) && index >= 0) {
-      state.innerModelValue.splice(index, 1)
+      const cloned = [...state.innerModelValue]
+      cloned.splice(index, 1)
+      newValue = [...cloned, newTag]
+    } else {
+      newValue = [...state.innerModelValue, newTag]
     }
-    state.innerModelValue.push(newTag)
-    const newValue = state.innerModelValue
-    emitChangeModelEvent({ emits, state, newValue, oldValue })
+    emitChangeModelEvent({ emit, state, newValue, oldValue })
   }
-
   /**
    * 使用输入选项
    * @param val 输入框的值
@@ -154,7 +158,7 @@ export function useDropdown({ props, emits, state, t, format }) {
 
     const { prevItem } = state
     const value = item.value || item.label
-    const inputRef = instance.refs.inputRef
+    const inputRef = instance.$refs?.inputRef
     if (!hasTagItem(state, value)) {
       const tagLabel = state.propItem.label || item.label
       updateModelValue(prevItem, item, tagLabel, value)
@@ -177,7 +181,7 @@ export function useDropdown({ props, emits, state, t, format }) {
         return
       }
     } else {
-      emits('search', state.innerModelValue)
+      emit('search', state.innerModelValue)
     }
   }
 
@@ -247,7 +251,7 @@ export function useDropdown({ props, emits, state, t, format }) {
       // 输入不为空的情况
       const { maxlength } = props
       if (maxlength && maxlength < inputValue.length) {
-        emits('exceed', maxlength)
+        emit('exceed', maxlength)
         return
       }
 
@@ -257,7 +261,7 @@ export function useDropdown({ props, emits, state, t, format }) {
 
   // 帮助图标点击事件
   const helpClick = () => {
-    emits('help')
+    emit('help')
   }
 
   return { selectPropItem, selectRadioItem, selectInputValue, createTag, helpClick, setOperator }
