@@ -69,7 +69,6 @@
       &__tags-group {
         min-height: 32px;
         max-height: 82px;
-        padding: 2px;
         width: 100%;
         border: 1px solid #c2c2c2;
         border-radius: 6px;
@@ -239,6 +238,7 @@
     white-space: nowrap;
     vertical-align: middle;
     font-size: var(--tvp-SearchBox-tag-font-size);
+    color: var(--tvp-SearchBox-dropdown-desc-text-color);
 
     span {
       padding-left: 8px;
@@ -284,12 +284,10 @@
   &__bottom-btn,
   &__checkbox-btn {
     display: flex;
-    width: 100%;
+    margin: 0 10px;
     border-top: 1px solid var(--tvp-SearchBox-dropdown-btn-group-border-color);
     margin-top: var(--tvp-SearchBox-dropdown-btn-group-margin-top);
     padding-top: var(--tvp-SearchBox-dropdown-btn-group-padding-top);
-    padding-right: 10px;
-    gap: 5px;
     justify-content: flex-end;
     padding-bottom: var(--tvp-SearchBox-dropdown-btn-group-padding-bottom);
 
@@ -298,9 +296,11 @@
     }
   }
 
-  &__checkbox-btn {
-    padding-left: 10px;
+  &__bottom-btn {
+    margin-right: 0px;
+    margin-left: 0px;
   }
+
 
   &__filter-type {
     display: inline-block;
@@ -321,14 +321,12 @@
 
   &__filter-item {
     color: var(--tvp-SearchBox-search-filter-text-color);
+    background-color: var(--tvp-SearchBox-bg-color);
   }
 
   &__dropdown-item.@{dropdown-tiny-cls}-item {
-    width: 100%;
-    max-width: 100%;
-    background: inherit;
 
-    & > div {
+    .@{dropdown-tiny-cls}-item__content.@{dropdown-tiny-cls}-menu__item-content{
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -340,9 +338,6 @@
     }
   }
 
-  &__dropdown-item-init {
-    background-color: #f5f5f5;
-  }
 
   // 空白处可以选中复选框
   &__checkbox-item {
@@ -356,6 +351,7 @@
       width: 100%;
       overflow: hidden;
       text-overflow: ellipsis;
+      padding-top: 4px;
     }
 
     .@{dropdown-tiny-cls}-item__wrap {
@@ -363,6 +359,7 @@
     }
     .@{checkbox-tiny-cls} {
       padding: 6px 10px;
+      padding-left: 0;
     }
   }
 
@@ -385,8 +382,8 @@
   }
 
   &__panel-box {
-    width: 100%;
     padding: 0px 10px;
+    overflow: hidden;
     color: var(--tvp-SearchBox-dropdown-desc-text-color);
   }
 
@@ -394,7 +391,6 @@
   &__number-item.@{form-tiny-cls}-item {
     padding-bottom: 8px;
     margin-bottom: 0;
-    width: 200px;
 
     & > div {
       width: 100%;

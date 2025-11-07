@@ -1,38 +1,3 @@
-<script setup lang="ts">
-import { reactive, ref, shallowRef } from 'vue'
-
-const tags = ref([
-  {
-    'label': '选择人员',
-    'field': 'autocomplete',
-    'type': 'custom',
-    'replace': true,
-    'slotName': 'autocomplete',
-    'value': '5656'
-  }
-])
-const items = reactive([
-  {
-    label: '选择人员',
-    field: 'autocomplete',
-    type: 'custom',
-    replace: true, // 支持单选
-    slotName: 'autocomplete' // 定义此属性类型对应的插槽名，并在以下的模板层使用
-  },
-  {
-    label: '其他自定义',
-    field: 'other',
-    type: 'custom',
-    slotName: 'other' // 定义此属性类型对应的插槽名
-  }
-])
-
-const onChange = (newFilters, oldFilters) => {
-  console.log('changeEvent:', newFilters, oldFilters)
-}
-
-</script>
-
 <template>
   <ClientOnly>
     <tiny-search-box v-model="tags" :items="items" editable @change="onChange">
@@ -56,8 +21,44 @@ const onChange = (newFilters, oldFilters) => {
       </template>
       <!-- 编辑状态下：other对应的自定义二级面板 -->
       <template #other-edit="scope">
-        <span @click="scope.onConfirm({ value: 'other' })">我是other对应的编辑态自定义面板</span>
+        <span @click="scope.onConfirm({ value: 'other' })"
+          >我是other对应的编辑态自定义面板</span
+        >
       </template>
     </tiny-search-box>
   </ClientOnly>
 </template>
+
+<script setup lang="ts">
+import { reactive, ref, shallowRef } from "vue";
+
+const tags = ref([
+  {
+    label: "选择人员",
+    field: "autocomplete",
+    type: "custom",
+    replace: true,
+    slotName: "autocomplete",
+    value: "5656",
+  },
+]);
+const items = reactive([
+  {
+    label: "选择人员",
+    field: "autocomplete",
+    type: "custom",
+    replace: true, // 支持单选
+    slotName: "autocomplete", // 定义此属性类型对应的插槽名，并在以下的模板层使用
+  },
+  {
+    label: "其他自定义",
+    field: "other",
+    type: "custom",
+    slotName: "other", // 定义此属性类型对应的插槽名
+  },
+]);
+
+const onChange = (newFilters, oldFilters) => {
+  console.log("changeEvent:", newFilters, oldFilters);
+};
+</script>

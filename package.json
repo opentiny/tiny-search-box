@@ -5,16 +5,24 @@
   "packageManager": "pnpm@9.14.4",
   "scripts": {
     "dev": "pnpm -F @opentiny/vue-search-box-docs docs:dev",
+    "dev3": "pnpm -F @opentiny/vue3-test dev",
+    "dev3:saas": "pnpm -F @opentiny/vue-search-box-docs docs:dev --mode saas",
+    "dev2": "pnpm -F @opentiny/vue2-test dev",
+    "dev2:saas": "pnpm -F @opentiny/vue2-test dev --mode saas",
     "build:docs": "pnpm -F @opentiny/vue-search-box-docs docs:build",
-    "build": "pnpm -F @opentiny/vue-search-box build",
-    "pub": "pnpm -F @opentiny/vue-search-box publish --no-git-checks"
-  },
-  "dependencies": {
-    "vue": "^3.0.0"
+    "build": "pnpm -F @opentiny/vue-search-box build:all",
+    "pub": "pnpm -F @opentiny/vue-search-box publish:all --no-git-checks"
   },
   "devDependencies": {
     "less": "^4.2.2",
     "vite": "^6.2.2"
+  },
+  "pnpm": {
+    "overrides": {
+      "vue-template-compiler>vue": "npm:vue@2.6.14",
+      "vite-plugin-vue2>vue": "npm:vue@2.6.14",
+      "@opentiny/vue-locale>vue": "npm:vue@2.6.14"
+    }
   },
   "gitHooks": {
     "pre-commit": "lint-staged",

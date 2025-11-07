@@ -1,8 +1,8 @@
-import { ref } from 'vue'
+// import { ref } from 'vue'
 import Loading from '@opentiny/vue-loading'
-import { debounce } from '../utils/index'
-import { hasTagItem, createNewTag, getTagId, emitChangeModelEvent } from '../utils/tag'
-import { showDropdown } from '../utils/dropdown'
+import { debounce } from '../utils/index.ts'
+import { hasTagItem, createNewTag, getTagId, emitChangeModelEvent } from '../utils/tag.ts'
+import { showDropdown } from '../utils/dropdown.ts'
 
 const escapeRegExp = (string) => string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
 
@@ -33,28 +33,29 @@ const getHighlightMatch = (labelRegex, label) => {
   return match
 }
 
-export function useMatch({ props, state, emits }) {
-  const loadingInstance = ref(null)
+export function useMatch({ props, state, emit, nextTick }) {
+  // const loadingInstance = ref(null)
 
   const getMatchList = async (keyword: string) => {
-    if (typeof document !== 'undefined') {
-      !loadingInstance.value &&
-        (loadingInstance.value = Loading.service({
-          target: document.getElementById('potential-loading')
-        }))
-    }
+    // if (typeof document !== 'undefined') {
+    //   !loadingInstance.value &&
+    //     (loadingInstance.value = Loading.service({
+    //       target: document.getElementById('potential-loading')
+    //     }))
+    // }
     state.potentialOptions = await props.potentialOptions.getMatchList(keyword)
-    loadingInstance.value && loadingInstance.value.close()
+    // loadingInstance.value && loadingInstance.value.close()
     showDropdown(state, true)
   }
 
   const handleSearch = (e) => {
     const { recordItems, propItem } = state
-    const inputValue = e.target.value.trim()
+    const raw = typeof e === 'string' ? e : (e && e.target && typeof e.target.value === 'string' ? e.target.value : state.inputValue || '')
+    const inputValue = String(raw).trim()
     const { maxlength } = props
 
     if (maxlength && maxlength < inputValue.length) {
-      emits('exceed', maxlength)
+      emit('exceed', maxlength)
       return
     }
 
@@ -73,7 +74,7 @@ export function useMatch({ props, state, emits }) {
     const hasItem =
       propItem.label || !value ? null : recordItems.find((item) => item.type === 'map' && patt.test(item.label))
     if (hasItem) {
-      state.propItem.label = hasItem.label
+      state.propItem = { ...state.propItem, label: hasItem.label }
       state.inputValue = ''
       state.prevItem = hasItem
       state.backupPrevItem = hasItem
@@ -161,9 +162,10 @@ export function useMatch({ props, state, emits }) {
     const { prevItem, propItem } = state
     if (options) {
       showDropdown(state, false)
-      state.propItem.value = `${item.label}=`
+      state.propItem = { ...state.propItem, value: `${item.label}=` }
       state.isShowTagKey = false
       state.inputValue = ''
+
       state.backupList = item.options || []
       resetBackupList()
 
@@ -184,7 +186,7 @@ export function useMatch({ props, state, emits }) {
       const id = getTagId(props, prevItem, item)
       const newTag = createNewTag({ type, field, label: propItem.label, value, ...id })
       const tagList = [newTag]
-      emitChangeModelEvent({ emits, state, tagList })
+      emitChangeModelEvent({ emit, state, nextTick, tagList })
     }
     if (isFirst) {
       showDropdown(state)

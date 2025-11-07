@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { reactive, ref } from 'vue'
-import { data } from './group-key-data'
+import { reactive, ref } from "vue";
+import { data } from "./group-key-data";
 
-const tags = ref([])
-const items = reactive(data)
+const tags = ref([]);
+const items = reactive(data);
 </script>
 
 <template>

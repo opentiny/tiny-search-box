@@ -1,58 +1,97 @@
-import { readFileSync } from 'node:fs'
-import { resolve } from 'node:path'
-import * as glob from 'glob'
-import { defineConfig } from 'vite'
-import vue from '@vitejs/plugin-vue'
-import dts from 'vite-plugin-dts'
+import { defineConfig } from "vite";
+import vue from "@vitejs/plugin-vue";
+import { resolve } from "path";
+import dts from "vite-plugin-dts";
+import { clearOutputDir, moveTypesFiles, removeCssOutput } from "./scripts/plugin-utils"
 
-interface Manifest {
-  version: string
-  dependencies?: Record<string, string>
-  peerDependencies?: Record<string, string>
-}
-export function getPackageManifest(pkgPath: string): Manifest {
-  return JSON.parse(readFileSync(pkgPath, 'utf8')) as Manifest
-}
-export function rollupExternalFromPackage(pkgPath: string) {
-  const { dependencies, peerDependencies } = getPackageManifest(pkgPath)
-  const dependenciesKeys = Object.keys(dependencies ?? {})
-  const peerDependenciesKeys = Object.keys(peerDependencies ?? {})
-
-  return (id: string) => {
-    const packages = new Set([...peerDependenciesKeys, ...dependenciesKeys])
-    return Array.from(packages).some((pkg) => id === pkg || id.startsWith(`${pkg}/`))
-  }
-}
-
-function rollupOutput(target: string, format: string): any {
-  return {
-    format: target,
-    entryFileNames: `[name].${target}.js`,
-    preserveModules: true,
-    dir: resolve(__dirname, 'dist', format),
-    preserveModulesRoot: resolve(__dirname, 'src'),
-    exports: 'named'
-  }
-}
-
-const input = glob.sync('./src/**/*.ts', {
-  cwd: __dirname,
-  absolute: true
-})
 
 export default defineConfig({
-  plugins: [dts({ outDir: './dist/types' }), vue()],
+  plugins: [
+    // 构建前清空输出目录
+    clearOutputDir(resolve(__dirname, "dist/vue3"), "Vue3"),
+    vue(),
+    dts({
+      outDir: "dist/vue3/types",
+      include: ["src/index.type.ts"],
+      entryRoot: "vue3",
+    }),
+    // 移动类型文件：从 types/src/ 移到 types/
+    moveTypesFiles(resolve(__dirname, "dist/vue3/types")),
+    // 删除 CSS 输出
+    removeCssOutput(resolve(__dirname, "dist/vue3")),
+  ],
+  resolve: {
+    alias: {
+      'vue': resolve("node_modules/vue/dist/vue.esm.js"),
+      vue$: resolve("node_modules/vue/dist/vue.esm.js"),
+
+    },
+  },
   build: {
-    assetsDir: '',
-    sourcemap: false,
-    minify: false,
-    cssCodeSplit: true, // 分离 CSS 文件
+    outDir: "dist/vue3",
+    emptyOutDir: true,
+    lib: {
+      entry: resolve(__dirname, "index.ts"),
+      name: "TinySearchBox",
+      formats: ["es", "cjs"],
+      fileName: (format) => {
+        if (format === "es") {
+          return "es/index.es.js";
+        }
+        if (format === "cjs") {
+          return "lib/index.cjs.js";
+        }
+        return "index.js";
+      },
+    },
     rollupOptions: {
-      input,
-      treeshake: false,
-      preserveEntrySignatures: 'allow-extension',
-      external: rollupExternalFromPackage(resolve(__dirname, 'package.json')),
-      output: [rollupOutput('es', 'es'), rollupOutput('cjs', 'lib')]
-    }
-  }
-})
+      external: [
+        "vue",
+        "@opentiny/vue-button",
+        "@opentiny/vue-button-group",
+        "@opentiny/vue-checkbox",
+        "@opentiny/vue-checkbox-group",
+        "@opentiny/vue-date-picker",
+        "@opentiny/vue-dropdown",
+        "@opentiny/vue-dropdown-item",
+        "@opentiny/vue-dropdown-menu",
+        "@opentiny/vue-form",
+        "@opentiny/vue-form-item",
+        "@opentiny/vue-icon",
+        "@opentiny/vue-input",
+        "@opentiny/vue-loading",
+        "@opentiny/vue-option",
+        "@opentiny/vue-popover",
+        "@opentiny/vue-select",
+        "@opentiny/vue-tag",
+        "@opentiny/vue-tooltip",
+        "@opentiny/vue-common",
+        "@opentiny/vue-theme",
+      ],
+      output: {
+        globals: {
+          vue: "Vue",
+        },
+        // 阻止输出 CSS 文件
+        assetFileNames: () => {
+          // 不输出任何 CSS 文件
+          return "ignored.css";
+        },
+      },
+    },
+    cssCodeSplit: false,
+    sourcemap: true,
+  },
+
+  css: {
+    // 禁用 PostCSS（Vue3 构建不使用 tailwindcss）
+    postcss: {
+      plugins: [],
+    },
+    preprocessorOptions: {
+      less: {
+        javascriptEnabled: true,
+      },
+    },
+  },
+});
