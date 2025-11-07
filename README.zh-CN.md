@@ -35,7 +35,7 @@ import TinySearchBox from '@opentiny/vue-search-box';
 引入样式：
 
 ```css
-@import '@opentiny/vue-search-box/dist/index.css';
+@import '@opentiny/vue-search-box-theme';
 ```
 
 在模板中使用：

@@ -1,50 +1,103 @@
-import { App } from 'vue'
-import TinySearchBox from './index.vue'
-import TinySearchBoxFirstLevelPanel from './components/first-level-panel.vue'
-import TinySearchBoxSecondLevelPanel from './components/second-level-panel.vue'
-import zhCN from './utils/zh_CN'
-import enUS from './utils/en_US'
-import './index.less'
-export * from './index.type'
 
-let apps
-TinySearchBox.install = function (app: App) {
-  apps = app
-  app.component(TinySearchBox.name, TinySearchBox)
-}
+/**
+ * Copyright (c) 2022 - present TinyVue Authors.
+ * Copyright (c) 2022 - present Huawei Cloud Computing Technologies Co., Ltd.
+ *
+ * Use of this source code is governed by an MIT-style license.
+ *
+ * THE OPEN SOURCE SOFTWARE IN THIS PRODUCT IS DISTRIBUTED IN THE HOPE THAT IT WILL BE USEFUL,
+ * BUT WITHOUT ANY WARRANTY, WITHOUT EVEN THE IMPLIED WARRANTY OF MERCHANTABILITY OR FITNESS FOR
+ * A PARTICULAR PURPOSE. SEE THE APPLICABLE LICENSES FOR MORE DETAILS.
+ *
+ */
+import { $props, $prefix, $setup, defineComponent, isVue2, isVue3 } from '@opentiny/vue-common'
+import { type PropType } from '@opentiny/vue-common'
+import template from './pc.vue'
 
-export const t = (key, params) => {
-  // 优先用全局 $t
-  if (apps?.config?.globalProperties?.$t) {
-    return apps.config.globalProperties.$t(key, params)
+
+export const searchBoxProps = {
+  ...$props,
+  tiny_mode: {
+    type: String,
+    default: 'pc'
+  },
+  /** 搜索框的值，支持v-model */
+  modelValue: {
+    type: Array,
+    default: () => []
+  },
+  /** 搜索项配置数组 */
+  items: {
+    type: Array,
+    default: () => []
+  },
+  /** 空状态时的占位符文本 */
+  emptyPlaceholder: {
+    type: String,
+    default: ''
+  },
+  /** 潜在选项配置 */
+  potentialOptions: {
+    type: Object,
+    default: () => null
+  },
+  /** 是否显示帮助按钮 */
+  showHelp: {
+    type: Boolean,
+    default: true
+  },
+  /** ID映射键名 */
+  idMapKey: {
+    type: String,
+    default: 'id'
+  },
+  /** 默认字段 */
+  defaultField: {
+    type: String,
+    default: ''
+  },
+  /** 是否可编辑 */
+  editable: {
+    type: Boolean,
+    default: false
+  },
+  /** 最大长度限制 */
+  maxlength: {
+    type: Number,
+    default: undefined
+  },
+  /** 面板最大高度 */
+  panelMaxHeight: {
+    type: String,
+    default: '999px'
+  },
+  /** 输入值分隔符 */
+  splitInputValue: {
+    type: String,
+    default: ','
+  },
+  /** 自定义类名 */
+  customClass: {
+    type: String,
+    default: ''
+  },
+  /** 自定义样式 */
+  customStyle: {
+    type: Object,
+    default: () => ({})
+  },
+  /** 组件尺寸 */
+  size: {
+    type: String as PropType<'small' | ''>,
+    default: ''
   }
-  // 获取全局 lang
-  const lang = apps?.config?.globalProperties?.$i18n?.locale || 'zhCN'
-  return customTranslate(key, params, lang)
 }
+// 组件安装函数
+export default defineComponent({
+  name: $prefix + 'SearchBox',
+  props: searchBoxProps,
+  ...template
+})
 
-function customTranslate(key: string, params?: Record<string, any>, lang: 'zhCN' | 'enUS' = 'zhCN') {
-  // 全量国际化资源
-  const resources = { zhCN, enUS }
-  const i18nResources = resources[lang] || resources['zhCN']
 
-  // 支持多层级 key
-  const value = key.split('.').reduce((obj, k) => (obj && obj[k] !== undefined ? obj[k] : undefined), i18nResources)
 
-  let template = typeof value === 'string' ? value : key // key 不存在兜底
-
-  if (params && typeof params === 'object') {
-    Object.keys(params).forEach((k) => {
-      // 变量名要和模板一致
-      const value = params[k] ?? ''
-      template = template.replaceAll(`{${k}}`, String(value))
-    })
-  }
-  // 剩余未替换占位符兜底为空
-  template = template.replace(/{{\s*\w+\s*}}/g, '')
-  return template
-}
-
-export { zhCN, enUS, TinySearchBoxFirstLevelPanel, TinySearchBoxSecondLevelPanel }
-
-export default TinySearchBox

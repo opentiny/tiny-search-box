@@ -34,7 +34,7 @@ import TinySearchBox from '@opentiny/vue-search-box';
 Import styles:
 
 ```css
-@import '@opentiny/vue-search-box/dist/index.css';
+@import '@opentiny/vue-search-box-theme';
 ```
 
 html：
