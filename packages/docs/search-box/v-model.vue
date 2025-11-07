@@ -1,5 +1,12 @@
+<template>
+  <ClientOnly>
+    <tiny-search-box :items="dataSource" v-model="tags" default-field="ip" />
+  </ClientOnly>
+</template>
+
 <script setup lang="ts">
 import { ref } from 'vue'
+import TinySearchBox from '@opentiny/vue-search-box'
 import { dataSource } from './data-source'
 
 const tags = ref([
@@ -16,9 +23,3 @@ const tags = ref([
   }
 ])
 </script>
-
-<template>
-  <ClientOnly>
-    <tiny-search-box :items="dataSource" v-model="tags" default-field="ip" />
-  </ClientOnly>
-</template>

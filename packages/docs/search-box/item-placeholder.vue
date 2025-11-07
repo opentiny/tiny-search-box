@@ -1,6 +1,11 @@
+<template>
+  <ClientOnly>
+    <tiny-search-box v-model='tags' :items='items' editable />
+  </ClientOnly>
+</template>
 <script setup lang="ts">
 import { ref } from 'vue'
-import { TvpSearchBox } from '@huawei/tiny-vue-plus'
+import TinySearchBox from '@opentiny/vue-search-box'
 
 const items = ref([
   {
@@ -112,9 +117,3 @@ const tags = ref([
   }
 ])
 </script>
-
-<template>
-  <ClientOnly>
-    <tiny-search-box v-model="tags" :items="items" editable />
-  </ClientOnly>
-</template>

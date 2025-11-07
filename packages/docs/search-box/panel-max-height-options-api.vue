@@ -1,14 +1,22 @@
 <template>
-  <ClientOnly>
+  <div class="demo">
     <tiny-search-box v-model="tags" :items="items" panel-max-height="100px" />
-  </ClientOnly>
+  </div>
 </template>
 
-<script setup lang="ts">
-import { ref } from 'vue'
+<script>
 import TinySearchBox from '@opentiny/vue-search-box'
 import { dataSource } from './data-source'
 
-const items = dataSource
-const tags = ref([])
+export default {
+  components: {
+    TinySearchBox
+  },
+  data() {
+    return {
+      items: dataSource,
+      tags: []
+    }
+  }
+}
 </script>

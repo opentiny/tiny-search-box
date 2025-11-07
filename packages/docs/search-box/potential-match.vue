@@ -1,6 +1,17 @@
+<template>
+  <ClientOnly>
+    <tiny-search-box
+      :items="items"
+      v-model="tags"
+      :potential-options="potentialOptions"
+    />
+  </ClientOnly>
+</template>
+
 <script setup lang="ts">
 import { ref } from 'vue'
 import { dataSource } from './data-source'
+import TinySearchBox from '@opentiny/vue-search-box'
 
 const items = dataSource
 
@@ -37,9 +48,3 @@ const potentialOptions = ref({
   }
 })
 </script>
-
-<template>
-  <ClientOnly>
-    <tiny-search-box :items="items" v-model="tags" :potential-options="potentialOptions" />
-  </ClientOnly>
-</template>
