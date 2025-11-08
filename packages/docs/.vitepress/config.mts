@@ -5,7 +5,7 @@ import { containerPreview, componentPreview } from '@vitepress-demo-preview/plug
 
 const env = loadEnv(process.env.VITE_BASE_URL!, fileURLToPath(new URL('../', import.meta.url)))
 const __dirname = fileURLToPath(new URL('.', import.meta.url))
-// https://vitepress.dev/reference/site-co nfig
+
 export default defineConfig({
   title: 'TinySearchBox',
   description: '一个好用的综合搜索组件',
@@ -15,8 +15,7 @@ export default defineConfig({
     resolve: {
       alias: {
         'vue': path.resolve(__dirname, '../node_modules/vue/dist/vue.runtime.esm-bundler.js'),
-        '@opentiny/vue-search-box': path.resolve(__dirname, '../../search-box/index.ts'),
-        '@opentiny/vue-search-box-theme': path.resolve(__dirname, '../../search-box/theme/index.less'),
+        '@opentiny/vue-search-box': path.resolve('../../packages/search-box/index.ts'),
         '@opentiny/vue-button': path.resolve(__dirname, '../node_modules/@opentiny/vue-button'),
         '@opentiny/vue-button-group': path.resolve(__dirname, '../node_modules/@opentiny/vue-button-group'),
         '@opentiny/vue-checkbox': path.resolve(__dirname, '../node_modules/@opentiny/vue-checkbox'),
@@ -37,18 +36,44 @@ export default defineConfig({
         '@opentiny/vue-tooltip': path.resolve(__dirname, '../node_modules/@opentiny/vue-tooltip'),
         '@opentiny/vue-common': path.resolve(__dirname, '../node_modules/@opentiny/vue-common'),
         '@opentiny/vue-theme': path.resolve(__dirname, '../node_modules/@opentiny/vue-theme'),
+        '@opentiny/vue-locale': path.resolve(__dirname, '../node_modules/@opentiny/vue-locale')
       }
     },
     optimizeDeps: {
-      exclude: ['@opentiny/vue-search-box']
+      exclude: ['@opentiny/vue-search-box', '@opentiny/vue-locale']
     },
     build: {
       rollupOptions: {
-        external: ['vue']
+        external: ['vue', 'vue/server-renderer']
       }
     },
     ssr: {
-      noExternal: [/@opentiny\//, '@opentiny/vue-search-box']
+      // noExternal: [/@opentiny\//],
+      external: [
+        '@opentiny/vue-search-box',
+        '@opentiny/vue-input',
+        '@opentiny/vue-loading',
+        '@opentiny/vue-common',
+        '@opentiny/vue-search-box-theme',
+        '@opentiny/vue-option',
+        '@opentiny/vue-button',
+        '@opentiny/vue-button-group',
+        '@opentiny/vue-checkbox',
+        '@opentiny/vue-checkbox-group',
+        '@opentiny/vue-date-picker',
+        '@opentiny/vue-dropdown',
+        '@opentiny/vue-dropdown-item',
+        '@opentiny/vue-dropdown-menu',
+        '@opentiny/vue-form',
+        '@opentiny/vue-form-item',
+        '@opentiny/vue-icon',
+        '@opentiny/vue-popover',
+        '@opentiny/vue-select',
+        '@opentiny/vue-tag',
+        '@opentiny/vue-tooltip',
+        '@opentiny/vue-locale',
+        '@opentiny/vue-theme',
+      ]
     }
   },
   markdown: {
@@ -90,7 +115,6 @@ export default defineConfig({
           { text: '默认包含筛选项', link: '/examples/v-model' },
           { text: '自动匹配', link: '/examples/auto-match' },
           { text: '自定义二级下拉面板', link: '/examples/custom-panel' },
-          { text: '自由组合面板插槽', link: '/examples/combination-panel' },
           { text: '可编辑', link: '/examples/editable' },
           { text: '没有筛选项时的占位文本', link: '/examples/empty-placeholder' },
           { text: '自定义属性分组', link: '/examples/group-key' },

@@ -118,18 +118,18 @@ export const renderless = (
 
   // 生命周期
   onMounted(() => {
-    if (typeof window !== 'undefined') {
-      window.addEventListener('click', api.watchOutsideClick)
-      window.addEventListener('mousedown', api.watchMouseDown)
-      window.addEventListener('mousemove', api.watchMouseMove)
+    if (typeof document !== 'undefined') {
+      document.addEventListener('click', api.watchOutsideClick)
+      document.addEventListener('mousedown', api.watchMouseDown)
+      document.addEventListener('mousemove', api.watchMouseMove)
     }
   })
 
   onBeforeUnmount(() => {
-    if (typeof window !== 'undefined') {
-      window.removeEventListener('click', api.watchOutsideClick)
-      window.removeEventListener('mousedown', api.watchMouseDown)
-      window.removeEventListener('mousemove', api.watchMouseMove)
+    if (typeof document !== 'undefined') {
+      document.removeEventListener('click', api.watchOutsideClick)
+      document.removeEventListener('mousedown', api.watchMouseDown)
+      document.removeEventListener('mousemove', api.watchMouseMove)
       // 清理语言检查定时器
       if (state.localeCheckInterval) {
         clearInterval(state.localeCheckInterval)

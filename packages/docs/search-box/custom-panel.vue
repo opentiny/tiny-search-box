@@ -30,35 +30,35 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, ref, shallowRef } from "vue";
+import { reactive, ref } from "vue";
 
 const tags = ref([
   {
-    label: '选择人员',
-    field: 'autocomplete',
-    type: 'custom',
+    label: "选择人员",
+    field: "autocomplete",
+    type: "custom",
     replace: true,
-    slotName: 'autocomplete',
-    value: '5656',
+    slotName: "autocomplete",
+    value: "5656",
   },
 ]);
 const items = reactive([
   {
-    label: '选择人员',
-    field: 'autocomplete',
-    type: 'custom',
+    label: "选择人员",
+    field: "autocomplete",
+    type: "custom",
     replace: true, // 支持单选
-    slotName: 'autocomplete', // 定义此属性类型对应的插槽名，并在以下的模板层使用
+    slotName: "autocomplete", // 定义此属性类型对应的插槽名，并在以下的模板层使用
   },
   {
-    label: '其他自定义',
-    field: 'other',
-    type: 'custom',
-    slotName: 'other', // 定义此属性类型对应的插槽名
+    label: "其他自定义",
+    field: "other",
+    type: "custom",
+    slotName: "other", // 定义此属性类型对应的插槽名
   },
 ]);
 
 const onChange = (newFilters, oldFilters) => {
-  console.log('changeEvent:', newFilters, oldFilters);
+  console.log("changeEvent:", newFilters, oldFilters);
 };
 </script>
