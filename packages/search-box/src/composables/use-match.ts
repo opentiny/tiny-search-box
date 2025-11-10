@@ -153,6 +153,13 @@ export function useMatch({ props, state, emit, nextTick }) {
 
   const handleInput = debounce(handleSearch, 500)
 
+  // 保存取消函数，供外部调用
+  const cancelHandleInput = () => {
+    if (handleInput.cancel) {
+      handleInput.cancel()
+    }
+  }
+
   const resetBackupList = () => {
     state.backupList?.forEach((item) => item.isFilter && delete item.isFilter)
   }
@@ -195,6 +202,7 @@ export function useMatch({ props, state, emit, nextTick }) {
 
   return {
     handleInput,
-    selectFirstMap
+    selectFirstMap,
+    cancelHandleInput
   }
 }

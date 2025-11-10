@@ -145,10 +145,10 @@ export const renderless = (
 
 const initAllApi = ({ api, state, t, props, emit, nextTick, vm, computed }) => {
 
-  const { selectPropItem, selectRadioItem, selectInputValue, createTag, helpClick, setOperator } = useDropdown({ props, emit, state, t, format, nextTick, vm })
   const { deleteTag, clearTag, backspaceDeleteTag } = useTag({ props, state, emit, nextTick })
   const { editTag, confirmEditTag, selectPropChange, selectItemIsDisable } = useEdit({ props, state, t, nextTick, format, emit, vm })
-  const { handleInput, selectFirstMap } = useMatch({ props, state, emit, nextTick })
+  const { handleInput, selectFirstMap, cancelHandleInput } = useMatch({ props, state, emit, nextTick })
+  const { selectPropItem, selectRadioItem, selectInputValue, createTag, helpClick, setOperator } = useDropdown({ props, emit, state, t, format, nextTick, vm, cancelHandleInput })
   const { selectCheckbox } = useCheckbox({ props, state, emit, nextTick })
   const { onConfirmDate, handleDateShow, pickerOptions } = useDatePicker({ props, state, emit, nextTick, vm })
   const { sizeChange, initFormRule } = useNumRange({ props, state, t, emit, nextTick, vm })

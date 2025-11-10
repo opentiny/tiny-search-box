@@ -171,12 +171,12 @@ export const dataSource = [
     type: 'dateRange',
     format: 'yyyy/MM/dd', // 默认格式
     // 默认开始时间
-    start: new Date(2024, 3, 10),
+    start: new Date(),
     // 默认结束时间
     end: undefined,
     // 最小时间
-    min: new Date(2024, 3, 5),
-    max: new Date(2024, 5, 5)
+    min: new Date(),
+    max: new Date(new Date().getTime() + 1000 * 60 * 60 * 24 * 30),
   },
   {
     label: '时间日期',
