@@ -3,7 +3,7 @@ import { showDropdown } from '../utils/dropdown.ts'
 import { setStateNumRange } from '../utils/validate.ts'
 import { deepClone, omitObj } from '../utils/index.ts'
 
-export function useDropdown({ props, emit, state, t, format, nextTick, vm }) {
+export function useDropdown({ props, emit, state, t, format, nextTick, vm, cancelHandleInput }) {
   const instance = vm || state.instance
   const showValueItem = (item) => {
     const { start, end, type } = item
@@ -243,6 +243,10 @@ export function useDropdown({ props, emit, state, t, format, nextTick, vm }) {
 
   const createTag = () => {
     const { inputValue, propItem, prevItem } = state
+    // 取消 handleInput 的防抖，防止快速输入后回车导致面板弹出
+    if (cancelHandleInput) {
+      cancelHandleInput()
+    }
     showDropdown(state, false)
     if (!inputValue) {
       // 输入为空的情况
