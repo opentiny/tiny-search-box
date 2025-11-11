@@ -124,7 +124,8 @@ export const getVerifyDateTag = async (instance, state, props, isDateTimeType) =
   })
 
   if (isPass) {
-    const { field, label, type, operators } = prevItem
+    const { operators } = prevItem
+    const rest = omitObj(prevItem)
     let value = ''
     if (start && end) {
       if (start > end) {
@@ -139,7 +140,7 @@ export const getVerifyDateTag = async (instance, state, props, isDateTimeType) =
     }
     const id = getTagId(props, prevItem, prevItem)
     const operator = state.operatorValue && operators ? { operator: state.operatorValue } : null
-    newTag = createNewTag({ type, field, label, value, start, end, ...id, ...operator })
+    newTag = createNewTag({ ...rest, value, start, end, ...id, ...operator })
   }
 
   return newTag
