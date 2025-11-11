@@ -9,42 +9,36 @@ on:
 
 jobs:
   build:
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     steps:
-      - name: CheckOut Code
-        uses: actions/checkout@master
+      - name: Checkout repository
+        uses: actions/checkout@v4
         with:
           ref: ${{ github.ref_name }}
 
       - name: Setup pnpm
-        uses: pnpm/action-setup@v2
-
-      - name: Setup Node
-        uses: actions/setup-node@v3
+        uses: pnpm/action-setup@v3
         with:
-          node-version: 20.10.0
+          version: 9.14.4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'pnpm'
           registry-url: "https://registry.npmjs.org"
 
-      - name: Get pnpm store directory
-        id: pnpm-cache
-        run: |
-          echo "pnpm_cache_dir=$(pnpm store path)" >> $GITHUB_OUTPUT
-
-      - uses: actions/cache@v3
-        name: Setup pnpm cache
-        with:
-          path: ${{ steps.pnpm-cache.outputs.pnpm_cache_dir }}
-          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
-          restore-keys: |
-            ${{ runner.os }}-pnpm-store-
       - name: Install dependencies
-        run: pnpm i --no-frozen-lockfile
+        working-directory: ./packages/search-box
+        run: pnpm install --no-frozen-lockfile
 
       - name: Run Build search-box
-        run: pnpm build
+        working-directory: ./packages/search-box
+        run: pnpm build:all
 
       - name: Publish @opentiny/vue-search-box
-        run: pnpm pub
+        working-directory: ./packages/search-box
+        run: pnpm publish:all
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
