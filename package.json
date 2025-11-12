@@ -4,6 +4,7 @@
   "license": "MIT",
   "packageManager": "pnpm@9.14.4",
   "scripts": {
+    "install:all": "cd packages/search-box && pnpm install && cd ../docs && pnpm install && cd ../vue2-test && pnpm install && cd ../vue3-test && pnpm install && cd ../..",
     "dev": "pnpm -F @opentiny/vue-search-box-docs docs:dev",
     "dev3": "pnpm -F vue3-test dev",
     "dev3:saas": "pnpm -F @opentiny/vue-search-box-docs docs:dev --mode saas",

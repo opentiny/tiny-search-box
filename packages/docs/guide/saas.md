@@ -2,18 +2,30 @@
 
 TinySearchBox 组件库支持 SaaS 主题，提供了专门的主题样式和配置方式。
 
-## 安装 SaaS 主题
+## 安装 SaaS 主题包
+
+### Vue 3
 
 ```bash
-npm install @opentiny/vue-search-box-theme-saas
+npm install @opentiny/vue-search-box-saas
 ```
 
-## 引入样式
+### Vue 2
 
-### 一：直接引入 CSS
+```bash
+npm install @opentiny/vue-search-box-saas@2.27.1
+```
+
+## 使用说明
+
+SaaS 主题包已内置样式文件，**无需单独引入样式**。样式会在导入组件时自动加载。
+
+### 手动引入样式（可选）
+
+如果需要手动控制样式加载，可以单独引入：
 
 ```javascript
-import '@opentiny/vue-search-box-theme-saas'
+import '@opentiny/vue-search-box-saas/index.css'
 ```
 
 ## 二：使用 alias 替换间接依赖组件风格
@@ -51,9 +63,7 @@ export default defineConfig(({ mode }) => {
 import { ref } from 'vue'
 import ConfigProvider from '@opentiny/vue-config-provider'
 import designSaasConfig from '@opentiny/vue-design-saas'
-import TinySearchBox from '@opentiny/vue-search-box'
-// 引入 SaaS 主题
-import '@opentiny/vue-search-box-theme-saas'
+import TinySearchBox from '@opentiny/vue-search-box-saas'
 
 const tags = ref([])
 const items = ref([
@@ -68,28 +78,7 @@ const items = ref([
 
 ```bash
 vite --mode saas
-```
 
-## 在代码中使用
-
-### Vue
-
-```vue
-<template>
-  <tiny-search-box v-model="tags" :items="items" />
-</template>
-
-<script setup>
-import { ref } from 'vue'
-import TinySearchBox from '@opentiny/vue-search-box'
-// 引入 SaaS 主题
-import '@opentiny/vue-search-box-theme-saas'
-
-const tags = ref([])
-const items = ref([
-  // ... 配置项
-])
-</script>
 ```
 
 ## 样式定制
@@ -100,7 +89,7 @@ SaaS 模式使用 Less 和 Tailwind CSS，你可以通过以下方式定制样�
 
 ```less
 // 在你的样式文件中
-@import '@opentiny/vue-search-box-theme-saas/index.less';
+@import '@opentiny/vue-search-box-saas/index.css';
 
 // 覆盖变量
 @primary-color: #1890ff;
@@ -115,7 +104,7 @@ SaaS 模式使用 Less 和 Tailwind CSS，你可以通过以下方式定制样�
 module.exports = {
   content: [
     './src/**/*.{vue,js,ts}',
-    './node_modules/@opentiny/vue-search-box-theme-saas/**/*.{less,css}'
+    './node_modules/@opentiny/vue-search-box-saas/**/*.{js,css}'
   ],
   theme: {
     extend: {
@@ -128,10 +117,11 @@ module.exports = {
 
 ## 开发注意事项
 
-1. **PostCSS 配置**：SaaS 模式需要 PostCSS 和 Tailwind CSS，确保已安装相关依赖
-2. **Less 路径**：确保 Less 路径配置正确，能够解析 `@opentiny/vue-theme-saas` 中的变量
-3. **开发模式**：开发模式下使用 Less 文件以支持实时变更，生产模式使用编译后的 CSS
-4. **模式切换**：通过 Vite 的 `mode` 参数切换模式，而不是在代码中硬编码
+1. **包选择**：使用 SaaS 主题时，请安装 `@opentiny/vue-search-box-saas` 包，而不是普通主题包
+2. **Vue 版本**：确保安装对应 Vue 版本的 SaaS 主题包（Vue2: 2.27.1, Vue3: 3.27.1）
+3. **样式自动加载**：SaaS 主题包的样式会在导入组件时自动加载，无需手动引入
+4. **样式定制**：如需定制样式，可以通过 CSS 变量或覆盖类名来实现
+5. **PostCSS 配置**：如果项目中使用 Tailwind CSS，需要正确配置 content 路径
 
 ## 相关资源
 

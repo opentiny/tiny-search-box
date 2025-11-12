@@ -31,10 +31,14 @@ Import TinySearchBox:
 import TinySearchBox from '@opentiny/vue-search-box';
 ```
 
-Import styles:
+Styles:
 
-```css
-@import '@opentiny/vue-search-box-theme';
+The component package includes built-in styles that are automatically loaded when you import the component. **No need to manually import styles.**
+
+If you need to manually control style loading, you can import separately:
+
+```javascript
+import '@opentiny/vue-search-box/index.css'
 ```
 
 html：
@@ -98,7 +102,7 @@ html：
 ```shell
 git clone git@github.com:opentiny/tiny-search-box.git
 cd tiny-search-box
-pnpm i
+pnpm install:all
 pnpm dev
 ```
 

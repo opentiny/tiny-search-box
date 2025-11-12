@@ -22,31 +22,24 @@ pnpm add @opentiny/vue-search-box
 yarn add @opentiny/vue-search-box
 ```
 
-## 引入样式
+## 样式说明
 
-### 默认主题
+组件包已内置样式文件，**无需单独引入样式**。样式会在导入组件时自动加载。
 
-```javascript
-import '@opentiny/vue-search-box-theme'
-```
+### 包说明
 
-或者引入 CSS 文件：
+- **普通主题包**：`@opentiny/vue-search-box`
+  - Vue2 版本：`2.27.1`
+  - Vue3 版本：`3.27.1`
+  
+- **SaaS 主题包**：`@opentiny/vue-search-box-saas`
+  - Vue2 版本：`2.27.1`
+  - Vue3 版本：`3.27.1`
 
-```css
-@import '@opentiny/vue-search-box-theme/index.css';
-```
+### 手动引入样式（可选）
 
-### SaaS 主题
+如果需要手动控制样式加载，可以单独引入：
 
-```javascript
-import '@opentiny/vue-search-box-theme-saas'
-```
-
-或者引入 CSS 文件：
-
-```css
-@import '@opentiny/vue-search-box-theme-saas/index.css';
-```
 
 ## 基本使用
 
@@ -60,7 +53,6 @@ import '@opentiny/vue-search-box-theme-saas'
 <script setup>
 import { ref } from 'vue'
 import TinySearchBox from '@opentiny/vue-search-box'
-import '@opentiny/vue-search-box-theme'
 
 const tags = ref([])
 const items = ref([
@@ -94,7 +86,6 @@ const items = ref([
 
 <script>
 import TinySearchBox from '@opentiny/vue-search-box'
-import '@opentiny/vue-search-box-theme'
 
 export default {
   components: {
@@ -135,7 +126,6 @@ export default {
 ```javascript
 import { createApp } from 'vue'
 import TinySearchBox from '@opentiny/vue-search-box'
-import '@opentiny/vue-search-box-theme'
 
 const app = createApp(App)
 app.use(TinySearchBox)
@@ -147,7 +137,6 @@ app.mount('#app')
 ```javascript
 import Vue from 'vue'
 import TinySearchBox from '@opentiny/vue-search-box'
-import '@opentiny/vue-search-box-theme'
 
 Vue.use(TinySearchBox)
 ```
@@ -254,6 +243,7 @@ const items = [
 - `help` - 点击帮助按钮时触发
 - `first-level-select` - 选择第一级选项时触发
 - `exceed` - 输入超出最大长度时触发
+- `tag-click` - 点击已选中标签触发
 
 ```vue
 <template>
@@ -301,8 +291,9 @@ const tags: ISearchBoxTag[] = []
 
 ## 注意事项
 
-1. **样式引入**：使用组件前必须引入样式文件
-2. **Vue 版本**：确保使用正确的 Vue 版本（Vue 2 或 Vue 3）
+1. **样式引入**：组件包已内置样式，导入组件时会自动加载，无需手动引入
+2. **Vue 版本**：确保使用正确的 Vue 版本（Vue 2 或 Vue 3），并安装对应版本的包
 3. **国际化配置**：如需使用国际化，请正确配置 `setGlobalApp`
-4. **主题选择**：根据项目需求选择默认主题或 SaaS 主题
+4. **主题选择**：根据项目需求选择普通主题包（`@opentiny/vue-search-box`）或 SaaS 主题包（`@opentiny/vue-search-box-saas`）
+5. **包结构**：每个包包含 `index.js`（组件代码）和 `index.css`（样式文件），样式会自动导入
 
