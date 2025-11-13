@@ -6,14 +6,15 @@
       :item-data="{ label: state.inputValue }"
       @item-click="() => selectInputValue(state.inputValue)"
     >
-      <span> {{ t("tvp.tvpSearchbox.initUse") }}＂{{ state.inputValue }}＂</span>
+      <span> {{ t('tvp.tvpSearchbox.initUse') }}＂{{ state.inputValue }}＂</span>
     </tiny-dropdown-item>
-    <div v-show="!state.propItem.label && state.inputValue.trim()">
-      <div v-for="(value, key) in state.matchItems" :key="key">
+    <div v-show="!state.propItem.label && state.inputValue?.trim()">
+      <div
+        v-for="(value, key) in state.matchItems"
+        :key="key"
+      >
         <div v-if="value['attr'].length">
-          <span class="tvp-search-box__filter-type">{{
-            key === "0" ? t("tvp.tvpSearchbox.attributeType") : key
-          }}</span>
+          <span class="tvp-search-box__filter-type">{{ key === '0' ? t('tvp.tvpSearchbox.attributeType') : key }}</span>
           <tiny-dropdown-item
             v-for="(item, index) in value['attr']"
             :key="item.label + index"
@@ -22,7 +23,10 @@
             @item-click="() => selectPropItem(item)"
           >
             <span>
-              <span v-for="text in item.match" :key="text">
+              <span
+                v-for="text in item.match"
+                :key="text"
+              >
                 <span
                   v-if="text.toLowerCase() === item.hightlighStr"
                   class="tvp-search-box__text-highlight"
@@ -35,9 +39,7 @@
         </div>
         <template v-if="value['attrValue'].length">
           <span class="tvp-search-box__filter-type">{{
-            t("tvp.tvpSearchbox.propertyValue", [
-              key === "0" ? t("tvp.tvpSearchbox.attributeType") : key,
-            ])
+            t('tvp.tvpSearchbox.propertyValue', [key === '0' ? t('tvp.tvpSearchbox.attributeType') : key])
           }}</span>
           <tiny-dropdown-item
             v-for="(item, index) in value['attrValue']"
@@ -48,7 +50,10 @@
             @item-click="() => selectRadioItem(item, true)"
           >
             <span>
-              <span v-for="text in item.match" :key="text">
+              <span
+                v-for="text in item.match"
+                :key="text"
+              >
                 <span
                   v-if="text.toLowerCase() === item.hightlighStr"
                   class="tvp-search-box__text-highlight"
@@ -61,10 +66,11 @@
         </template>
       </div>
       <div v-show="state.potentialOptions">
-        <span class="tvp-search-box__filter-type">{{
-          t("tvp.tvpSearchbox.matched")
-        }}</span>
-        <div id="potential-loading" class="tvp-search-box__potential-box">
+        <span class="tvp-search-box__filter-type">{{ t('tvp.tvpSearchbox.matched') }}</span>
+        <div
+          id="potential-loading"
+          class="tvp-search-box__potential-box"
+        >
           <div v-if="state.potentialOptions">
             <tiny-dropdown-item
               v-for="(item, index) in state.potentialOptions"
@@ -81,13 +87,18 @@
       </div>
     </div>
     <div
-      v-show="state.visible && !state.propItem.label && !state.inputValue.trim()"
+      v-show="state.visible && !state.propItem.label && !state.inputValue?.trim()"
       class="tvp-search-box__first-panel"
     >
-      <div v-for="(group, key) in state.groupItems" :key="key">
-        <span v-if="group.length" class="tvp-search-box__filter-type">{{
-          key === "0" ? t("tvp.tvpSearchbox.attributeType") : key
-        }}</span>
+      <div
+        v-for="(group, key) in state.groupItems"
+        :key="key"
+      >
+        <span
+          v-if="group.length"
+          class="tvp-search-box__filter-type"
+          >{{ key === '0' ? t('tvp.tvpSearchbox.attributeType') : key }}</span
+        >
         <tiny-dropdown-item
           v-for="(item, index) in group"
           :key="(item.field || item.label) + index"
@@ -162,7 +173,7 @@ export default defineComponent({
     handleEvents: {
       type: Function,
       default: null
-    },
+    }
   },
   emits: ['events'],
   setup(props, context) {
