@@ -77,7 +77,7 @@ export function moveTypesFiles(typesDir: string): Plugin {
             const srcDir = resolve(typesPath, 'src')
             const indexPath = resolve(srcDir, 'index.type.d.ts')
             const targetPath = resolve(typesPath, 'index.type.d.ts')
-            
+
             if (existsSync(indexPath)) {
                 // 读取文件内容
                 const content = readFileSync(indexPath, 'utf-8')
@@ -254,6 +254,136 @@ export function removeJsOutput(): Plugin {
                     delete bundle[fileName]
                 }
             })
+        }
+    }
+}
+
+/**
+ * 在构建时包含样式文件的插件
+ * @param lessSrcPath Less 源文件路径
+ * @param outDir 输出目录
+ * @param cssFileName CSS 输出文件名
+ * @param isSaas 是否为 saas 主题
+ */
+export interface IncludeStyleOptions {
+    lessSrcPath: string
+    outDir: string
+    cssFileName?: string
+    isSaas?: boolean
+    postcssConfigPath?: string
+    tailwindConfigPath?: string
+    cwd: string
+}
+
+export function includeStyle(options: IncludeStyleOptions): Plugin {
+    const {
+        lessSrcPath,
+        outDir,
+        cssFileName = 'index.css',
+        isSaas = false,
+        postcssConfigPath,
+        tailwindConfigPath,
+        cwd
+    } = options
+
+    return {
+        name: 'include-style',
+        async writeBundle() {
+            const lessPath = resolve(lessSrcPath)
+            const outputDir = resolve(outDir)
+            const cssDest = resolve(outputDir, cssFileName)
+
+            if (!existsSync(lessPath)) {
+                console.warn('⚠️ Less 源文件不存在:', lessPath)
+                return
+            }
+
+            // 确保输出目录存在
+            mkdirSync(outputDir, { recursive: true })
+
+            try {
+                if (isSaas && postcssConfigPath && tailwindConfigPath) {
+                    // Saas 主题：需要处理 Tailwind
+                    const tempCss = resolve(outputDir, 'temp.css')
+                    const postcssConfig = resolve(postcssConfigPath)
+                    const tailwindConfig = resolve(tailwindConfigPath)
+                    const workDir = resolve(cwd)
+
+                    console.log('📝 编译 Saas 主题样式...')
+                    // 步骤1：使用 lessc 编译 Less
+                    execSync(`npx lessc "${lessPath}" "${tempCss}"`, {
+                        stdio: 'pipe',
+                        cwd: workDir,
+                        shell: true as any
+                    })
+
+                    // 读取并修复 @apply 指令
+                    let tempCssContent = readFileSync(tempCss, 'utf-8')
+                    tempCssContent = tempCssContent.replace(/@apply\s+([^;]+),/g, (match, classes) => {
+                        const cleaned = classes.replace(/,\s*/g, ' ').trim()
+                        return `@apply ${cleaned}`
+                    })
+                    writeFileSync(tempCss, tempCssContent, 'utf-8')
+
+                    // 步骤2：使用 postcss 处理 Tailwind
+                    execSync(`npx postcss "${tempCss}" -o "${cssDest}" --config "${postcssConfig}"`, {
+                        stdio: 'inherit',
+                        cwd: workDir,
+                        shell: true as any,
+                        env: {
+                            ...process.env,
+                            TAILWIND_CONFIG: tailwindConfig
+                        }
+                    } as any)
+
+                    // 删除临时文件
+                    if (existsSync(tempCss)) {
+                        unlinkSync(tempCss)
+                    }
+                } else {
+                    // 普通主题：直接编译 Less
+                    console.log('📝 编译普通主题样式...')
+                    execSync(`npx lessc "${lessPath}" "${cssDest}"`, {
+                        stdio: 'inherit',
+                        cwd: resolve(cwd),
+                        shell: true as any
+                    })
+                }
+
+                if (existsSync(cssDest)) {
+                    const cssContent = readFileSync(cssDest, 'utf-8')
+                    console.log(`✓ 样式文件已生成: ${cssDest} (${Math.round(cssContent.length / 1024)} KB)`)
+                }
+            } catch (error: any) {
+                console.error('❌ 样式编译失败:', error.message)
+                throw error
+            }
+        }
+    }
+}
+
+/**
+ * 在构建后的入口文件中自动导入样式
+ * @param cssPath CSS 文件相对路径
+ * @param outDir 输出目录
+ */
+export function autoImportStyle(cssPath: string = './index.css', outDir?: string): Plugin {
+    return {
+        name: 'auto-import-style',
+        async closeBundle() {
+            if (!outDir) return
+
+            const outputDir = resolve(outDir)
+            const indexFile = resolve(outputDir, 'index.js')
+
+            // 修改入口文件，添加样式导入
+            if (existsSync(indexFile)) {
+                const content = readFileSync(indexFile, 'utf-8')
+                if (!content.includes(`import '${cssPath}'`)) {
+                    writeFileSync(indexFile, `import '${cssPath}';\n${content}`, 'utf-8')
+                    console.log(`✓ 已在入口文件中添加样式导入`)
+                }
+            }
         }
     }
 }

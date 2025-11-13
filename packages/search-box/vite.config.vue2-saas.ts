@@ -71,32 +71,34 @@ const vueTemplateCompiler = require('vue-template-compiler')
 export default defineConfig({
     plugins: [
         // 构建前清空输出目录
-        clearOutputDir(resolve(__dirname, 'dist/vue2'), 'Vue2'),
+        clearOutputDir(resolve(__dirname, 'dist/vue2-saas'), 'Vue2-Saas'),
         createVuePlugin({
             vueTemplateOptions: {
                 compiler: vueTemplateCompiler
             }
         }),
         dts({
-            outDir: 'dist/vue2/types',
+            outDir: 'dist/vue2-saas/types',
             include: ['src/index.type.ts'],
             entryRoot: 'src'
         }),
         // 移动类型文件：从 types/src/ 移到 types/
-        moveTypesFiles(resolve(__dirname, 'dist/vue2/types')),
-        // 包含普通主题样式
+        moveTypesFiles(resolve(__dirname, 'dist/vue2-saas/types')),
+        // 包含 Saas 主题样式
         includeStyle({
-            lessSrcPath: resolve(__dirname, 'theme/index.less'),
-            outDir: resolve(__dirname, 'dist/vue2'),
+            lessSrcPath: resolve(__dirname, 'theme-saas/index.less'),
+            outDir: resolve(__dirname, 'dist/vue2-saas'),
             cssFileName: 'index.css',
-            isSaas: false,
+            isSaas: true,
+            postcssConfigPath: resolve(__dirname, 'postcss.config.cjs'),
+            tailwindConfigPath: resolve(__dirname, 'tailwind.config.cjs'),
             cwd: __dirname
         }),
         // 自动导入样式
-        autoImportStyle('./index.css', resolve(__dirname, 'dist/vue2'))
+        autoImportStyle('./index.css', resolve(__dirname, 'dist/vue2-saas'))
     ],
     build: {
-        outDir: 'dist/vue2',
+        outDir: 'dist/vue2-saas',
         emptyOutDir: true,
         lib: {
             entry: resolve(__dirname, 'index.ts'),
@@ -157,7 +159,7 @@ export default defineConfig({
     },
     css: {
         postcss: {
-            // Vue2 构建不使用 tailwindcss
+            // Saas 主题需要 PostCSS 处理 Tailwind，但我们在插件中处理
             plugins: []
         },
         preprocessorOptions: {

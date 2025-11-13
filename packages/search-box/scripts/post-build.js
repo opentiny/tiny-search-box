@@ -11,7 +11,7 @@ const rootDir = resolve(__dirname, '..')
 const packageJson = JSON.parse(readFileSync(resolve(rootDir, 'package.json'), 'utf-8'))
 
 // 从命令行参数获取构建类型
-const buildType = process.argv[2] // 'vue2', 'vue3', 'saas'
+const buildType = process.argv[2] // 'vue2', 'vue2-saas', 'vue3', 'vue3-saas'
 
 // 解析版本号，提取 minor 和 patch 版本
 // 例如：3.27.0 -> { major: 3, minor: 27, patch: 0 }
@@ -41,15 +41,15 @@ function getVue3Version() {
 }
 
 // 生成 Vue2 的 package.json
-function generateVue2PackageJson() {
+function generateVue2NormalPackageJson() {
   return {
     name: packageJson.name,
     version: getVue2Version(),
     description: packageJson.description,
-    main: 'lib/index.cjs.js',
-    module: 'es/index.es.js',
+    main: 'index.js',
+    module: 'index.js',
     types: 'types/index.d.ts',
-    sideEffects: false,
+    sideEffects: ['*.css'],
     publishConfig: {
       access: 'public'
     },
@@ -85,16 +85,106 @@ function generateVue2PackageJson() {
   }
 }
 
-// 生成 Vue3 的 package.json
-function generateVue3PackageJson() {
+// 生成 Vue2 Saas 的 package.json
+function generateVue2SaasPackageJson() {
+  return {
+    name: '@opentiny/vue-search-box-saas',
+    version: getVue2Version(),
+    description: packageJson.description,
+    main: 'index.js',
+    module: 'index.js',
+    types: 'types/index.d.ts',
+    sideEffects: ['*.css'],
+    publishConfig: {
+      access: 'public'
+    },
+    peerDependencies: {
+      vue: '^2.6.14'
+    },
+    dependencies: {
+      '@opentiny/vue-button': '^2.26.0',
+      '@opentiny/vue-checkbox': '^2.26.0',
+      '@opentiny/vue-checkbox-group': '^2.26.0',
+      '@opentiny/vue-date-picker': '^2.26.0',
+      '@opentiny/vue-dropdown': '^2.26.0',
+      '@opentiny/vue-dropdown-item': '^2.26.0',
+      '@opentiny/vue-dropdown-menu': '^2.26.0',
+      '@opentiny/vue-form': '^2.26.0',
+      '@opentiny/vue-form-item': '^2.26.0',
+      '@opentiny/vue-icon': '^2.26.0',
+      '@opentiny/vue-input': '^2.26.0',
+      '@opentiny/vue-loading': '^2.26.0',
+      '@opentiny/vue-option': '^2.26.0',
+      '@opentiny/vue-popover': '^2.26.0',
+      '@opentiny/vue-select': '^2.26.0',
+      '@opentiny/vue-tag': '^2.26.0',
+      '@opentiny/vue-tooltip': '^2.26.0',
+      '@opentiny/vue-common': '^2.26.0',
+      '@opentiny/vue-theme': '^3.26.0'
+    },
+    keywords: packageJson.keywords || [],
+    license: packageJson.license,
+    repository: packageJson.repository,
+    homepage: packageJson.homepage,
+    bugs: packageJson.bugs
+  }
+}
+
+// 生成 Vue3 Normal 的 package.json
+function generateVue3NormalPackageJson() {
   return {
     name: packageJson.name,
     version: getVue3Version(),
     description: packageJson.description,
-    main: 'lib/index.cjs.js',
-    module: 'es/index.es.js',
+    main: 'index.js',
+    module: 'index.js',
     types: 'types/index.d.ts',
-    sideEffects: false,
+    sideEffects: ['*.css'],
+    publishConfig: {
+      access: 'public'
+    },
+    peerDependencies: {
+      vue: '^3.0.0'
+    },
+    dependencies: {
+      '@opentiny/vue-button': '^3.26.0',
+      '@opentiny/vue-checkbox': '^3.26.0',
+      '@opentiny/vue-checkbox-group': '^3.26.0',
+      '@opentiny/vue-date-picker': '^3.26.0',
+      '@opentiny/vue-dropdown': '^3.26.0',
+      '@opentiny/vue-dropdown-item': '^3.26.0',
+      '@opentiny/vue-dropdown-menu': '^3.26.0',
+      '@opentiny/vue-form': '^3.26.0',
+      '@opentiny/vue-form-item': '^3.26.0',
+      '@opentiny/vue-icon': '^3.26.0',
+      '@opentiny/vue-input': '^3.26.0',
+      '@opentiny/vue-loading': '^3.26.0',
+      '@opentiny/vue-option': '^3.26.0',
+      '@opentiny/vue-popover': '^3.26.0',
+      '@opentiny/vue-select': '^3.26.0',
+      '@opentiny/vue-tag': '^3.26.0',
+      '@opentiny/vue-tooltip': '^3.26.0',
+      '@opentiny/vue-common': '^3.26.0',
+      '@opentiny/vue-theme': '^3.26.0'
+    },
+    keywords: packageJson.keywords || [],
+    license: packageJson.license,
+    repository: packageJson.repository,
+    homepage: packageJson.homepage,
+    bugs: packageJson.bugs
+  }
+}
+
+// 生成 Vue3 Saas 的 package.json
+function generateVue3SaasPackageJson() {
+  return {
+    name: '@opentiny/vue-search-box-saas',
+    version: getVue3Version(),
+    description: packageJson.description,
+    main: 'index.js',
+    module: 'index.js',
+    types: 'types/index.d.ts',
+    sideEffects: ['*.css'],
     publishConfig: {
       access: 'public'
     },
@@ -136,14 +226,20 @@ function generatePackageJson() {
   let distDir = ''
 
   if (buildType === 'vue2') {
-    pkg = generateVue2PackageJson()
+    pkg = generateVue2NormalPackageJson()
     distDir = resolve(rootDir, 'dist/vue2')
-    // 不再复制和编译 CSS 文件，CSS 由单独的 theme 构建处理
+  } else if (buildType === 'vue2-saas') {
+    pkg = generateVue2SaasPackageJson()
+    distDir = resolve(rootDir, 'dist/vue2-saas')
   } else if (buildType === 'vue3') {
-    pkg = generateVue3PackageJson()
+    pkg = generateVue3NormalPackageJson()
     distDir = resolve(rootDir, 'dist/vue3')
+  } else if (buildType === 'vue3-saas') {
+    pkg = generateVue3SaasPackageJson()
+    distDir = resolve(rootDir, 'dist/vue3-saas')
   } else {
     console.error(`未知的构建类型: ${buildType}`)
+    console.error('可用类型: vue2, vue2-saas, vue3, vue3-saas')
     process.exit(1)
   }
 

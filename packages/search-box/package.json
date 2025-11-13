@@ -1,6 +1,6 @@
 {
   "name": "@opentiny/vue-search-box",
-  "version": "3.27.0",
+  "version": "3.27.1",
   "description": "",
   "homepage": "https://github.com/opentiny/tiny-search-box#readme",
   "bugs": {
@@ -46,15 +46,17 @@
     "@opentiny/vue-theme-saas": "^3.27.0"
   },
   "scripts": {
-    "build:all": "pnpm build2 && pnpm build3 && pnpm build:theme && pnpm build:saas",
-    "build2": "vite build --config vite.config.vue2.ts && node scripts/post-build.js vue2",
-    "build3": "vite build && node scripts/post-build.js vue3",
-    "build:theme": "vite build --config vite.config.theme.ts",
-    "build:saas": "vite build --config vite.config.theme-saas.ts",
+    "build:all": "pnpm build:vue2 && pnpm build:vue2-saas && pnpm build:vue3 && pnpm build:vue3-saas",
+    "build:vue2": "vite build --config vite.config.vue2.ts && node scripts/post-build.js vue2",
+    "build:vue2-saas": "vite build --config vite.config.vue2-saas.ts && node scripts/post-build.js vue2-saas",
+    "build:vue3": "vite build --config vite.config.vue3.ts && node scripts/post-build.js vue3",
+    "build:vue3-saas": "vite build --config vite.config.vue3-saas.ts && node scripts/post-build.js vue3-saas",
+    "build:aurora": "pnpm build:all && node scripts/releaseAurora.js",
+    "release:aurora": "node scripts/releaseAurora.js",
     "publish:vue2": "node scripts/publish.js vue2",
+    "publish:vue2-saas": "node scripts/publish.js vue2-saas",
     "publish:vue3": "node scripts/publish.js vue3",
-    "publish:theme": "node scripts/publish.js theme",
-    "publish:theme-saas": "node scripts/publish.js theme-saas",
+    "publish:vue3-saas": "node scripts/publish.js vue3-saas",
     "publish:all": "node scripts/publish.js all"
   },
   "devDependencies": {

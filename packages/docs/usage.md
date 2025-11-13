@@ -30,12 +30,6 @@ npm i @opentiny/vue-search-box
 import TinySearchBox from '@opentiny/vue-search-box';
 ````
 
-引入样式：
-
-```css
-@import '@opentiny/vue-search-box/dist/index.css';
-```
-
 在模板中使用：
 
 ```html
@@ -97,7 +91,7 @@ import TinySearchBox from '@opentiny/vue-search-box';
 ```shell
 git clone git@github.com:opentiny/tiny-search-box.git
 cd tiny-search-box
-pnpm i
+pnpm install:all
 pnpm dev
 ```
 
