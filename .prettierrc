@@ -7,7 +7,7 @@
   "endOfLine": "auto",
   "bracketSpacing": true,
   "jsxBracketSameLine": true,
-  "jsxSingleQuote": false,
+  "jsxSingleQuote": true,
   "useTabs": false,
   "tabWidth": 2,
   "proseWrap": "preserve",
@@ -17,6 +17,16 @@
       "files": ".prettierrc",
       "options": {
         "parser": "json"
+      }
+    },
+    {
+      "files": "*.vue",
+      "options": {
+        "parser": "vue",
+        "singleQuote": true,
+        "jsxSingleQuote": true,
+        "singleAttributePerLine": true,
+        "htmlWhitespaceSensitivity": "css"
       }
     }
   ]

@@ -1,5 +1,5 @@
 <template>
-  <div 
+  <div
     :class="['tvp-search-box', size === 'small' ? 'tvp-search-box--small' : '']"
     @click.stop="showPopover(state, false)"
   >
@@ -15,10 +15,13 @@
       @click.stop="editTag(tag, index, $event)"
     >
       <span class="tvp-search-box__tag-value"
-        >{{ tag.label }} {{ tag.operator || ":" }} {{ tag.value }}
+        >{{ tag.label }} {{ tag.operator || ':'}} {{ tag.value }}
       </span>
     </tiny-tag>
-    <span v-if="modelValue.length" class="tvp-search-box__placeholder"></span>
+    <span
+      v-if="modelValue.length"
+      class="tvp-search-box__placeholder"
+    ></span>
     <tiny-form
       ref="formRef"
       :model="state"
@@ -65,7 +68,10 @@
                 class="tvp-search-box__input-close"
                 @click.stop="clearTag"
               />
-              <span v-show="isShowClose" class="tvp-search-box__input-separator"></span>
+              <span
+                v-show="isShowClose"
+                class="tvp-search-box__input-separator"
+              ></span>
               <tiny-tooltip
                 v-if="showHelp"
                 effect="light"
@@ -90,13 +96,13 @@
               :style="{ 'max-height': panelMaxHeight }"
               @mouseup.stop="() => {}"
             >
-              <div v-show="!state.propItem.label || state.inputValue.trim()">
+              <div v-show="!state.propItem.label || state.inputValue?.trim()">
                 <slot
                   v-if="state.instance?.slots['first-panel']"
                   name="first-panel"
                   v-bind="{
                     state,
-                    handleEvents,
+                    handleEvents
                   }"
                   @click.stop
                 ></slot>
@@ -104,7 +110,8 @@
                   v-else
                   :state="state"
                   :handleEvents="handleEvents"
-                ></TinySearchBoxFirstLevelPanel>
+                >
+                </TinySearchBoxFirstLevelPanel>
               </div>
               <div v-show="state.propItem.label">
                 <slot
@@ -114,7 +121,7 @@
                     state,
                     pickerOptions,
                     handleEvents,
-                    back: () => resetInput(state),
+                    back: () => resetInput(state)
                   }"
                   @click.stop
                 ></slot>
@@ -133,7 +140,7 @@
                     :name="state.prevItem.slotName"
                     v-bind="{
                       showDropdown: () => showDropdown(state),
-                      onConfirm: handleConfirm,
+                      onConfirm: handleConfirm
                     }"
                     @click.stop
                   ></slot>
@@ -157,7 +164,7 @@
           <template v-if="state.prevItem.type !== 'custom'">
             <div class="tvp-search-box__date-wrap">
               <div class="tvp-search-box__dropdown-start">
-                {{ t("tvp.tvpSearchbox.attributeType") }}
+                {{ t('tvp.tvpSearchbox.attributeType') }}
               </div>
               <tiny-form-item class="tvp-search-box__number-item">
                 <tiny-select
@@ -189,8 +196,11 @@
                   </tiny-option>
                 </tiny-select>
               </tiny-form-item>
-              <div v-if="state.prevItem.operators" class="tvp-search-box__dropdown-end">
-                {{ t("tvp.tvpSearchbox.operator") }}
+              <div
+                v-if="state.prevItem.operators"
+                class="tvp-search-box__dropdown-end"
+              >
+                {{ t('tvp.tvpSearchbox.operator') }}
               </div>
               <tiny-form-item
                 v-if="state.prevItem.operators"
@@ -210,14 +220,10 @@
                 v-if="state.prevItem.type !== 'numRange'"
                 class="tvp-search-box__dropdown-end"
               >
-                {{ t("tvp.tvpSearchbox.tagValue") }}
+                {{ t('tvp.tvpSearchbox.tagValue') }}
               </div>
               <tiny-form-item
-                v-if="
-                  !['numRange', 'dateRange', 'datetimeRange', 'custom'].includes(
-                    state.prevItem.type
-                  )
-                "
+                v-if="!['numRange', 'dateRange', 'datetimeRange', 'custom'].includes(state.prevItem.type)"
                 prop="inputEditValue"
                 class="tvp-search-box__number-item"
               >
@@ -239,14 +245,18 @@
                   >
                   </tiny-option>
                 </tiny-select>
-                <tiny-input v-else v-model="state.inputEditValue" clearable></tiny-input>
+                <tiny-input
+                  v-else
+                  v-model="state.inputEditValue"
+                  clearable
+                ></tiny-input>
               </tiny-form-item>
               <div
                 v-if="state.prevItem.type === 'numRange'"
                 class="tvp-search-box__number"
               >
                 <div class="tvp-search-box__dropdown-start">
-                  {{ t("tvp.tvpSearchbox.minValueText") }}({{ state.prevItem.unit }})
+                  {{ t('tvp.tvpSearchbox.minValueText') }}({{ state.prevItem.unit }})
                 </div>
                 <tiny-form-item
                   :prop="state.curMinNumVar"
@@ -260,7 +270,7 @@
                   ></tiny-input>
                 </tiny-form-item>
                 <div class="tvp-search-box__dropdown-end">
-                  {{ t("tvp.tvpSearchbox.maxValueText") }}({{ state.prevItem.unit }})
+                  {{ t('tvp.tvpSearchbox.maxValueText') }}({{ state.prevItem.unit }})
                 </div>
                 <tiny-form-item
                   :prop="state.curMaxNumVar"
@@ -280,14 +290,14 @@
                 <div class="tvp-search-box__dropdown-title">
                   {{
                     state.prevItem.maxTimeLength > 0
-                      ? t("tvp.tvpSearchbox.timeLengthTitle", {
-                          value: (state.prevItem.maxTimeLength / 86400000).toFixed(1),
+                      ? t('tvp.tvpSearchbox.timeLengthTitle', {
+                          value: (state.prevItem.maxTimeLength / 86400000).toFixed(1)
                         })
-                      : t("tvp.tvpSearchbox.rangeDateTitle")
+                      : t('tvp.tvpSearchbox.rangeDateTitle')
                   }}
                 </div>
                 <div class="tvp-search-box__dropdown-start">
-                  {{ t("tvp.tvpSearchbox.rangeBeginLabel") }}
+                  {{ t('tvp.tvpSearchbox.rangeBeginLabel') }}
                 </div>
                 <tiny-form-item
                   prop="startDate"
@@ -303,9 +313,12 @@
                   ></tiny-date-picker>
                 </tiny-form-item>
                 <div class="tvp-search-box__dropdown-end">
-                  {{ t("tvp.tvpSearchbox.rangeEndLabel") }}
+                  {{ t('tvp.tvpSearchbox.rangeEndLabel') }}
                 </div>
-                <tiny-form-item prop="endDate" class="tvp-search-box__date-item">
+                <tiny-form-item
+                  prop="endDate"
+                  class="tvp-search-box__date-item"
+                >
                   <tiny-date-picker
                     v-model="state.endDate"
                     :format="state.prevItem.format || state.dateRangeFormat"
@@ -322,14 +335,14 @@
                 <div class="tvp-search-box__dropdown-title">
                   {{
                     state.prevItem.maxTimeLength > 0
-                      ? t("tvp.tvpSearchbox.timeLengthTitle", {
-                          value: (state.prevItem.maxTimeLength / 86400000).toFixed(1),
+                      ? t('tvp.tvpSearchbox.timeLengthTitle', {
+                          value: (state.prevItem.maxTimeLength / 86400000).toFixed(1)
                         })
-                      : t("tvp.tvpSearchbox.rangeDateTitle")
+                      : t('tvp.tvpSearchbox.rangeDateTitle')
                   }}
                 </div>
                 <div class="tvp-search-box__dropdown-start">
-                  {{ t("tvp.tvpSearchbox.rangeBeginLabel") }}
+                  {{ t('tvp.tvpSearchbox.rangeBeginLabel') }}
                 </div>
                 <tiny-form-item
                   prop="startDateTime"
@@ -347,9 +360,12 @@
                   ></tiny-date-picker>
                 </tiny-form-item>
                 <div class="tvp-search-box__dropdown-end">
-                  {{ t("tvp.tvpSearchbox.rangeEndLabel") }}
+                  {{ t('tvp.tvpSearchbox.rangeEndLabel') }}
                 </div>
-                <tiny-form-item prop="endDateTime" class="tvp-search-box__date-item">
+                <tiny-form-item
+                  prop="endDateTime"
+                  class="tvp-search-box__date-item"
+                >
                   <tiny-date-picker
                     v-model="state.endDateTime"
                     type="datetime"
@@ -363,20 +379,30 @@
               </div>
             </div>
             <div class="tvp-search-box__bottom-btn">
-              <tiny-button size="mini" @click="confirmEditTag(false)">
-                {{ t("tvp.tvpSearchbox.cancel") }}
+              <tiny-button
+                size="mini"
+                @click="confirmEditTag(false)"
+              >
+                {{ t('tvp.tvpSearchbox.cancel') }}
               </tiny-button>
-              <tiny-button size="mini" @click="confirmEditTag(true)">
-                {{ t("tvp.tvpSearchbox.confirm") }}
+              <tiny-button
+                size="mini"
+                :disabled="state.hasFormError"
+                @click="confirmEditTag(true)"
+              >
+                {{ t('tvp.tvpSearchbox.confirm') }}
               </tiny-button>
             </div>
           </template>
-          <div v-else class="tvp-search-box__panel-box">
+          <div
+            v-else
+            class="tvp-search-box__panel-box"
+          >
             <slot
               :name="`${state.prevItem.slotName}-edit`"
               v-bind="{
                 showDropdown: () => showPopover(state),
-                onConfirm: handleEditConfirm,
+                onConfirm: handleEditConfirm
               }"
               @click.stop
             ></slot>
@@ -420,7 +446,7 @@ export default defineComponent({
     ...$props,
     tiny_mode: {
       type: String,
-      default: 'pc',
+      default: 'pc'
     },
     modelValue: {
       type: Array,
@@ -428,11 +454,11 @@ export default defineComponent({
     },
     items: {
       type: Array,
-      default: () => [],
+      default: () => []
     },
     emptyPlaceholder: {
       type: String,
-      default: '',
+      default: ''
     },
     potentialOptions: {
       type: Object,
@@ -448,7 +474,7 @@ export default defineComponent({
     },
     defaultField: {
       type: String,
-      default: '',
+      default: ''
     },
     editable: {
       type: Boolean,
@@ -472,14 +498,7 @@ export default defineComponent({
       default: ''
     }
   },
-  emits: [
-    'update:modelValue',
-    'change',
-    'search',
-    'exceed',
-    'first-level-select',
-    'clear'
-  ],
+  emits: ['update:modelValue', 'change', 'search', 'exceed', 'first-level-select', 'clear'],
   components: {
     TinyTag,
     TinyInput,
@@ -498,10 +517,10 @@ export default defineComponent({
     // 图标组件
     TinyIconSearch: iconSearch(),
     TinyIconClose: iconClose(),
-    TinyIconHelpQuery: iconHelpQuery(),
+    TinyIconHelpQuery: iconHelpQuery()
   },
   setup(props, context) {
-    return setup({ props, context, renderless, api });
-  },
-});
+    return setup({ props, context, renderless, api })
+  }
+})
 </script>
