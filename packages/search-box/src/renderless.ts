@@ -44,10 +44,12 @@ export const api = [
   'showPopover'
 ]
 
+const resolveEmptyPlaceholder = (props, t) => props.emptyPlaceholder || t('tvp.tvpSearchbox.addPlaceholder')
+
 const initState = ({ reactive, computed, api, i18n, watch, props, emit, vm }) => {
   const state = reactive({
     innerModelValue: [...props.modelValue],
-    placeholder: props.emptyPlaceholder || t('tvp.tvpSearchbox.addPlaceholder'),
+    placeholder: props.modelValue.length > 0 ? t('tvp.tvpSearchbox.addPlaceholder') : resolveEmptyPlaceholder(props, t),
     emitter: emit,
     recordItems: [],
     groupItems: {},
@@ -175,11 +177,13 @@ const initAllApi = ({ api, state, t, props, emit, nextTick, vm, computed }) => {
     state.placeholder = placeholderValue
   }
 
-  // 默认显示 addPlaceholder
+  const getEmptyPlaceholderValue = () => resolveEmptyPlaceholder(props, t)
+
+  // 默认显示占位符，emptyPlaceholder 优先
   if (props.modelValue.length > 0) {
     setPlaceholder(t('tvp.tvpSearchbox.addPlaceholder'))
   } else {
-    setPlaceholder(t('tvp.tvpSearchbox.addPlaceholder'))
+    setPlaceholder(getEmptyPlaceholderValue())
   }
 
 
@@ -241,8 +245,10 @@ const initWatch = ({ watch, state, props, api, nextTick, vm }) => {
         api.setPlaceholder(t('tvp.tvpSearchbox.addPlaceholder'))
       }
     } else {
-      // 默认显示 addPlaceholder
-      api.setPlaceholder(t('tvp.tvpSearchbox.addPlaceholder'))
+      // 默认显示 emptyPlaceholder（如果提供）或 addPlaceholder
+      const defaultPlaceholder =
+        props.modelValue.length > 0 ? t('tvp.tvpSearchbox.addPlaceholder') : resolveEmptyPlaceholder(props, t)
+      api.setPlaceholder(defaultPlaceholder)
     }
   }
 
@@ -442,7 +448,7 @@ const initWatch = ({ watch, state, props, api, nextTick, vm }) => {
         })
         showPopover(state, false)
         if (newVal.length === 0) {
-          api.setPlaceholder(t('tvp.tvpSearchbox.addPlaceholder'))
+          api.setPlaceholder(resolveEmptyPlaceholder(props, t))
         }
 
         if (props.editable && !state.inputEditValue.length && newVal[0]) {
