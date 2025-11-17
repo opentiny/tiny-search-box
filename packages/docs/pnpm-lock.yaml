@@ -59,6 +59,9 @@ importers:
       '@opentiny/vue-popover':
         specifier: ^3.27.0
         version: 3.27.0
+      '@opentiny/vue-search-box':
+        specifier: ^3.27.1
+        version: 3.27.1(vue@3.5.22)
       '@opentiny/vue-select':
         specifier: ^3.27.0
         version: 3.27.0
@@ -77,6 +80,9 @@ importers:
       less:
         specifier: ^4.3.0
         version: 4.4.2
+      vue:
+        specifier: ^3.5.13
+        version: 3.5.22
     devDependencies:
       '@rollup/plugin-commonjs':
         specifier: ^28.0.3
@@ -90,9 +96,6 @@ importers:
       vitepress:
         specifier: ^1.6.3
         version: 1.6.4(@algolia/client-search@5.42.0)(@types/node@22.19.0)(less@4.4.2)(postcss@8.5.6)(qrcode@1.5.1)(search-insights@2.17.3)
-      vue:
-        specifier: ^3.5.13
-        version: 3.5.22
 
 packages:
 
@@ -520,6 +523,11 @@ packages:
 
   '@opentiny/vue-scrollbar@3.27.0':
     resolution: {integrity: sha512-nQwMSEN5IC6q21L+nzn7kyr9LpsqbQ3I9MeokFv6cuJfZ2j3+CZVKtyBSGYU7n4ec2zGYqYfkZR93+EJuODX1w==}
+
+  '@opentiny/vue-search-box@3.27.1':
+    resolution: {integrity: sha512-vFLk7ikJjakpwBkYDpS6IhQVdJTPqE4AkEqt4E96qy+S8G94optQJD0sKhSOYtyuaJGXO0GSW8fa5eml3VIOlQ==}
+    peerDependencies:
+      vue: ^3.0.0
 
   '@opentiny/vue-search@3.27.0':
     resolution: {integrity: sha512-B5vWjX57WMx+oxi4KGKuBCrY7LEM8nZlMTRAr+Nro+o3Q1p1Xfx60+tFvPhvouGrrHaKnKts4T2tkcted0dUyw==}
@@ -2065,6 +2073,29 @@ snapshots:
       '@opentiny/vue-common': 3.27.0
       '@opentiny/vue-renderless': 3.27.0
       '@opentiny/vue-theme': 3.27.0
+
+  '@opentiny/vue-search-box@3.27.1(vue@3.5.22)':
+    dependencies:
+      '@opentiny/vue-button': 3.27.0
+      '@opentiny/vue-checkbox': 3.27.0
+      '@opentiny/vue-checkbox-group': 3.27.0
+      '@opentiny/vue-common': 3.27.0
+      '@opentiny/vue-date-picker': 3.27.0
+      '@opentiny/vue-dropdown': 3.27.0
+      '@opentiny/vue-dropdown-item': 3.27.0
+      '@opentiny/vue-dropdown-menu': 3.27.0
+      '@opentiny/vue-form': 3.27.0
+      '@opentiny/vue-form-item': 3.27.0
+      '@opentiny/vue-icon': 3.27.0
+      '@opentiny/vue-input': 3.27.0
+      '@opentiny/vue-loading': 3.27.0
+      '@opentiny/vue-option': 3.27.0
+      '@opentiny/vue-popover': 3.27.0
+      '@opentiny/vue-select': 3.27.0
+      '@opentiny/vue-tag': 3.27.0
+      '@opentiny/vue-theme': 3.27.0
+      '@opentiny/vue-tooltip': 3.27.0
+      vue: 3.5.22
 
   '@opentiny/vue-search@3.27.0':
     dependencies:
