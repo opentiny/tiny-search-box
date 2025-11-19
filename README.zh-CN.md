@@ -24,7 +24,6 @@ TinySearchBox 主要有以下特点和优势：
 ```shell
 npm i @opentiny/vue-search-box
 ```
-```
 
 导入 TinySearchBox 综合搜索：
 
@@ -32,10 +31,14 @@ npm i @opentiny/vue-search-box
 import TinySearchBox from '@opentiny/vue-search-box';
 ```
 
-引入样式：
+样式说明：
 
-```css
-@import '@opentiny/vue-search-box-theme';
+组件包已内置样式文件，导入组件时会自动加载，**无需手动引入样式**。
+
+如果需要手动控制样式加载，可以单独引入：
+
+```javascript
+import '@opentiny/vue-search-box/index.css'
 ```
 
 在模板中使用：
@@ -99,7 +102,7 @@ import TinySearchBox from '@opentiny/vue-search-box';
 ```shell
 git clone git@github.com:opentiny/tiny-search-box.git
 cd tiny-search-box
-pnpm i
+pnpm install:all
 pnpm dev
 ```
 

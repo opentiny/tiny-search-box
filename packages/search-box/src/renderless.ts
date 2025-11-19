@@ -44,10 +44,12 @@ export const api = [
   'showPopover'
 ]
 
+const resolveEmptyPlaceholder = (props, t) => props.emptyPlaceholder || t('tvp.tvpSearchbox.addPlaceholder')
+
 const initState = ({ reactive, computed, api, i18n, watch, props, emit, vm }) => {
   const state = reactive({
     innerModelValue: [...props.modelValue],
-    placeholder: props.emptyPlaceholder || t('tvp.tvpSearchbox.addPlaceholder'),
+    placeholder: props.modelValue.length > 0 ? t('tvp.tvpSearchbox.addPlaceholder') : resolveEmptyPlaceholder(props, t),
     emitter: emit,
     recordItems: [],
     groupItems: {},
@@ -87,6 +89,7 @@ const initState = ({ reactive, computed, api, i18n, watch, props, emit, vm }) =>
     currentEditSelectTags: [],
     visible: false,
     visibleTimer: null,
+    hasFormError: false, // 表单校验错误状态
     hasBackupList: computed(() => state.propItem.label && [undefined, 'radio', 'checkbox', 'map'].includes(state.prevItem.type)),
     isIndeterminate: computed(() => state.checkboxGroup.length > 0 && state.checkboxGroup.length !== state.filterList.length),
     checkAll: computed({
@@ -146,7 +149,7 @@ export const renderless = (
 const initAllApi = ({ api, state, t, props, emit, nextTick, vm, computed }) => {
 
   const { deleteTag, clearTag, backspaceDeleteTag } = useTag({ props, state, emit, nextTick })
-  const { editTag, confirmEditTag, selectPropChange, selectItemIsDisable } = useEdit({ props, state, t, nextTick, format, emit, vm })
+  const { editTag, confirmEditTag, selectPropChange, selectItemIsDisable, checkFormValidation } = useEdit({ props, state, t, nextTick, format, emit, vm })
   const { handleInput, selectFirstMap, cancelHandleInput } = useMatch({ props, state, emit, nextTick })
   const { selectPropItem, selectRadioItem, selectInputValue, createTag, helpClick, setOperator } = useDropdown({ props, emit, state, t, format, nextTick, vm, cancelHandleInput })
   const { selectCheckbox } = useCheckbox({ props, state, emit, nextTick })
@@ -174,11 +177,13 @@ const initAllApi = ({ api, state, t, props, emit, nextTick, vm, computed }) => {
     state.placeholder = placeholderValue
   }
 
-  // 默认显示 addPlaceholder
+  const getEmptyPlaceholderValue = () => resolveEmptyPlaceholder(props, t)
+
+  // 默认显示占位符，emptyPlaceholder 优先
   if (props.modelValue.length > 0) {
     setPlaceholder(t('tvp.tvpSearchbox.addPlaceholder'))
   } else {
-    setPlaceholder(t('tvp.tvpSearchbox.addPlaceholder'))
+    setPlaceholder(getEmptyPlaceholderValue())
   }
 
 
@@ -215,6 +220,7 @@ const initAllApi = ({ api, state, t, props, emit, nextTick, vm, computed }) => {
     handleEditConfirm,
     showDropdown,
     showPopover,
+    checkFormValidation,
     setPlaceholder,
     initItems,
     initFormRule,
@@ -239,8 +245,10 @@ const initWatch = ({ watch, state, props, api, nextTick, vm }) => {
         api.setPlaceholder(t('tvp.tvpSearchbox.addPlaceholder'))
       }
     } else {
-      // 默认显示 addPlaceholder
-      api.setPlaceholder(t('tvp.tvpSearchbox.addPlaceholder'))
+      // 默认显示 emptyPlaceholder（如果提供）或 addPlaceholder
+      const defaultPlaceholder =
+        props.modelValue.length > 0 ? t('tvp.tvpSearchbox.addPlaceholder') : resolveEmptyPlaceholder(props, t)
+      api.setPlaceholder(defaultPlaceholder)
     }
   }
 
@@ -375,10 +383,42 @@ const initWatch = ({ watch, state, props, api, nextTick, vm }) => {
             : (state.currentEditSelectTags || '')
         }
       }
+      // 关闭编辑面板时重置校验错误状态
+      if (!newVal) {
+        state.hasFormError = false
+      }
     },
     {
       immediate: true
     }
+  )
+
+  // 监听编辑面板相关字段变化，检查校验状态
+  watch(
+    () => {
+      // 获取需要监听的字段值
+      const fields = {
+        inputEditValue: state.inputEditValue,
+        startDate: state.startDate,
+        endDate: state.endDate,
+        startDateTime: state.startDateTime,
+        endDateTime: state.endDateTime
+      }
+      // 如果是 numRange 类型，添加动态字段
+      if (state.curMinNumVar && state.curMaxNumVar) {
+        fields[state.curMinNumVar] = state[state.curMinNumVar]
+        fields[state.curMaxNumVar] = state[state.curMaxNumVar]
+      }
+      return fields
+    },
+    () => {
+      if (state.popoverVisible) {
+        nextTick(() => {
+          api.checkFormValidation()
+        })
+      }
+    },
+    { deep: true }
   )
 
   watch(
@@ -408,7 +448,7 @@ const initWatch = ({ watch, state, props, api, nextTick, vm }) => {
         })
         showPopover(state, false)
         if (newVal.length === 0) {
-          api.setPlaceholder(t('tvp.tvpSearchbox.addPlaceholder'))
+          api.setPlaceholder(resolveEmptyPlaceholder(props, t))
         }
 
         if (props.editable && !state.inputEditValue.length && newVal[0]) {

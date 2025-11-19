@@ -1,0 +1,66 @@
+name: CI
+
+# 此工作流确保每个 PR 在合并前都必须通过 build 和 build:docs 任务
+on:
+  pull_request:
+    branches:
+      - main
+      - master
+  push:
+    branches:
+      - main
+      - master
+
+jobs:
+  # 构建 search-box 组件
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: 9.14.4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        working-directory: ./packages/search-box
+        run: pnpm install --no-frozen-lockfile
+
+      - name: Run build
+        run: pnpm build
+
+  # 构建文档站点
+  build-docs:
+    name: Build Docs
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: 9.14.4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        working-directory: ./packages/docs
+        run: pnpm install --frozen-lockfile
+
+      - name: Build docs
+        run: pnpm build:docs
+

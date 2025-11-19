@@ -2,8 +2,7 @@ import { defineConfig } from "vite";
 import vue from "@vitejs/plugin-vue";
 import { resolve } from "path";
 import dts from "vite-plugin-dts";
-import { clearOutputDir, moveTypesFiles, removeCssOutput } from "./scripts/plugin-utils"
-
+import { clearOutputDir, moveTypesFiles, includeStyle, autoImportStyle } from "./scripts/plugin-utils"
 
 export default defineConfig({
   plugins: [
@@ -17,14 +16,21 @@ export default defineConfig({
     }),
     // 移动类型文件：从 types/src/ 移到 types/
     moveTypesFiles(resolve(__dirname, "dist/vue3/types")),
-    // 删除 CSS 输出
-    removeCssOutput(resolve(__dirname, "dist/vue3")),
+    // 包含普通主题样式
+    includeStyle({
+      lessSrcPath: resolve(__dirname, "theme/index.less"),
+      outDir: resolve(__dirname, "dist/vue3"),
+      cssFileName: "index.css",
+      isSaas: false,
+      cwd: __dirname
+    }),
+    // 自动导入样式
+    autoImportStyle('./index.css', resolve(__dirname, "dist/vue3"))
   ],
   resolve: {
     alias: {
       'vue': resolve("node_modules/vue/dist/vue.esm.js"),
       vue$: resolve("node_modules/vue/dist/vue.esm.js"),
-
     },
   },
   build: {
@@ -33,16 +39,8 @@ export default defineConfig({
     lib: {
       entry: resolve(__dirname, "index.ts"),
       name: "TinySearchBox",
-      formats: ["es", "cjs"],
-      fileName: (format) => {
-        if (format === "es") {
-          return "es/index.es.js";
-        }
-        if (format === "cjs") {
-          return "lib/index.cjs.js";
-        }
-        return "index.js";
-      },
+      formats: ["es"],
+      fileName: () => "index.js",
     },
     rollupOptions: {
       external: [
@@ -72,10 +70,12 @@ export default defineConfig({
         globals: {
           vue: "Vue",
         },
-        // 阻止输出 CSS 文件
-        assetFileNames: () => {
-          // 不输出任何 CSS 文件
-          return "ignored.css";
+        // 允许输出 CSS 文件
+        assetFileNames: (assetInfo) => {
+          if (assetInfo.name && assetInfo.name.endsWith('.css')) {
+            return 'index.css'
+          }
+          return assetInfo.name || 'asset'
         },
       },
     },
@@ -84,7 +84,7 @@ export default defineConfig({
   },
 
   css: {
-    // 禁用 PostCSS（Vue3 构建不使用 tailwindcss）
+    // 禁用 PostCSS（普通主题不使用 tailwindcss）
     postcss: {
       plugins: [],
     },
@@ -95,3 +95,4 @@ export default defineConfig({
     },
   },
 });
+

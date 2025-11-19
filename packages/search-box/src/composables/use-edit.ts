@@ -18,20 +18,54 @@ export function useEdit({ props, state, t, nextTick, format, emit, vm }) {
       const { datetimeRangeFormat } = state
       state.startDateTime = format(start, datetimeRangeFormat)
       state.endDateTime = format(end, datetimeRangeFormat)
+    } else {
+      if (mergeTag) {
+        const labels = curTag.options?.flatMap((item) => item.label) || []
+        // 多选编辑态，tiny-select multiple 需要数组
+        state.inputEditValue = labels
+        state.currentEditSelectTags = labels
       } else {
-        if (mergeTag) {
-          const labels = curTag.options?.flatMap((item) => item.label) || []
-          // 多选编辑态，tiny-select multiple 需要数组
-          state.inputEditValue = labels
-          state.currentEditSelectTags = labels
-        } else {
-          // 其他场景使用字符串
-          state.inputEditValue = Array.isArray(value) ? value.join(',') : (value || '')
-        }
-        state.currentEditValue = options
+        // 其他场景使用字符串
+        state.inputEditValue = Array.isArray(value) ? value.join(',') : (value || '')
       }
+      state.currentEditValue = options
+    }
     state.operatorValue = operator
     state.currentOperators = operators
+  }
+
+  // 检查表单校验状态
+  const checkFormValidation = async () => {
+    if (!state.instance?.$refs?.formRef) {
+      return
+    }
+
+    const { prevItem } = state
+    let verifyProps = []
+
+    if (prevItem.type === 'numRange') {
+      verifyProps = [state.curMinNumVar, state.curMaxNumVar]
+    } else if (prevItem.type === 'dateRange') {
+      verifyProps = ['startDate', 'endDate']
+    } else if (prevItem.type === 'datetimeRange') {
+      verifyProps = ['startDateTime', 'endDateTime']
+    } else if (!['custom', 'map'].includes(prevItem.type)) {
+      verifyProps = ['inputEditValue']
+    }
+
+    if (verifyProps?.length === 0) {
+      state.hasFormError = false
+      return
+    }
+
+    let hasError = false
+    await state.instance.$refs.formRef.validateField(verifyProps, (errMsg) => {
+      if (errMsg) {
+        hasError = true
+      }
+    })
+
+    state.hasFormError = hasError
   }
 
   const editTag = (tag, index, e) => {
@@ -49,6 +83,8 @@ export function useEdit({ props, state, t, nextTick, format, emit, vm }) {
       popoverRef.state.popperElm && (popoverRef.state.popperElm.style.display = 'none')
       popoverRef.doDestroy()
       state.popoverVisible = true
+      // 打开编辑面板时检查校验状态
+      checkFormValidation()
     })
 
     state.prevItem = state.recordItems.find((item) => item.field === tag.field)
@@ -64,6 +100,10 @@ export function useEdit({ props, state, t, nextTick, format, emit, vm }) {
     if (disabled) return
     state.prevItem = item
     setDropdownProps(item)
+    // 切换属性类型时检查校验状态
+    nextTick(() => {
+      checkFormValidation()
+    })
   }
 
   const confirmEditTag = async (isConfirm) => {
@@ -118,6 +158,7 @@ export function useEdit({ props, state, t, nextTick, format, emit, vm }) {
     editTag,
     confirmEditTag,
     selectPropChange,
-    selectItemIsDisable
+    selectItemIsDisable,
+    checkFormValidation
   }
 }

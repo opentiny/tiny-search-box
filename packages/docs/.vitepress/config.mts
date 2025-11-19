@@ -12,68 +12,11 @@ export default defineConfig({
   base: env.VITE_BASE_URL || '/tiny-search-box/',
   cleanUrls: true,
   vite: {
-    resolve: {
-      alias: {
-        'vue': path.resolve(__dirname, '../node_modules/vue/dist/vue.runtime.esm-bundler.js'),
-        '@opentiny/vue-search-box': path.resolve('../../packages/search-box/index.ts'),
-        '@opentiny/vue-button': path.resolve(__dirname, '../node_modules/@opentiny/vue-button'),
-        '@opentiny/vue-button-group': path.resolve(__dirname, '../node_modules/@opentiny/vue-button-group'),
-        '@opentiny/vue-checkbox': path.resolve(__dirname, '../node_modules/@opentiny/vue-checkbox'),
-        '@opentiny/vue-checkbox-group': path.resolve(__dirname, '../node_modules/@opentiny/vue-checkbox-group'),
-        '@opentiny/vue-date-picker': path.resolve(__dirname, '../node_modules/@opentiny/vue-date-picker'),
-        '@opentiny/vue-dropdown': path.resolve(__dirname, '../node_modules/@opentiny/vue-dropdown'),
-        '@opentiny/vue-dropdown-item': path.resolve(__dirname, '../node_modules/@opentiny/vue-dropdown-item'),
-        '@opentiny/vue-dropdown-menu': path.resolve(__dirname, '../node_modules/@opentiny/vue-dropdown-menu'),
-        '@opentiny/vue-form': path.resolve(__dirname, '../node_modules/@opentiny/vue-form'),
-        '@opentiny/vue-form-item': path.resolve(__dirname, '../node_modules/@opentiny/vue-form-item'),
-        '@opentiny/vue-icon': path.resolve(__dirname, '../node_modules/@opentiny/vue-icon'),
-        '@opentiny/vue-input': path.resolve(__dirname, '../node_modules/@opentiny/vue-input'),
-        '@opentiny/vue-loading': path.resolve(__dirname, '../node_modules/@opentiny/vue-loading'),
-        '@opentiny/vue-option': path.resolve(__dirname, '../node_modules/@opentiny/vue-option'),
-        '@opentiny/vue-popover': path.resolve(__dirname, '../node_modules/@opentiny/vue-popover'),
-        '@opentiny/vue-select': path.resolve(__dirname, '../node_modules/@opentiny/vue-select'),
-        '@opentiny/vue-tag': path.resolve(__dirname, '../node_modules/@opentiny/vue-tag'),
-        '@opentiny/vue-tooltip': path.resolve(__dirname, '../node_modules/@opentiny/vue-tooltip'),
-        '@opentiny/vue-common': path.resolve(__dirname, '../node_modules/@opentiny/vue-common'),
-        '@opentiny/vue-theme': path.resolve(__dirname, '../node_modules/@opentiny/vue-theme'),
-        '@opentiny/vue-locale': path.resolve(__dirname, '../node_modules/@opentiny/vue-locale')
-      }
-    },
     optimizeDeps: {
       exclude: ['@opentiny/vue-search-box', '@opentiny/vue-locale']
     },
-    build: {
-      rollupOptions: {
-        external: ['vue', 'vue/server-renderer']
-      }
-    },
     ssr: {
-      // noExternal: [/@opentiny\//],
-      external: [
-        '@opentiny/vue-search-box',
-        '@opentiny/vue-input',
-        '@opentiny/vue-loading',
-        '@opentiny/vue-common',
-        '@opentiny/vue-search-box-theme',
-        '@opentiny/vue-option',
-        '@opentiny/vue-button',
-        '@opentiny/vue-button-group',
-        '@opentiny/vue-checkbox',
-        '@opentiny/vue-checkbox-group',
-        '@opentiny/vue-date-picker',
-        '@opentiny/vue-dropdown',
-        '@opentiny/vue-dropdown-item',
-        '@opentiny/vue-dropdown-menu',
-        '@opentiny/vue-form',
-        '@opentiny/vue-form-item',
-        '@opentiny/vue-icon',
-        '@opentiny/vue-popover',
-        '@opentiny/vue-select',
-        '@opentiny/vue-tag',
-        '@opentiny/vue-tooltip',
-        '@opentiny/vue-locale',
-        '@opentiny/vue-theme',
-      ]
+      noExternal: [/@opentiny\//, '@opentiny/vue-search-box']
     }
   },
   markdown: {

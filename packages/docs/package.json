@@ -9,6 +9,8 @@
     "docs:preview": "vitepress preview"
   },
   "dependencies": {
+    "vue": "^3.5.13",
+    "@opentiny/vue-search-box": "^3.27.1",
     "@opentiny/vue-button": "^3.27.0",
     "@opentiny/vue-button-group": "^3.27.0",
     "@opentiny/vue-checkbox": "^3.27.0",
@@ -37,7 +39,6 @@
     "@rollup/plugin-commonjs": "^28.0.3",
     "@types/node": "^22.15.12",
     "@vitepress-demo-preview/plugin": "^1.4.0",
-    "vitepress": "^1.6.3",
-    "vue": "^3.5.13"
+    "vitepress": "^1.6.3"
   }
 }
