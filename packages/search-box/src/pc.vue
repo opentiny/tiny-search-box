@@ -498,7 +498,7 @@ export default defineComponent({
       default: ''
     }
   },
-  emits: ['update:modelValue', 'change', 'search', 'exceed', 'first-level-select', 'clear'],
+  emits: ['update:modelValue', 'change', 'search', 'exceed', 'first-level-select', 'second-level-enter', 'clear'],
   components: {
     TinyTag,
     TinyInput,
