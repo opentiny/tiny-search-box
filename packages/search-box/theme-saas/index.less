@@ -105,6 +105,11 @@
   }
 }
 
+.@{popper-tiny-cls}.@{search-box__dropdown-menu-cls},
+.@{search-box__popover-cls}  {
+  @apply p-0;
+}
+
 .@{search-box__popover-cls}.@{popover-tiny-cls}[x-placement^='bottom'] {
   @apply mt-0;
 }
@@ -274,7 +279,6 @@
 
   &__checkbox-wrap {
     @apply ~"max-h-[186px]";
-    @apply overflow-auto;
   }
 
   &__checkbox {

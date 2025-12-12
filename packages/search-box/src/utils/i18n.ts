@@ -3,8 +3,8 @@
  * 如果使用组件库的项目有i18n则使用父级项目，如果没有则默认使用中文
  */
 
-import zhCN from './zh_CN.ts'
-import enUS from './en_US.ts'
+import zhCN from './zh_CN'
+import enUS from './en_US'
 
 // 默认语言包
 const defaultLocale = 'zh-CN'
@@ -15,6 +15,8 @@ const locales = {
 
 // 全局应用实例
 let globalApp: any = null
+// 可选的全局 t 覆盖函数（未被 readonly/Proxy 包装）
+let globalT: any = null
 
 /**
  * 设置全局应用实例
@@ -22,6 +24,14 @@ let globalApp: any = null
  */
 export const setGlobalApp = (app: any) => {
   globalApp = app
+}
+
+/**
+ * 设置全局可写的 t 函数（用于宿主传入未包装的 t，避免只读 Proxy 触发 set 错误）
+ * @param {Function} tFn - 翻译函数
+ */
+export const setGlobalT = (tFn: any) => {
+  globalT = tFn
 }
 
 /**
@@ -67,6 +77,18 @@ export const getLocaleMessages = (locale) => {
  */
 export const t = (key, params = {}) => {
   if (!key) return ''
+
+  // 优先使用外部注入的全局 t
+  if (typeof globalT === 'function') {
+    try {
+      const result = globalT(key, params)
+      if (result && result !== key) {
+        return result
+      }
+    } catch (error) {
+      console.warn('[TinySearchBox] globalT translation failed:', error)
+    }
+  }
 
   // 尝试使用父级项目的i18n
   if (globalApp?.config?.globalProperties?.$t) {
@@ -140,7 +162,7 @@ export const t = (key, params = {}) => {
  * @returns {Array} 翻译后的文本数组
  */
 export const tArray = (keys, params = {}) => {
-  return keys.map(key => t(key, params))
+  return keys.map((key) => t(key, params))
 }
 
 /**
@@ -185,6 +207,7 @@ export default {
   zhCN,
   enUS,
   tArray,
+  setGlobalT,
   setGlobalApp,
   getCurrentLocale,
   getLocaleMessages,

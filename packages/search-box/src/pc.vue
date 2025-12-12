@@ -14,9 +14,7 @@
       @close="deleteTag(tag)"
       @click.stop="editTag(tag, index, $event)"
     >
-      <span class="tvp-search-box__tag-value"
-        >{{ tag.label }} {{ tag.operator || ':'}} {{ tag.value }}
-      </span>
+      <span class="tvp-search-box__tag-value">{{ tag.label }} {{ tag.operator || ':' }} {{ tag.value }} </span>
     </tiny-tag>
     <span
       v-if="modelValue.length"
@@ -35,120 +33,117 @@
       <div class="tvp-search-box__input-wrapper">
         <section class="tvp-search-box__prop">
           <span v-show="state.propItem.label"
-            >{{ state.propItem.label }}&nbsp;{{
-              `${state.operatorValue ? state.operatorValue : ""}&nbsp;`
-            }}</span
+            >{{ state.propItem.label }}&nbsp;{{ `${state.operatorValue ? state.operatorValue : ''}&nbsp;` }}</span
           >
           <span v-show="state.propItem.value">{{ state.propItem.value }}</span>
         </section>
-        <tiny-dropdown
+        <tiny-popover
           ref="dropdownRef"
-          v-model:visible="state.visible"
-          trigger="click"
+          v-model="state.visible"
+          trigger="manual"
+          placement="bottom-start"
           class="tvp-search-box__dropdown"
-          :show-icon="false"
-          :size="size === 'small' ? 'small' : ''"
-          lazy-show-popper
-          :close-on-click-outside="true"
+          popper-class="tvp-search-box__dropdown-menu"
+          :visible-arrow="false"
+          :append-to-body="appendToBody"
         >
-          <tiny-input
-            ref="inputRef"
-            v-model="state.inputValue"
-            class="tvp-search-box__input"
-            :placeholder="state.placeholder"
-            :maxlength="maxlength && maxlength + 1"
-            @keydown.delete.stop="backspaceDeleteTag"
-            @keydown.enter.stop="createTag"
-            @input="handleInput"
-            @click="handleClick"
-          >
-            <template #suffix>
-              <tiny-icon-close
-                v-show="isShowClose"
-                class="tvp-search-box__input-close"
-                @click.stop="clearTag"
-              />
-              <span
-                v-show="isShowClose"
-                class="tvp-search-box__input-separator"
-              ></span>
-              <tiny-tooltip
-                v-if="showHelp"
-                effect="light"
-                :content="t('tvp.tvpSearchbox.help')"
-                placement="top"
-              >
-                <tiny-icon-help-query
-                  class="tvp-search-box__input-help"
-                  @click.stop="helpClick"
-                />
-              </tiny-tooltip>
-              <tiny-icon-search
-                class="tvp-search-box__input-search"
-                @click.stop="createTag"
-              />
-            </template>
-          </tiny-input>
-          <template #dropdown>
-            <tiny-dropdown-menu
-              placement="bottom-start"
-              popper-class="tvp-search-box__dropdown-menu"
-              :style="{ 'max-height': panelMaxHeight }"
-              @mouseup.stop="() => {}"
+          <template #reference>
+            <tiny-input
+              ref="inputRef"
+              v-model="state.inputValue"
+              class="tvp-search-box__input"
+              :placeholder="state.placeholder"
+              :maxlength="maxlength && maxlength + 1"
+              @keydown.delete.stop="backspaceDeleteTag"
+              @keydown.enter.stop="createTag"
+              @input="handleInput"
+              @click="handleClick"
             >
-              <div v-show="!state.propItem.label || state.inputValue?.trim()">
-                <slot
-                  v-if="state.instance?.slots['first-panel']"
-                  name="first-panel"
-                  v-bind="{
-                    state,
-                    handleEvents
-                  }"
-                  @click.stop
-                ></slot>
-                <TinySearchBoxFirstLevelPanel
-                  v-else
-                  :state="state"
-                  :handleEvents="handleEvents"
+              <template #suffix>
+                <tiny-icon-close
+                  v-show="isShowClose"
+                  class="tvp-search-box__input-close"
+                  @click.stop="clearTag"
+                />
+                <span
+                  v-show="isShowClose"
+                  class="tvp-search-box__input-separator"
+                ></span>
+                <tiny-tooltip
+                  v-if="showHelp"
+                  effect="light"
+                  :content="t('tvp.tvpSearchbox.help')"
+                  placement="top"
                 >
-                </TinySearchBoxFirstLevelPanel>
-              </div>
-              <div v-show="state.propItem.label">
-                <slot
-                  v-if="state.instance?.slots['second-panel']"
-                  name="second-panel"
-                  v-bind="{
-                    state,
-                    pickerOptions,
-                    handleEvents,
-                    back: () => resetInput(state)
-                  }"
-                  @click.stop
-                ></slot>
-                <TinySearchBoxSecondLevelPanel
-                  v-else-if="state.prevItem.type !== 'custom'"
-                  :state="state"
-                  :picker-options="pickerOptions"
-                  @events="handleEvents"
-                ></TinySearchBoxSecondLevelPanel>
-                <div
-                  v-else
-                  class="tvp-search-box__panel-box"
-                  @click="showDropdown(state)"
-                >
-                  <slot
-                    :name="state.prevItem.slotName"
-                    v-bind="{
-                      showDropdown: () => showDropdown(state),
-                      onConfirm: handleConfirm
-                    }"
-                    @click.stop
-                  ></slot>
-                </div>
-              </div>
-            </tiny-dropdown-menu>
+                  <tiny-icon-help-query
+                    class="tvp-search-box__input-help"
+                    @click.stop="helpClick"
+                  />
+                </tiny-tooltip>
+                <tiny-icon-search
+                  class="tvp-search-box__input-search"
+                  @click.stop="createTag"
+                />
+              </template>
+            </tiny-input>
           </template>
-        </tiny-dropdown>
+          <div
+            class="tvp-search-box__dropdown"
+            :style="{ 'max-height': panelMaxHeight }"
+            @mouseup.stop="() => {}"
+          >
+            <div v-show="!state.propItem.label || state.inputValue?.trim()">
+              <slot
+                v-if="state.instance?.slots['first-panel']"
+                name="first-panel"
+                v-bind="{
+                  state,
+                  handleEvents
+                }"
+                @click.stop
+              ></slot>
+              <TinySearchBoxFirstLevelPanel
+                v-else
+                :state="state"
+                :handleEvents="handleEvents"
+              >
+              </TinySearchBoxFirstLevelPanel>
+            </div>
+            <div v-show="state.propItem.label">
+              <slot
+                v-if="state.instance?.slots['second-panel']"
+                name="second-panel"
+                v-bind="{
+                  state,
+                  pickerOptions,
+                  handleEvents,
+                  back: () => resetInput(state)
+                }"
+                @click.stop
+              ></slot>
+              <TinySearchBoxSecondLevelPanel
+                v-else-if="state.prevItem.type !== 'custom'"
+                :state="state"
+                :picker-options="pickerOptions"
+                @events="handleEvents"
+              ></TinySearchBoxSecondLevelPanel>
+              <div
+                v-else
+                class="tvp-search-box__panel-box"
+                @click="showDropdown(state)"
+              >
+                <slot
+                  :name="state.prevItem.slotName"
+                  v-bind="{
+                    showDropdown: () => showDropdown(state),
+                    onConfirm: handleConfirm
+                  }"
+                  @click.stop
+                ></slot>
+              </div>
+            </div>
+          </div>
+        </tiny-popover>
       </div>
 
       <template v-if="editable">
@@ -160,6 +155,7 @@
           trigger="manual"
           popper-class="tvp-search-box__popover"
           class="tvp-search-box__form-popover"
+          :append-to-body="appendToBody"
         >
           <template v-if="state.prevItem.type !== 'custom'">
             <div class="tvp-search-box__date-wrap">
@@ -177,12 +173,7 @@
                     :label="t('tvp.tvpSearchbox.allProperty')"
                     :value="state.allTypeAttri.label"
                     :disabled="selectItemIsDisable(state.allTypeAttri)"
-                    @click="
-                      selectPropChange(
-                        state.allTypeAttri,
-                        selectItemIsDisable(state.allTypeAttri)
-                      )
-                    "
+                    @click="selectPropChange(state.allTypeAttri, selectItemIsDisable(state.allTypeAttri))"
                   >
                   </tiny-option>
                   <tiny-option
@@ -416,7 +407,7 @@
 <script lang="ts">
 // Vue2 版本，使用 tiny-vue 的 renderless 架构
 import { defineComponent, setup, $props, isVue2 } from '@opentiny/vue-common'
-import { renderless, api } from './renderless.ts'
+import { renderless, api } from './renderless'
 // 导入组件
 import TinyTag from '@opentiny/vue-tag'
 import TinyInput from '@opentiny/vue-input'
@@ -491,6 +482,10 @@ export default defineComponent({
     splitInputValue: {
       type: String,
       default: ','
+    },
+    appendToBody: {
+      type: Boolean,
+      default: true
     },
     // 尺寸
     size: {

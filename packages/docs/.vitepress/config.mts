@@ -60,6 +60,7 @@ export default defineConfig({
           { text: '自定义二级下拉面板', link: '/examples/custom-panel' },
           { text: '可编辑', link: '/examples/editable' },
           { text: '没有筛选项时的占位文本', link: '/examples/empty-placeholder' },
+          { text: '挂载到 body', link: '/examples/append-to-body' },
           { text: '自定义属性分组', link: '/examples/group-key' },
           { text: 'help 提示场景', link: '/examples/help' },
           { text: '指定筛选项的 ID 键取值', link: '/examples/id-map-key' },
