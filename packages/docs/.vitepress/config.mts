@@ -72,7 +72,8 @@ export default defineConfig({
           { text: '自定义默认搜索项', link: '/examples/default-field' },
           { text: '切分输入值', link: '/examples/split-input-value' },
           { text: '尺寸', link: '/examples/size' },
-          { text: '事件', link: '/examples/events' }
+          { text: '事件', link: '/examples/events' },
+          { text: '后缀图标插槽', link: '/examples/suffix-icon' }
         ]
       },
       {
@@ -80,7 +81,8 @@ export default defineConfig({
         items: [
           { text: 'props', link: '/apis/props' },
           { text: 'types', link: '/apis/types' },
-          { text: 'events', link: '/apis/events' }
+          { text: 'events', link: '/apis/events' },
+          { text: 'slots', link: '/apis/slots' }
         ]
       }
     ],

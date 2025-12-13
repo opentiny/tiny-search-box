@@ -1,9 +1,16 @@
 <template>
   <div
-    :class="['tvp-search-box', size === 'small' ? 'tvp-search-box--small' : '']"
+    :class="[
+      'tvp-search-box',
+      size === 'small' ? 'tvp-search-box--small' : '',
+      showPrefixIcon ? '' : 'hide-prefix-icon'
+    ]"
     @click.stop="showPopover(state, false)"
   >
-    <tiny-icon-search class="tvp-search-box__prefix" />
+    <tiny-icon-search
+      v-if="showPrefixIcon"
+      class="tvp-search-box__prefix"
+    />
     <tiny-tag
       v-for="(tag, index) in modelValue"
       :key="tag.field + index"
@@ -14,9 +21,7 @@
       @close="deleteTag(tag)"
       @click.stop="editTag(tag, index, $event)"
     >
-      <span class="tvp-search-box__tag-value"
-        >{{ tag.label }} {{ tag.operator || ':'}} {{ tag.value }}
-      </span>
+      <span class="tvp-search-box__tag-value">{{ tag.label }} {{ tag.operator || ':' }} {{ tag.value }} </span>
     </tiny-tag>
     <span
       v-if="modelValue.length"
@@ -35,9 +40,7 @@
       <div class="tvp-search-box__input-wrapper">
         <section class="tvp-search-box__prop">
           <span v-show="state.propItem.label"
-            >{{ state.propItem.label }}&nbsp;{{
-              `${state.operatorValue ? state.operatorValue : ""}&nbsp;`
-            }}</span
+            >{{ state.propItem.label }}&nbsp;{{ `${state.operatorValue ? state.operatorValue : ''}&nbsp;` }}</span
           >
           <span v-show="state.propItem.value">{{ state.propItem.value }}</span>
         </section>
@@ -72,6 +75,12 @@
                 v-show="isShowClose"
                 class="tvp-search-box__input-separator"
               ></span>
+              <span
+                v-if="state.instance?.$slots?.['suffix-icon'] || state.instance?.slots?.['suffix-icon']"
+                :class="showHelp ? 'tvp-search-box__suffix-icon-slot' : 'tvp-search-box__suffix-icon-slot-no-help'"
+              >
+                <slot name="suffix-icon"></slot>
+              </span>
               <tiny-tooltip
                 v-if="showHelp"
                 effect="light"
@@ -177,12 +186,7 @@
                     :label="t('tvp.tvpSearchbox.allProperty')"
                     :value="state.allTypeAttri.label"
                     :disabled="selectItemIsDisable(state.allTypeAttri)"
-                    @click="
-                      selectPropChange(
-                        state.allTypeAttri,
-                        selectItemIsDisable(state.allTypeAttri)
-                      )
-                    "
+                    @click="selectPropChange(state.allTypeAttri, selectItemIsDisable(state.allTypeAttri))"
                   >
                   </tiny-option>
                   <tiny-option
@@ -465,6 +469,10 @@ export default defineComponent({
       default: () => null
     },
     showHelp: {
+      type: Boolean,
+      default: true
+    },
+    showPrefixIcon: {
       type: Boolean,
       default: true
     },

@@ -46,6 +46,11 @@ export const searchBoxProps = {
     type: Boolean,
     default: true
   },
+  /** 是否显示搜索框前面的搜索图标 */
+  showPrefixIcon: {
+    type: Boolean,
+    default: true
+  },
   /** ID映射键名 */
   idMapKey: {
     type: String,

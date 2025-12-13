@@ -228,6 +228,18 @@ export default {
         'en-US': ' Listen to the first-level selection event through   first-level-select  . '
       },
       codeFiles: ['events.vue']
+    },
+    {
+      demoId: 'suffix-icon',
+      name: {
+        'zh-CN': '后缀图标',
+        'en-US': 'Suffix Icon'
+      },
+      desc: {
+        'zh-CN': ' 通过  suffix-icon   配置后缀图标。 ',
+        'en-US': ' Use   suffix-icon   to configure the suffix icon. '
+      },
+      codeFiles: ['suffix-icon.vue']
     }
   ]
 }

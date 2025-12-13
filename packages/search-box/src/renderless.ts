@@ -109,7 +109,7 @@ const initState = ({ reactive, computed, api, i18n, watch, props, emit, vm }) =>
 export const renderless = (
   props,
   { getCurrentInstance, onMounted, onBeforeUnmount, computed, reactive, watch },
-  { emit: $emit, nextTick, refs, vm }
+  { emit: $emit, nextTick, refs, vm, slots }
 ) => {
   const api = {} as any
   const emit = props.emitter ? props.emitter.emit : $emit
@@ -118,6 +118,10 @@ export const renderless = (
   initWatch({ watch, state, props, api, nextTick, vm })
 
   state.instance = vm
+  // 在 Vue2 中，slots 可能通过 context 传递，需要设置到 instance 上
+  if (vm && slots) {
+    vm.slots = slots
+  }
 
   // 生命周期
   onMounted(() => {
@@ -171,7 +175,6 @@ const initAllApi = ({ api, state, t, props, emit, nextTick, vm, computed }) => {
     selectFirstMap,
     handleDateShow
   })
-
 
   const setPlaceholder = (placeholderValue: string) => {
     state.placeholder = placeholderValue
