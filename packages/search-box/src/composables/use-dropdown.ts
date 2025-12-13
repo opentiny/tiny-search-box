@@ -128,7 +128,7 @@ export function useDropdown({ props, emit, state, t, format, nextTick, vm, cance
     } else {
       newValue = [...state.innerModelValue, newTag]
     }
-    emitChangeModelEvent({ emit, state, newValue, oldValue })
+    emitChangeModelEvent({ emit, state, nextTick, newValue, oldValue })
   }
   /**
    * 使用输入选项
@@ -168,6 +168,9 @@ export function useDropdown({ props, emit, state, t, format, nextTick, vm, cance
   const hasNotInputValueCreateTag = (propItem, prevItem) => {
     // 有label
     if (propItem.label) {
+      // 触发 second-level-enter 事件，传递当前选中的 item 和对应的 options
+      emit('second-level-enter', prevItem)
+
       if (!prevItem.options) {
         return
       }

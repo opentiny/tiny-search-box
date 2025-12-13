@@ -1,4 +1,3 @@
-
 <template>
   <ClientOnly>
     <tiny-search-box
@@ -6,6 +5,7 @@
       :items="items"
       editable
       @first-level-select="FirstLevelSelect"
+      @second-level-enter="SecondLevelEnter"
       @search="onSearch"
       @change="onChange"
       @clear="onClear"
@@ -141,6 +141,10 @@ const FirstLevelSelect = (field) => {
       ]
     }
   }, 1000)
+}
+
+const SecondLevelEnter = (item) => {
+  console.log('SecondLevelEnter:', item)
 }
 
 const tags = ref([])
