@@ -1,4 +1,3 @@
-
 /**
  * Copyright (c) 2022 - present TinyVue Authors.
  * Copyright (c) 2022 - present Huawei Cloud Computing Technologies Co., Ltd.
@@ -13,7 +12,6 @@
 import { $props, $prefix, $setup, defineComponent, isVue2, isVue3 } from '@opentiny/vue-common'
 import { type PropType } from '@opentiny/vue-common'
 import template from './pc.vue'
-
 
 export const searchBoxProps = {
   ...$props,
@@ -90,6 +88,11 @@ export const searchBoxProps = {
   size: {
     type: String as PropType<'small' | ''>,
     default: ''
+  },
+  /** 将下拉面板/弹窗挂载到 body，解决父容器 overflow 场景遮挡问题 */
+  appendToBody: {
+    type: Boolean,
+    default: false
   }
 }
 // 组件安装函数
@@ -98,6 +101,3 @@ export default defineComponent({
   props: searchBoxProps,
   ...template
 })
-
-
-

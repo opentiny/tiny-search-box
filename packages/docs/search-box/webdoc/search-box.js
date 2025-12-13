@@ -15,6 +15,18 @@ export default {
       codeFiles: ['basic-usage.vue', 'data-source.ts']
     },
     {
+      demoId: 'append-to-body',
+      name: {
+        'zh-CN': '挂载到 body',
+        'en-US': 'Append to Body'
+      },
+      desc: {
+        'zh-CN': ' 通过 append-to-body 配置将下拉面板挂载到 body。 ',
+        'en-US': ' Use  append-to-body  to configure the drop-down panel to be mounted to the body. '
+      },
+      codeFiles: ['append-to-body.vue']
+    },
+    {
       demoId: 'panel-max-height',
       name: {
         'zh-CN': '面板最大高度',
