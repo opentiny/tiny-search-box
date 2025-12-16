@@ -1,9 +1,16 @@
 <template>
   <div
-    :class="['tvp-search-box', size === 'small' ? 'tvp-search-box--small' : '']"
+    :class="[
+      'tvp-search-box',
+      size === 'small' ? 'tvp-search-box--small' : '',
+      showPrefixIcon ? '' : 'hide-prefix-icon'
+    ]"
     @click.stop="showPopover(state, false)"
   >
-    <tiny-icon-search class="tvp-search-box__prefix" />
+    <tiny-icon-search
+      v-if="showPrefixIcon"
+      class="tvp-search-box__prefix"
+    />
     <tiny-tag
       v-for="(tag, index) in modelValue"
       :key="tag.field + index"
@@ -456,6 +463,10 @@ export default defineComponent({
       default: () => null
     },
     showHelp: {
+      type: Boolean,
+      default: true
+    },
+    showPrefixIcon: {
       type: Boolean,
       default: true
     },
