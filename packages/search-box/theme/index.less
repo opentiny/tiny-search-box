@@ -111,6 +111,11 @@
   margin-top: 0;
 }
 
+.@{popper-tiny-cls}.@{search-box__dropdown-menu-cls},
+.@{search-box__popover-cls}  {
+  padding: 0;
+}
+
 .@{search-box-prefix-cls} {
   .inject-SearchBox-vars();
 
@@ -274,7 +279,6 @@
 
   &__checkbox-wrap {
     max-height: 186px;
-    overflow: auto;
   }
 
   &__checkbox {
@@ -351,7 +355,6 @@
       width: 100%;
       overflow: hidden;
       text-overflow: ellipsis;
-      padding-top: 4px;
     }
 
     .@{dropdown-tiny-cls}-item__wrap {
