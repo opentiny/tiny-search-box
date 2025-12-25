@@ -2,7 +2,7 @@
   <ClientOnly>
     <div class="demo-append-body">
       <tiny-search-box
-        v-model="tags1"
+        v-model="tags2"
         :items="items"
         editable
         :append-to-body="false"
@@ -11,12 +11,17 @@
   </ClientOnly>
 </template>
 
-<script setup lang="ts">
-import { ref } from 'vue'
+<script>
 import { dataSource } from './data-source'
 
-const items = dataSource
-const tags1 = ref([])
+export default {
+  data() {
+    return {
+      items: dataSource,
+      tags1: []
+    }
+  }
+}
 </script>
 
 <style scoped>
