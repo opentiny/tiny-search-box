@@ -171,16 +171,21 @@ export function useDropdown({ props, emit, state, t, format, nextTick, vm, cance
       // 触发 second-level-enter 事件，传递当前选中的 item 和对应的 options
       emit('second-level-enter', prevItem)
 
-      if (!prevItem.options) {
+      if (!prevItem.options || !prevItem.options.length) {
         return
       }
 
-      const hasTag = props.modelValue.find((item) => item.value === prevItem.options[0].label)
+      const firstOption = prevItem.options[0]
+      if (!firstOption) {
+        return
+      }
+
+      const hasTag = props.modelValue.find((item) => item.value === firstOption.label)
 
       if (!hasTag) {
         const label = prevItem.label
-        const value = prevItem.options && prevItem.options[0].label
-        updateModelValue(prevItem, prevItem.options[0], label, value)
+        const value = firstOption.label
+        updateModelValue(prevItem, firstOption, label, value)
         return
       }
     } else {
