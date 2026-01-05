@@ -17,6 +17,8 @@
 .@{search-box__popover-cls} {
 
   width: 232px;
+  @apply px-0;
+  @apply py-0;
   @apply overflow-auto;
   
 
@@ -123,6 +125,7 @@
   @apply justify-start;
   @apply border;
   @apply border-color-border;
+  @apply border-solid;
   @apply rounded;
   min-height: 28px;
   @apply pl-8;
@@ -273,6 +276,7 @@
   &__radio-wrap {
    max-height: 240px;
     @apply overflow-auto;
+    @apply py-1;
   }
 
   &__checkbox-wrap {
