@@ -73,9 +73,18 @@
                   @click.stop="clearTag"
                 />
                 <span
-                  v-show="isShowClose"
+                  v-show="
+                    isShowClose &&
+                    (showHelp || state.instance?.$slots?.['suffix-icon'] || state.instance?.slots?.['suffix-icon'])
+                  "
                   class="tvp-search-box__input-separator"
                 ></span>
+                <span
+                  v-if="state.instance?.$slots?.['suffix-icon'] || state.instance?.slots?.['suffix-icon']"
+                  :class="showHelp ? 'tvp-search-box__suffix-icon-slot' : 'tvp-search-box__suffix-icon-slot-no-help'"
+                >
+                  <slot name="suffix-icon"></slot>
+                </span>
                 <tiny-tooltip
                   v-if="showHelp"
                   effect="light"
