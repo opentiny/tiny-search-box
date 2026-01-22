@@ -5,6 +5,12 @@ const autoprefixer = require('autoprefixer')
 const { resolve } = require('path')
 // 获取 Tailwind 配置文件的绝对路径
 const tailwindConfigPath = resolve(__dirname, 'tailwind.config.cjs')
+
+// 设置环境变量，确保 Tailwind 知道当前是 Saas 模式
+if (process.env.TINY_THEME === 'saas' || process.env.TINY_MODE === 'saas') {
+  process.env.TAILWIND_MODE = 'saas'
+}
+
 module.exports = {
   plugins: [
     // PostCSS 处理顺序：

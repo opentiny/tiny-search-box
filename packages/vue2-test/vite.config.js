@@ -1,5 +1,6 @@
 import { resolve, dirname } from 'path'
 import { fileURLToPath } from 'url'
+import { createRequire } from 'module'
 import scriptSetupPlugin from 'unplugin-vue2-script-setup/vite'
 import { defineConfig, loadEnv } from 'vite'
 import dynamicImportPlugin from 'vite-plugin-dynamic-import'
@@ -7,8 +8,7 @@ import { createVuePlugin as vue2Plugin } from 'vite-plugin-vue2'
 import { createSvgPlugin as vue2SvgPlugin } from 'vite-plugin-vue2-svg'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
-console.log('__dirname', __dirname)
-console.log('resolve("node_modules/vue/dist/vue.esm.js")', resolve('node_modules/vue/dist/vue.esm.js'))
+const require = createRequire(import.meta.url)
 
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '')
@@ -28,6 +28,11 @@ export default defineConfig(({ mode }) => {
     server: {
       host: 'localhost',
       open: true
+    },
+    // 配置依赖预构建，确保 @opentiny/vue 正确预构建
+    optimizeDeps: {
+      include: ['@opentiny/vue', '@opentiny/vue-common'],
+      exclude: ['@opentiny/vue-search-box']
     },
     define: {
       // 定义全局变量，用于在运行时判断模式
@@ -65,23 +70,7 @@ export default defineConfig(({ mode }) => {
         'vue$': resolve(__dirname, 'node_modules/vue/dist/vue.esm.js'),
         'vue-template-compiler': resolve(__dirname, 'node_modules/vue-template-compiler'),
         '@demos': resolve(__dirname, '../../packages/docs/search-box'),
-        "@opentiny/vue-button": resolve(__dirname, '../search-box/node_modules/@opentiny/vue-button'),
-        "@opentiny/vue-button-group": resolve('../search-box/node_modules/@opentiny/vue-button-group'),
-        "@opentiny/vue-checkbox": resolve('../search-box/node_modules/@opentiny/vue-checkbox'),
-        "@opentiny/vue-checkbox-group": resolve('../search-box/node_modules/@opentiny/vue-checkbox-group'),
-        "@opentiny/vue-date-picker": resolve('../search-box/node_modules/@opentiny/vue-date-picker'),
-        "@opentiny/vue-dropdown": resolve('../search-box/node_modules/@opentiny/vue-dropdown'),
-        "@opentiny/vue-dropdown-item": resolve('../search-box/node_modules/@opentiny/vue-dropdown-item'),
-        "@opentiny/vue-dropdown-menu": resolve('../search-box/node_modules/@opentiny/vue-dropdown-menu'),
-        "@opentiny/vue-form": resolve('../search-box/node_modules/@opentiny/vue-form'),
-        "@opentiny/vue-form-item": resolve('../search-box/node_modules/@opentiny/vue-form-item'),
-        "@opentiny/vue-input": resolve('../search-box/node_modules/@opentiny/vue-input'),
-        "@opentiny/vue-loading": resolve('../search-box/node_modules/@opentiny/vue-loading'),
-        "@opentiny/vue-option": resolve('../search-box/node_modules/@opentiny/vue-option'),
-        "@opentiny/vue-popover": resolve('../search-box/node_modules/@opentiny/vue-popover'),
-        "@opentiny/vue-select": resolve('../search-box/node_modules/@opentiny/vue-select'),
-        "@opentiny/vue-tag": resolve('../search-box/node_modules/@opentiny/vue-tag'),
-        "@opentiny/vue-tooltip": resolve('../search-box/node_modules/@opentiny/vue-tooltip'),
+        "@opentiny/vue": resolve(__dirname, '../search-box/node_modules/@opentiny/vue'),
         "@opentiny/vue-common": resolve('../search-box/node_modules/@opentiny/vue-common'),
         '@opentiny/vue-search-box': resolve('../search-box/index.ts'),
         // 根据模式映射 theme 和 icon
@@ -97,15 +86,29 @@ export default defineConfig(({ mode }) => {
       preprocessorOptions: {
         less: {
           javascriptEnabled: true,
+          // Saas 模式下，限制路径解析，避免自动引入 theme/vars.less
+          paths: isSaas
+            ? [
+              // 只包含 theme-saas 目录，不包含 theme 目录
+              resolve(__dirname, `../search-box/theme${isSaas ? '-saas' : ''}`),
+            ]
+            : [
+              // 普通模式：包含 theme 目录
+              resolve(__dirname, `../search-box/theme${isSaas ? '-saas' : ''}`),
+            ],
         },
       },
-      postcss: isSaas && isDev
-        ? {
-          // Saas 开发模式：配置 PostCSS 处理 Tailwind
-          // 使用 search-box 的 PostCSS 配置
-          config: resolve('../search-box/postcss.config.cjs'),
-        }
-        : undefined,
+      postcss: isSaas
+        ? (() => {
+            // Saas 模式：直接加载 PostCSS 配置并应用插件
+            const postcssConfigPath = resolve(__dirname, '../search-box/postcss.config.cjs');
+            const postcssConfig = require(postcssConfigPath);
+            return postcssConfig;
+          })()
+        : {
+            // 普通模式：禁用 PostCSS，避免自动查找 postcss.config.cjs
+            plugins: []
+          },
     }
   }
 })
