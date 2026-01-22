@@ -425,24 +425,26 @@
 import { defineComponent, setup, $props, isVue2 } from '@opentiny/vue-common'
 import { renderless, api } from './renderless'
 // 导入组件
-import TinyTag from '@opentiny/vue-tag'
-import TinyInput from '@opentiny/vue-input'
-import TinyDropdown from '@opentiny/vue-dropdown'
-import TinyDropdownMenu from '@opentiny/vue-dropdown-menu'
-import TinyButton from '@opentiny/vue-button'
-import TinyTooltip from '@opentiny/vue-tooltip'
-import TinyDatePicker from '@opentiny/vue-date-picker'
-import TinyForm from '@opentiny/vue-form'
-import TinyFormItem from '@opentiny/vue-form-item'
-import TinyPopover from '@opentiny/vue-popover'
-import TinySelect from '@opentiny/vue-select'
-import TinyOption from '@opentiny/vue-option'
-
+import { 
+  TinyTag,
+  TinyInput,
+  TinyDropdown,
+  TinyDropdownMenu,
+  TinyButton,
+  TinyTooltip,
+  TinyDatePicker,
+  TinyForm,
+  TinyFormItem,
+  TinyPopover,
+  TinySelect,
+  TinyOption,
+} from '@opentiny/vue'
 import { iconSearch, iconClose, iconHelpQuery } from '@opentiny/vue-icon'
 
 import TinySearchBoxFirstLevelPanel from './components/first-level-panel.vue'
 import TinySearchBoxSecondLevelPanel from './components/second-level-panel.vue'
-import '../../search-box/theme/index.less'
+// 样式通过构建工具自动导入，开发环境使用别名导入
+import '@opentiny/vue-search-box-theme'
 
 export default defineComponent({
   model: {
@@ -513,7 +515,7 @@ export default defineComponent({
       default: ''
     }
   },
-  emits: ['update:modelValue', 'change', 'search', 'exceed', 'first-level-select', 'second-level-enter', 'clear'],
+  emits: ['update:modelValue', 'change', 'search', 'exceed', 'first-level-select', 'second-level-enter', 'clear', 'tagClick', 'help'],
   components: {
     TinyTag,
     TinyInput,
