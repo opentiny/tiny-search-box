@@ -1,8 +1,7 @@
 <script>
 import Vue from "vue";
 import TinySearchBox from "@opentiny/vue-search-box";
-
-import TinyRadioGroup from "@opentiny/vue-radio-group";
+import { TinyRadioGroup } from "@opentiny/vue";
 import demosData from "@demos/webdoc/search-box.js";
 
 export default {

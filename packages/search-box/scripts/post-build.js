@@ -49,7 +49,17 @@ function generateVue2NormalPackageJson() {
     main: 'index.js',
     module: 'index.js',
     types: 'types/index.d.ts',
+    typings: 'types/index.d.ts', // 向后兼容
     sideEffects: ['*.css'],
+    exports: {
+      '.': {
+        types: './types/index.d.ts',
+        import: './index.js',
+        require: './index.js'
+      },
+      './index.css': './index.css',
+      './package.json': './package.json'
+    },
     publishConfig: {
       access: 'public'
     },
@@ -57,25 +67,10 @@ function generateVue2NormalPackageJson() {
       vue: '^2.6.14'
     },
     dependencies: {
-      '@opentiny/vue-button': '^2.26.0',
-      '@opentiny/vue-checkbox': '^2.26.0',
-      '@opentiny/vue-checkbox-group': '^2.26.0',
-      '@opentiny/vue-date-picker': '^2.26.0',
-      '@opentiny/vue-dropdown': '^2.26.0',
-      '@opentiny/vue-dropdown-item': '^2.26.0',
-      '@opentiny/vue-dropdown-menu': '^2.26.0',
-      '@opentiny/vue-form': '^2.26.0',
-      '@opentiny/vue-form-item': '^2.26.0',
-      '@opentiny/vue-icon': '^2.26.0',
-      '@opentiny/vue-input': '^2.26.0',
-      '@opentiny/vue-loading': '^2.26.0',
-      '@opentiny/vue-option': '^2.26.0',
-      '@opentiny/vue-popover': '^2.26.0',
-      '@opentiny/vue-select': '^2.26.0',
-      '@opentiny/vue-tag': '^2.26.0',
-      '@opentiny/vue-tooltip': '^2.26.0',
-      '@opentiny/vue-common': '^2.26.0',
-      '@opentiny/vue-theme': '^3.26.0'
+      '@opentiny/vue': '^2.28.0',
+      '@opentiny/vue-common': '^2.28.0',
+      '@opentiny/vue-icon': '^2.28.0',
+      '@opentiny/vue-theme': '^3.28.0'
     },
     keywords: packageJson.keywords || [],
     license: packageJson.license,
@@ -94,7 +89,17 @@ function generateVue2SaasPackageJson() {
     main: 'index.js',
     module: 'index.js',
     types: 'types/index.d.ts',
+    typings: 'types/index.d.ts', // 向后兼容
     sideEffects: ['*.css'],
+    exports: {
+      '.': {
+        types: './types/index.d.ts',
+        import: './index.js',
+        require: './index.js'
+      },
+      './index.css': './index.css',
+      './package.json': './package.json'
+    },
     publishConfig: {
       access: 'public'
     },
@@ -102,25 +107,10 @@ function generateVue2SaasPackageJson() {
       vue: '^2.6.14'
     },
     dependencies: {
-      '@opentiny/vue-button': '^2.26.0',
-      '@opentiny/vue-checkbox': '^2.26.0',
-      '@opentiny/vue-checkbox-group': '^2.26.0',
-      '@opentiny/vue-date-picker': '^2.26.0',
-      '@opentiny/vue-dropdown': '^2.26.0',
-      '@opentiny/vue-dropdown-item': '^2.26.0',
-      '@opentiny/vue-dropdown-menu': '^2.26.0',
-      '@opentiny/vue-form': '^2.26.0',
-      '@opentiny/vue-form-item': '^2.26.0',
-      '@opentiny/vue-icon': '^2.26.0',
-      '@opentiny/vue-input': '^2.26.0',
-      '@opentiny/vue-loading': '^2.26.0',
-      '@opentiny/vue-option': '^2.26.0',
-      '@opentiny/vue-popover': '^2.26.0',
-      '@opentiny/vue-select': '^2.26.0',
-      '@opentiny/vue-tag': '^2.26.0',
-      '@opentiny/vue-tooltip': '^2.26.0',
-      '@opentiny/vue-common': '^2.26.0',
-      '@opentiny/vue-theme': '^3.26.0'
+      '@opentiny/vue': '^2.28.0',
+      '@opentiny/vue-common': '^2.28.0',
+      '@opentiny/vue-icon': '^2.28.0',
+      '@opentiny/vue-theme': '^3.28.0'
     },
     keywords: packageJson.keywords || [],
     license: packageJson.license,
@@ -139,7 +129,17 @@ function generateVue3NormalPackageJson() {
     main: 'index.js',
     module: 'index.js',
     types: 'types/index.d.ts',
+    typings: 'types/index.d.ts', // 向后兼容
     sideEffects: ['*.css'],
+    exports: {
+      '.': {
+        types: './types/index.d.ts',
+        import: './index.js',
+        require: './index.js'
+      },
+      './index.css': './index.css',
+      './package.json': './package.json'
+    },
     publishConfig: {
       access: 'public'
     },
@@ -148,23 +148,8 @@ function generateVue3NormalPackageJson() {
     },
     dependencies: {
       '@opentiny/vue-button': '^3.26.0',
-      '@opentiny/vue-checkbox': '^3.26.0',
-      '@opentiny/vue-checkbox-group': '^3.26.0',
-      '@opentiny/vue-date-picker': '^3.26.0',
-      '@opentiny/vue-dropdown': '^3.26.0',
-      '@opentiny/vue-dropdown-item': '^3.26.0',
-      '@opentiny/vue-dropdown-menu': '^3.26.0',
-      '@opentiny/vue-form': '^3.26.0',
-      '@opentiny/vue-form-item': '^3.26.0',
-      '@opentiny/vue-icon': '^3.26.0',
-      '@opentiny/vue-input': '^3.26.0',
-      '@opentiny/vue-loading': '^3.26.0',
-      '@opentiny/vue-option': '^3.26.0',
-      '@opentiny/vue-popover': '^3.26.0',
-      '@opentiny/vue-select': '^3.26.0',
-      '@opentiny/vue-tag': '^3.26.0',
-      '@opentiny/vue-tooltip': '^3.26.0',
-      '@opentiny/vue-common': '^3.26.0',
+      '@opentiny/vue-common': '^3.28.0',
+      '@opentiny/vue-icon': '^3.28.0',
       '@opentiny/vue-theme': '^3.26.0'
     },
     keywords: packageJson.keywords || [],
@@ -184,7 +169,17 @@ function generateVue3SaasPackageJson() {
     main: 'index.js',
     module: 'index.js',
     types: 'types/index.d.ts',
+    typings: 'types/index.d.ts', // 向后兼容
     sideEffects: ['*.css'],
+    exports: {
+      '.': {
+        types: './types/index.d.ts',
+        import: './index.js',
+        require: './index.js'
+      },
+      './index.css': './index.css',
+      './package.json': './package.json'
+    },
     publishConfig: {
       access: 'public'
     },
@@ -192,25 +187,10 @@ function generateVue3SaasPackageJson() {
       vue: '^3.0.0'
     },
     dependencies: {
-      '@opentiny/vue-button': '^3.26.0',
-      '@opentiny/vue-checkbox': '^3.26.0',
-      '@opentiny/vue-checkbox-group': '^3.26.0',
-      '@opentiny/vue-date-picker': '^3.26.0',
-      '@opentiny/vue-dropdown': '^3.26.0',
-      '@opentiny/vue-dropdown-item': '^3.26.0',
-      '@opentiny/vue-dropdown-menu': '^3.26.0',
-      '@opentiny/vue-form': '^3.26.0',
-      '@opentiny/vue-form-item': '^3.26.0',
-      '@opentiny/vue-icon': '^3.26.0',
-      '@opentiny/vue-input': '^3.26.0',
-      '@opentiny/vue-loading': '^3.26.0',
-      '@opentiny/vue-option': '^3.26.0',
-      '@opentiny/vue-popover': '^3.26.0',
-      '@opentiny/vue-select': '^3.26.0',
-      '@opentiny/vue-tag': '^3.26.0',
-      '@opentiny/vue-tooltip': '^3.26.0',
-      '@opentiny/vue-common': '^3.26.0',
-      '@opentiny/vue-theme': '^3.26.0'
+      '@opentiny/vue': '^3.26.0',
+      '@opentiny/vue-common': '^3.28.0',
+      '@opentiny/vue-icon': '^3.28.0',
+      '@opentiny/vue-theme': '^3.28.0'
     },
     keywords: packageJson.keywords || [],
     license: packageJson.license,

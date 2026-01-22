@@ -31,7 +31,9 @@ export default defineConfig({
   resolve: {
     alias: {
       'vue': resolve('node_modules/vue/dist/vue.esm.js'),
-      vue$: resolve('node_modules/vue/dist/vue.esm.js')
+      vue$: resolve('node_modules/vue/dist/vue.esm.js'),
+      // 开发环境和打包环境都支持样式别名导入
+      '@opentiny/vue-search-box-theme': resolve(__dirname, 'theme/index.less')
     }
   },
   build: {
@@ -43,27 +45,18 @@ export default defineConfig({
       formats: ['es'],
       fileName: () => 'index.js'
     },
+    // 启用 tree-shaking，确保按需打包
+    minify: 'esbuild',
     rollupOptions: {
+      // 启用 tree-shaking，确保按需打包
+      treeshake: {
+        moduleSideEffects: false,
+        propertyReadSideEffects: false,
+        tryCatchDeoptimization: false
+      },
       external: [
         'vue',
-        '@opentiny/vue-button',
-        '@opentiny/vue-button-group',
-        '@opentiny/vue-checkbox',
-        '@opentiny/vue-checkbox-group',
-        '@opentiny/vue-date-picker',
-        '@opentiny/vue-dropdown',
-        '@opentiny/vue-dropdown-item',
-        '@opentiny/vue-dropdown-menu',
-        '@opentiny/vue-form',
-        '@opentiny/vue-form-item',
-        '@opentiny/vue-icon',
-        '@opentiny/vue-input',
-        '@opentiny/vue-loading',
-        '@opentiny/vue-option',
-        '@opentiny/vue-popover',
-        '@opentiny/vue-select',
-        '@opentiny/vue-tag',
-        '@opentiny/vue-tooltip',
+        '@opentiny/vue',
         '@opentiny/vue-common',
         '@opentiny/vue-theme'
       ],
@@ -91,7 +84,9 @@ export default defineConfig({
     },
     preprocessorOptions: {
       less: {
-        javascriptEnabled: true
+        javascriptEnabled: true,
+        // 普通模式下，限制路径解析，只包含 theme 目录，避免解析到 theme-saas 目录
+        paths: [resolve(__dirname, 'theme')]
       }
     }
   }

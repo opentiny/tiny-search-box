@@ -272,14 +272,16 @@
 <script>
 // Vue2 版本，使用 tiny-vue 的 renderless 架构
 import { defineComponent, setup, $props, $prefix } from '@opentiny/vue-common'
-import TinyFormItem from '@opentiny/vue-form-item'
-import TinyDropdownItem from '@opentiny/vue-dropdown-item'
-import TinyCheckbox from '@opentiny/vue-checkbox'
-import TinyCheckboxGroup from '@opentiny/vue-checkbox-group'
-import TinyDatePicker from '@opentiny/vue-date-picker'
-import TinyInput from '@opentiny/vue-input'
-import TinyButton from '@opentiny/vue-button'
-import TinyLoading from '@opentiny/vue-loading'
+import { 
+  TinyFormItem,
+  TinyDropdownItem,
+  TinyCheckbox,
+  TinyCheckboxGroup,
+  TinyDatePicker,
+  TinyInput,
+  TinyButton,
+  TinyLoading
+} from '@opentiny/vue'
 import { t } from '../utils/i18n.ts'
 
 // 简单的 renderless 函数
@@ -356,7 +358,7 @@ const api = [
 
 export default defineComponent({
   name: $prefix + 'SearchBoxSecondLevelPanel',
-  emits: ['events'],
+  emits: ['events', 'click'],
   components: {
     TinyFormItem,
     TinyDropdownItem,

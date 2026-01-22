@@ -1,9 +1,11 @@
 import { resolve, dirname } from "path";
 import { fileURLToPath } from "node:url";
+import { createRequire } from "module";
 import { defineConfig, loadEnv } from "vite";
 import vue from "@vitejs/plugin-vue";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
+const require = createRequire(import.meta.url);
 
 // https://vite.dev/config/
 export default defineConfig(({ mode }) => {
@@ -36,13 +38,17 @@ export default defineConfig(({ mode }) => {
           ],
       },
     },
-    postcss: isSaas && isDev
-      ? {
-        // Saas 开发模式：配置 PostCSS 处理 Tailwind
-        // 使用 search-box 的 PostCSS 配置
-        config: resolve(__dirname, "../../packages/search-box/postcss.config.cjs"),
-      }
-      : undefined,
+    postcss: isSaas
+      ? (() => {
+        // Saas 模式：直接加载 PostCSS 配置并应用插件
+        const postcssConfigPath = resolve(__dirname, "../../packages/search-box/postcss.config.cjs");
+        const postcssConfig = require(postcssConfigPath);
+        return postcssConfig;
+      })()
+      : {
+        // 普通模式：禁用 PostCSS，避免自动查找 postcss.config.cjs
+        plugins: []
+      },
   };
 
   return {
@@ -52,27 +58,16 @@ export default defineConfig(({ mode }) => {
     },
     plugins: [vue()],
     css: cssConfig,
+    // 配置依赖预构建，确保 @opentiny/vue 正确预构建
+    optimizeDeps: {
+      include: ['@opentiny/vue', '@opentiny/vue-common'],
+      exclude: ['@opentiny/vue-search-box']
+    },
     resolve: {
       extensions: [".mjs", ".js", ".mts", ".ts", ".jsx", ".tsx", ".vue", ".json"],
       alias: {
         "@demos": resolve(__dirname, "../../packages/docs/search-box"),
-        "@opentiny/vue-button": resolve('node_modules/@opentiny/vue-button'),
-        "@opentiny/vue-button-group": resolve('node_modules/@opentiny/vue-button-group'),
-        "@opentiny/vue-checkbox": resolve('node_modules/@opentiny/vue-checkbox'),
-        "@opentiny/vue-checkbox-group": resolve('node_modules/@opentiny/vue-checkbox-group'),
-        "@opentiny/vue-date-picker": resolve('node_modules/@opentiny/vue-date-picker'),
-        "@opentiny/vue-dropdown": resolve('node_modules/@opentiny/vue-dropdown'),
-        "@opentiny/vue-dropdown-item": resolve('node_modules/@opentiny/vue-dropdown-item'),
-        "@opentiny/vue-dropdown-menu": resolve('node_modules/@opentiny/vue-dropdown-menu'),
-        "@opentiny/vue-form": resolve('node_modules/@opentiny/vue-form'),
-        "@opentiny/vue-form-item": resolve('node_modules/@opentiny/vue-form-item'),
-        "@opentiny/vue-input": resolve('node_modules/@opentiny/vue-input'),
-        "@opentiny/vue-loading": resolve('node_modules/@opentiny/vue-loading'),
-        "@opentiny/vue-option": resolve('node_modules/@opentiny/vue-option'),
-        "@opentiny/vue-popover": resolve('node_modules/@opentiny/vue-popover'),
-        "@opentiny/vue-select": resolve('node_modules/@opentiny/vue-select'),
-        "@opentiny/vue-tag": resolve('node_modules/@opentiny/vue-tag'),
-        "@opentiny/vue-tooltip": resolve('node_modules/@opentiny/vue-tooltip'),
+        "@opentiny/vue": resolve('node_modules/@opentiny/vue'),
         "@opentiny/vue-common": resolve('node_modules/@opentiny/vue-common'),
         "@opentiny/vue-theme": resolve(`node_modules/@opentiny/vue-theme${isSaas ? '-saas' : ''}`),
         "@opentiny/vue-icon": resolve(`node_modules/@opentiny/vue-icon${isSaas ? '-saas' : ''}`),
