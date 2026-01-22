@@ -1,5 +1,5 @@
 // import { ref } from 'vue'
-import Loading from '@opentiny/vue-loading'
+import { Loading } from '@opentiny/vue'
 import { debounce } from '../utils/index.ts'
 import { hasTagItem, createNewTag, getTagId, emitChangeModelEvent } from '../utils/tag.ts'
 import { showDropdown } from '../utils/dropdown.ts'

@@ -63,7 +63,7 @@ export function removeCssOutput(outDir?: string): Plugin {
 }
 
 /**
- * 移动类型文件插件：从 types/src/ 移到 types/
+ * 移动类型文件插件：从 types/src/ 移到 types/，并重命名为 index.d.ts
  * @param typesDir 类型文件目录路径
  */
 export function moveTypesFiles(typesDir: string): Plugin {
@@ -73,7 +73,7 @@ export function moveTypesFiles(typesDir: string): Plugin {
       const typesPath = resolve(typesDir)
       const srcDir = resolve(typesPath, 'src')
       const indexPath = resolve(srcDir, 'index.type.d.ts')
-      const targetPath = resolve(typesPath, 'index.type.d.ts')
+      const targetPath = resolve(typesPath, 'index.d.ts')
 
       if (existsSync(indexPath)) {
         // 读取文件内容
@@ -83,6 +83,8 @@ export function moveTypesFiles(typesDir: string): Plugin {
         // 删除 src 目录
         rmSync(srcDir, { recursive: true, force: true })
         console.log('已移动类型文件到 types 目录')
+      } else {
+        console.warn('⚠️ 类型文件不存在:', indexPath)
       }
     }
   }
