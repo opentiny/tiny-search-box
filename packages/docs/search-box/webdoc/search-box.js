@@ -242,6 +242,18 @@ export default {
       codeFiles: ['events.vue']
     },
     {
+      demoId: 'validate-error',
+      name: {
+        'zh-CN': '校验错误',
+        'en-US': 'Validate Error'
+      },
+      desc: {
+        'zh-CN': ' 通过  regexp   配置项设置正则表达式校验条件，当输入值不匹配时，会触发  validate-error  事件，传递不匹配的值和校验信息。 ',
+        'en-US': ' Use  regexp  to configure regular expression validation conditions. When the input value does not match, the  validate-error  event will be triggered, passing the unmatched values and validation information. '
+      },
+      codeFiles: ['validate-error.vue']
+    },
+    {
       demoId: 'suffix-icon',
       name: {
         'zh-CN': '后缀图标',

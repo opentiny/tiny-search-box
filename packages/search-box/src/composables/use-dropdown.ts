@@ -207,11 +207,25 @@ export function useDropdown({ props, emit, state, t, format, nextTick, vm, cance
           ? [inputValue]
           : inputValue.split(props.splitInputValue)
 
+      // 如果配置项有 regexp 校验条件，对每个 tag 单独进行校验
       if (regexp) {
+        const invalidTags = []
         for (const tag of tagList) {
+          // 每个 tag 单独用 regexp 校验
           if (regexp.test(tag)) {
             newTagUpdateModelValue(prevItem, propItem, tag)
+          } else {
+            invalidTags.push(tag)
           }
+        }
+        // 当有校验不合法的值时，抛出事件
+        if (invalidTags.length > 0) {
+          emit('validate-error', {
+            invalidValues: invalidTags,
+            field: prevItem.field,
+            label: prevItem.label,
+            regexp: regexp.toString()
+          })
         }
         // 有输入且无正则
       } else {
@@ -222,12 +236,13 @@ export function useDropdown({ props, emit, state, t, format, nextTick, vm, cance
       // 无label的情况
     } else {
       const { items, defaultField } = props
+      // 先根据 regexp 匹配找到对应的配置项
       const currentItem =
         items.find((item) => {
           const { regexp } = item
           return regexp && regexp.test(state.inputValue)
         }) || (defaultField ? items.find((item) => item.field === defaultField) : state.allTypeAttri)
-      const { replace, type, mergeTag } = currentItem
+      const { replace, type, mergeTag, regexp } = currentItem
       const tagList =
         (type !== 'checkbox' && replace) || (type === 'checkbox' && mergeTag)
           ? [inputValue]
@@ -243,8 +258,31 @@ export function useDropdown({ props, emit, state, t, format, nextTick, vm, cance
         })
       }
       const label = currentItem.label
-      for (const tag of tagList) {
-        updateModelValue(currentItem, {}, label, tag)
+      
+      // 如果配置项有 regexp 校验条件，对每个 tag 单独进行校验
+      if (regexp) {
+        const invalidTags = []
+        for (const tag of tagList) {
+          // 每个 tag 单独用 regexp 校验
+          if (regexp.test(tag)) {
+            updateModelValue(currentItem, {}, label, tag)
+          } else {
+            invalidTags.push(tag)
+          }
+        }
+        // 当有校验不合法的值时，抛出事件
+        if (invalidTags.length > 0) {
+          emit('validate-error', {
+            invalidValues: invalidTags,
+            field: currentItem.field,
+            label: currentItem.label,
+            regexp: regexp.toString()
+          })
+        }
+      } else {
+        for (const tag of tagList) {
+          updateModelValue(currentItem, {}, label, tag)
+        }
       }
     }
   }
