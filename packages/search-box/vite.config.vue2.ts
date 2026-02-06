@@ -105,28 +105,23 @@ export default defineConfig({
             fileName: () => 'index.js'
         },
         rollupOptions: {
-            external: [
-                'vue',
-                '@opentiny/vue-button',
-                '@opentiny/vue-checkbox',
-                '@opentiny/vue-checkbox-group',
-                '@opentiny/vue-date-picker',
-                '@opentiny/vue-dropdown',
-                '@opentiny/vue-dropdown-item',
-                '@opentiny/vue-dropdown-menu',
-                '@opentiny/vue-form',
-                '@opentiny/vue-form-item',
-                '@opentiny/vue-icon',
-                '@opentiny/vue-input',
-                '@opentiny/vue-loading',
-                '@opentiny/vue-option',
-                '@opentiny/vue-popover',
-                '@opentiny/vue-select',
-                '@opentiny/vue-tag',
-                '@opentiny/vue-tooltip',
-                '@opentiny/vue-common',
-                '@opentiny/vue-theme'
-            ],
+            // 启用 tree-shaking，确保按需打包
+            treeshake: {
+                moduleSideEffects: false,
+                propertyReadSideEffects: false,
+                tryCatchDeoptimization: false
+            },
+            external: (id) => {
+                // 排除 vue 和所有 @opentiny/vue 相关依赖
+                if (id === 'vue' || id.startsWith('@opentiny/vue')) {
+                    return true
+                }
+                // 排除 streamsaver（@opentiny/vue 的内部依赖，可能导致 ESM 导入错误）
+                if (id === 'streamsaver' || id.startsWith('streamsaver/')) {
+                    return true
+                }
+                return false
+            },
             output: {
                 globals: {
                     vue: 'Vue'
@@ -150,7 +145,9 @@ export default defineConfig({
             'vue$': resolve(__dirname, 'node_modules/vue2/dist/vue.esm.js'),
             'vue': resolve(__dirname, 'node_modules/vue2/dist/vue.esm.js'),
             'vue-template-compiler$': resolve(__dirname, 'node_modules/vue-template-compiler'),
-            'vue-template-compiler': resolve(__dirname, 'node_modules/vue-template-compiler')
+            'vue-template-compiler': resolve(__dirname, 'node_modules/vue-template-compiler'),
+            // 开发环境和打包环境都支持样式别名导入
+            '@opentiny/vue-search-box-theme': resolve(__dirname, 'theme/index.less')
         },
         // 确保不会解析到 vue3
         dedupe: ['vue']
@@ -162,7 +159,9 @@ export default defineConfig({
         },
         preprocessorOptions: {
             less: {
-                javascriptEnabled: true
+                javascriptEnabled: true,
+                // 普通模式下，限制路径解析，只包含 theme 目录，避免解析到 theme-saas 目录
+                paths: [resolve(__dirname, 'theme')]
             }
         }
     }

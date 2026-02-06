@@ -3,7 +3,7 @@ import { ref, computed, defineAsyncComponent, shallowRef, watch, h } from "vue";
 import { useI18n } from "vue-i18n";
 import ConfigProvider from "@opentiny/vue-config-provider";
 import designSaasConfig from "@opentiny/vue-design-saas";
-import TinyRadioGroup from "@opentiny/vue-radio-group";
+import { TinyRadioGroup } from "@opentiny/vue";
 import demosData from "@demos/webdoc/search-box.js";
 
 const { locale } = useI18n();
