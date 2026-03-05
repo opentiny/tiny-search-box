@@ -37,14 +37,7 @@ export function useMatch({ props, state, emit, nextTick }) {
   // const loadingInstance = ref(null)
 
   const getMatchList = async (keyword: string) => {
-    // if (typeof document !== 'undefined') {
-    //   !loadingInstance.value &&
-    //     (loadingInstance.value = Loading.service({
-    //       target: document.getElementById('potential-loading')
-    //     }))
-    // }
     state.potentialOptions = await props.potentialOptions.getMatchList(keyword)
-    // loadingInstance.value && loadingInstance.value.close()
     showDropdown(state, true)
   }
 

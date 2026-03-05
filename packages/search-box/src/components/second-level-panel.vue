@@ -97,7 +97,7 @@
           {{ t("tvp.tvpSearchbox.rangeNumberTitle") }}
         </div>
         <div class="tvp-search-box__dropdown-start">
-          {{ t("tvp.tvpSearchbox.minValueText") }}({{ state.prevItem.unit }})
+          {{ t("tvp.tvpSearchbox.minValueText") }}{{ state.prevItem.unit ? `(${state.prevItem.unit})` : '' }}
         </div>
         <tiny-form-item
           :prop="state.curMinNumVar"
@@ -111,7 +111,7 @@
           ></tiny-input>
         </tiny-form-item>
         <div class="tvp-search-box__dropdown-end">
-          {{ t("tvp.tvpSearchbox.maxValueText") }}({{ state.prevItem.unit }})
+          {{ t("tvp.tvpSearchbox.maxValueText") }}{{ state.prevItem.unit ? `(${state.prevItem.unit})` : '' }}
         </div>
         <tiny-form-item :prop="state.curMaxNumVar" class="tvp-search-box__number-item">
           <tiny-input

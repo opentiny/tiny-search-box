@@ -263,7 +263,7 @@
                 class="tvp-search-box__number"
               >
                 <div class="tvp-search-box__dropdown-start">
-                  {{ t('tvp.tvpSearchbox.minValueText') }}({{ state.prevItem.unit }})
+                  {{ t('tvp.tvpSearchbox.minValueText') }}{{ state.prevItem.unit ? `(${state.prevItem.unit})` : '' }}
                 </div>
                 <tiny-form-item
                   :prop="state.curMinNumVar"
@@ -277,7 +277,7 @@
                   ></tiny-input>
                 </tiny-form-item>
                 <div class="tvp-search-box__dropdown-end">
-                  {{ t('tvp.tvpSearchbox.maxValueText') }}({{ state.prevItem.unit }})
+                  {{ t('tvp.tvpSearchbox.maxValueText') }}{{ state.prevItem.unit ? `(${state.prevItem.unit})` : '' }}
                 </div>
                 <tiny-form-item
                   :prop="state.curMaxNumVar"
@@ -515,7 +515,7 @@ export default defineComponent({
       default: ''
     }
   },
-  emits: ['update:modelValue', 'change', 'search', 'exceed', 'first-level-select', 'second-level-enter', 'clear', 'tagClick', 'help'],
+  emits: ['update:modelValue', 'change', 'search', 'exceed', 'first-level-select', 'second-level-enter', 'clear', 'tagClick', 'help', 'validate-error'],
   components: {
     TinyTag,
     TinyInput,
