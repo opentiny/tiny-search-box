@@ -1,8 +1,8 @@
-import { test, expect } from '@playwright/test'
+﻿import { expect, test } from '@playwright/test'
 
 test('默认包含筛选项', async ({ page }) => {
   page.on('pageerror', (exception) => expect(exception).toBeNull())
-  await page.goto('search-box#v-model')
+  await page.goto('/examples/v-model')
 
   const tags = page.locator('.tvp-search-box__tag')
   await expect(tags.nth(0)).toHaveText('个人IP地址 : 192.168.66.88')

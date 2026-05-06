@@ -1,8 +1,8 @@
-import { test, expect } from '@playwright/test'
+﻿import { expect, test } from '@playwright/test'
 
 test('基础用法', async ({ page }) => {
   page.on('pageerror', (exception) => expect(exception).toBeNull())
-  await page.goto('search-box#basic-usage')
+  await page.goto('/examples/basic-usage')
 
   const attrEls = page.locator('.tvp-search-box__first-panel > li .tiny-dropdown-item__label > span').first()
   const tags = page.locator('.tvp-search-box__tag')

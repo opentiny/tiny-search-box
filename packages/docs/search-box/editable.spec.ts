@@ -1,8 +1,8 @@
-import { test, expect } from '@playwright/test'
+﻿import { expect, test } from '@playwright/test'
 
 test('可编辑', async ({ page }) => {
   page.on('pageerror', (exception) => expect(exception).toBeNull())
-  await page.goto('search-box#editable')
+  await page.goto('/examples/editable')
 
   const tags = page.locator('.tvp-search-box__tag')
   await page.getByText('名称(有操作符) = ecs-1').click()

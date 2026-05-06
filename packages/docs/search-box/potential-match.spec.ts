@@ -1,8 +1,8 @@
-import { test, expect } from '@playwright/test'
+﻿import { expect, test } from '@playwright/test'
 
 test('潜在匹配项', async ({ page }) => {
   page.on('pageerror', (exception) => expect(exception).toBeNull())
-  await page.goto('search-box#potential-options')
+  await page.goto('/examples/potential-options')
 
   const tags = page.locator('.tvp-search-box__tag')
 

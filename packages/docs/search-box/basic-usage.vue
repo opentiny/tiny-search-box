@@ -1,7 +1,5 @@
 <template>
-  <ClientOnly>
-    <tiny-search-box v-model="tags" :items="dataSource" />
-  </ClientOnly>
+  <tiny-search-box v-model="tags" :default-field-replace="true" :items="dataSource" />
 </template>
 
 <script setup lang="ts">

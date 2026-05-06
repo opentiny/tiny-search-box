@@ -1,8 +1,8 @@
-import { test, expect } from '@playwright/test'
+﻿import { expect, test } from '@playwright/test'
 
 test('自动匹配', async ({ page }) => {
   page.on('pageerror', (exception) => expect(exception).toBeNull())
-  await page.goto('search-box#auto-match')
+  await page.goto('/examples/auto-match')
 
   const container = page.locator('#auto-match')
   const tags = page.locator('.tvp-search-box__tag')
