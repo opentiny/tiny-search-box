@@ -60,7 +60,7 @@ export default defineConfig({
       md.use(componentPreview)
     }
   },
-  head: [['link', { rel: 'icon', href: 'favicon.ico' }]],
+  head: [['link', { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }]],
   themeConfig: {
     logo: '/logo.svg',
     nav: [
