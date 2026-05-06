@@ -59,6 +59,10 @@ export const searchBoxProps = {
     type: String,
     default: ''
   },
+  defaultFieldReplace: {
+    type: Boolean,
+    default: false
+  },
   /** 是否可编辑 */
   editable: {
     type: Boolean,

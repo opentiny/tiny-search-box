@@ -72,19 +72,26 @@ export function moveTypesFiles(typesDir: string): Plugin {
     async closeBundle() {
       const typesPath = resolve(typesDir)
       const srcDir = resolve(typesPath, 'src')
-      const indexPath = resolve(srcDir, 'index.type.d.ts')
+      const srcIndexPath = resolve(srcDir, 'index.type.d.ts')
+      const flatIndexPath = resolve(typesPath, 'index.type.d.ts')
       const targetPath = resolve(typesPath, 'index.d.ts')
+      const indexPath = existsSync(srcIndexPath) ? srcIndexPath : flatIndexPath
 
       if (existsSync(indexPath)) {
         // 读取文件内容
         const content = readFileSync(indexPath, 'utf-8')
         // 写入到目标位置
         writeFileSync(targetPath, content, 'utf-8')
-        // 删除 src 目录
-        rmSync(srcDir, { recursive: true, force: true })
+        // 删除多余的类型中间文件/目录
+        if (existsSync(srcDir)) {
+          rmSync(srcDir, { recursive: true, force: true })
+        }
+        if (indexPath === flatIndexPath && existsSync(flatIndexPath)) {
+          unlinkSync(flatIndexPath)
+        }
         console.log('已移动类型文件到 types 目录')
       } else {
-        console.warn('⚠️ 类型文件不存在:', indexPath)
+        console.warn('⚠️ 类型文件不存在:', srcIndexPath, 'or', flatIndexPath)
       }
     }
   }
