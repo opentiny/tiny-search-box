@@ -22,4 +22,5 @@ pnpm test:e2e:headed
 pnpm test:e2e:ui
 pnpm test:e2e:report
 pnpm test:e2e:codegen
+pnpm test:e2e:codegen:headed
 ```

@@ -237,14 +237,14 @@ export function useDropdown({ props, emit, state, t, format, nextTick, vm, cance
     } else {
       const { items, defaultField, defaultFieldReplace } = props
       // 先根据 regexp 匹配找到对应的配置项
-      const currentItem =
-        items.find((item) => {
-          const { regexp } = item
-          return regexp && regexp.test(state.inputValue)
-        }) || (defaultField ? items.find((item) => item.field === defaultField) : state.allTypeAttri)
-      const isDefaultKeywordField = currentItem?.field === state.allTypeAttri.field
+      const matchedItem = items.find((item) => {
+        const { regexp } = item
+        return regexp && regexp.test(state.inputValue)
+      })
+      const defaultItem = defaultField ? items.find((item) => item.field === defaultField) : state.allTypeAttri
+      const currentItem = matchedItem || defaultItem
       const normalizedCurrentItem =
-        isDefaultKeywordField && defaultFieldReplace ? { ...currentItem, replace: true } : currentItem
+        !matchedItem && defaultFieldReplace ? { ...currentItem, replace: true } : currentItem
       const { replace, type, mergeTag, regexp } = normalizedCurrentItem
       const tagList =
         (type !== 'checkbox' && replace) || (type === 'checkbox' && mergeTag)

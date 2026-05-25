@@ -1,6 +1,6 @@
 <template>
   <ClientOnly>
-    <tiny-search-box v-model="tags" :default-field="defaultField" :items="dataSource" />
+    <tiny-search-box v-model="tags" :default-field="defaultField" :default-field-replace="true" :items="dataSource" />
   </ClientOnly>
 </template>
 
