@@ -1,8 +1,8 @@
-import { test, expect } from '@playwright/test'
+﻿import { expect, test } from '@playwright/test'
 
 test('自定义二级下拉面板', async ({ page }) => {
   page.on('pageerror', (exception) => expect(exception).toBeNull())
-  await page.goto('search-box#custom-panel')
+  await page.goto('/examples/custom-panel')
 
   const tags = page.locator('.tvp-search-box__tag')
 

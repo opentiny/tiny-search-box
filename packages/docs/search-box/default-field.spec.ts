@@ -1,13 +1,20 @@
-import { test, expect } from '@playwright/test'
+﻿import { expect, test } from '@playwright/test'
 
 test('自定义默认搜索项', async ({ page }) => {
   page.on('pageerror', (exception) => expect(exception).toBeNull())
-  await page.goto('search-box#default-field')
+  await page.goto('/examples/default-field')
 
   const tags = page.locator('.tvp-search-box__tag')
 
   await page.getByRole('textbox', { name: '选择属性筛选，或输入关键字搜索' }).fill('东北区')
   await page.getByRole('textbox', { name: '选择属性筛选，或输入关键字搜索' }).press('Enter')
+  await expect(tags).toHaveCount(1)
   await expect(tags.last()).toHaveText('可用地区 : 东北区')
   await expect(tags.last()).toHaveAttribute('title', '可用地区 : 东北区')
+
+  await page.getByRole('textbox', { name: '添加筛选条件' }).fill('华南区')
+  await page.getByRole('textbox', { name: '添加筛选条件' }).press('Enter')
+  await expect(tags).toHaveCount(1)
+  await expect(tags.last()).toHaveText('可用地区 : 华南区')
+  await expect(tags.last()).toHaveAttribute('title', '可用地区 : 华南区')
 })

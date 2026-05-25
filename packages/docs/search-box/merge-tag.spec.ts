@@ -1,8 +1,8 @@
-import { test, expect } from '@playwright/test'
+﻿import { expect, test } from '@playwright/test'
 
 test('合并多选标签', async ({ page }) => {
   page.on('pageerror', (exception) => expect(exception).toBeNull())
-  await page.goto('search-box#merge-tag')
+  await page.goto('/examples/merge-tag')
 
   const tags = page.locator('.tvp-search-box__tag')
 

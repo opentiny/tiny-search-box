@@ -489,6 +489,10 @@ export default defineComponent({
       type: String,
       default: ''
     },
+    defaultFieldReplace: {
+      type: Boolean,
+      default: false
+    },
     editable: {
       type: Boolean,
       default: false

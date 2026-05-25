@@ -5,11 +5,16 @@
   "packageManager": "pnpm@9.14.4",
   "scripts": {
     "install:all": "cd packages/search-box && pnpm install && cd ../docs && pnpm install && cd ../vue2-test && pnpm install && cd ../vue3-test && pnpm install && cd ../..",
-    "dev": "pnpm -F @opentiny/vue-search-box-docs docs:dev", 
+    "dev": "pnpm -C packages/docs docs:dev:local",
+    "dev:npm": "pnpm -C packages/docs docs:dev",
     "dev3": "pnpm -F vue3-test dev",
     "dev3:saas": "pnpm -F vue3-test dev --mode saas",
     "dev2": "pnpm -F vue2-test dev",
     "dev2:saas": "pnpm -F vue2-test dev --mode saas",
+    "test:playground": "pnpm -C packages/docs test:e2e",
+    "test:playground:headed": "pnpm -C packages/docs test:e2e:headed",
+    "test:playground:codegen": "pnpm -C packages/docs test:e2e:codegen",
+    "test:playground:codegen:headed": "pnpm -C packages/docs test:e2e:codegen:headed",
     "build:docs": "pnpm -F @opentiny/vue-search-box-docs docs:build",
     "build": "pnpm -F @opentiny/vue-search-box build:all",
     "pub": "pnpm -F @opentiny/vue-search-box publish:all --no-git-checks"
@@ -20,7 +25,6 @@
       "vite-plugin-vue2>vue": "link:./packages/search-box/node_modules/vue2",
       "@opentiny/vue-locale>vue": "npm:vue@2.6.14",
       "vue2-test>vue": "npm:vue@2.6.14",
-      "vue2-test>vue-template-compiler>vue": "npm:vue@2.6.14",
       "@vitejs/plugin-vue>vue": "link:./packages/search-box/node_modules/vue3"
     },
     "packageExtensions": {

@@ -1,8 +1,8 @@
-import { test, expect } from '@playwright/test'
+﻿import { expect, test } from '@playwright/test'
 
 test('时间长度限制', async ({ page }) => {
   page.on('pageerror', (exception) => expect(exception).toBeNull())
-  await page.goto('search-box#max-time-length')
+  await page.goto('/examples/max-time-length')
 
   const tags = page.locator('.tvp-search-box__tag')
 

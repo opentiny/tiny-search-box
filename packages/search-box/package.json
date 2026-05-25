@@ -1,6 +1,6 @@
 {
   "name": "@opentiny/vue-search-box",
-  "version": "3.28.5",
+  "version": "3.29.0-alpha.0",
   "description": "",
   "homepage": "https://github.com/opentiny/tiny-search-box#readme",
   "bugs": {
@@ -19,7 +19,7 @@
     "./theme/**/*",
     "./theme-saas/**/*"
   ],
-  "main": "lib/index.js",
+  "main": "index.js",
   "module": "index.ts",
   "keywords": [
     "search",
@@ -35,6 +35,7 @@
   },
   "scripts": {
     "build:all": "pnpm build:vue2 && pnpm build:vue2-saas && pnpm build:vue3 && pnpm build:vue3-saas",
+    "typecheck": "tsc --noEmit -p tsconfig.json",
     "build:vue2": "vite build --config vite.config.vue2.ts && node scripts/post-build.js vue2",
     "build:vue2-saas": "vite build --config vite.config.vue2-saas.ts && node scripts/post-build.js vue2-saas",
     "build:vue3": "vite build --config vite.config.vue3.ts && node scripts/post-build.js vue3",

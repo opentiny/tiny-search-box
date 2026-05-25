@@ -297,3 +297,12 @@ const tags: ISearchBoxTag[] = []
 4. **主题选择**：根据项目需求选择普通主题包（`@opentiny/vue-search-box`）或 SaaS 主题包（`@opentiny/vue-search-box-saas`）
 5. **包结构**：每个包包含 `index.js`（组件代码）和 `index.css`（样式文件），样式会自动导入
 
+
+## i18n 自动继承说明
+
+从当前版本开始，组件在 `use` 时会自动继承宿主应用的 i18n（Vue2 / Vue3 都支持），通常不再需要手动调用 `setGlobalApp`。
+
+- 推荐：
+  - Vue3：`app.use(i18n)` 后 `app.use(TinySearchBox)`
+  - Vue2：`Vue.use(TinySearchBox)`，并在根实例中配置 `i18n`
+- 兼容：如遇多应用/微前端等特殊场景，仍可手动调用 `setGlobalApp` 指定实例。

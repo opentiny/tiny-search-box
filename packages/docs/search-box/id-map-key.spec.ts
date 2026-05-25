@@ -1,8 +1,8 @@
-import { test, expect } from '@playwright/test'
+﻿import { expect, test } from '@playwright/test'
 
 test('指定筛选项的ID键取值', async ({ page }) => {
   page.on('pageerror', (exception) => expect(exception).toBeNull())
-  await page.goto('search-box#id-map-key')
+  await page.goto('/examples/id-map-key')
 
   page.on('console', (msg) => {
     if (msg.type() === 'log') {

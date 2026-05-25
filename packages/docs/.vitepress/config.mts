@@ -5,6 +5,8 @@ import { containerPreview, componentPreview } from '@vitepress-demo-preview/plug
 
 const env = loadEnv(process.env.VITE_BASE_URL!, fileURLToPath(new URL('../', import.meta.url)))
 const __dirname = fileURLToPath(new URL('.', import.meta.url))
+const useLocalSearchBox = process.env.USE_LOCAL_SEARCH_BOX === 'true'
+const docsNodeModules = path.resolve(__dirname, '../node_modules')
 
 export default defineConfig({
   title: 'TinySearchBox',
@@ -12,11 +14,43 @@ export default defineConfig({
   base: env.VITE_BASE_URL || '/tiny-search-box/',
   cleanUrls: true,
   vite: {
+    resolve: {
+      alias: useLocalSearchBox
+        ? {
+            '@opentiny/vue-search-box': path.resolve(__dirname, '../../search-box/index.ts'),
+            '@opentiny/vue-search-box-theme': path.resolve(__dirname, '../../search-box/theme/index.less'),
+            '@opentiny/vue': path.resolve(docsNodeModules, '@opentiny/vue'),
+            '@opentiny/vue-common': path.resolve(docsNodeModules, '@opentiny/vue-common'),
+            '@opentiny/vue-icon': path.resolve(docsNodeModules, '@opentiny/vue-icon'),
+            '@opentiny/vue-locale': path.resolve(docsNodeModules, '@opentiny/vue-locale'),
+            vue: path.resolve(docsNodeModules, 'vue/dist/vue.runtime.esm-bundler.js')
+          }
+        : {}
+    },
     optimizeDeps: {
-      exclude: ['@opentiny/vue-search-box', '@opentiny/vue-locale']
+      include: [
+        'streamsaver',
+        'quill-delta',
+        '@opentiny/vue',
+        '@opentiny/vue-common',
+        '@opentiny/vue-icon',
+        '@opentiny/vue-locale'
+      ],
+      exclude: useLocalSearchBox
+        ? [
+            // Keep local package source in dev for HMR.
+            '@opentiny/vue-search-box'
+          ]
+        : []
+    },
+    server: {
+      fs: {
+        allow: [path.resolve(__dirname, '..'), path.resolve(__dirname, '../../search-box')]
+      }
     },
     ssr: {
-      noExternal: [/@opentiny\//, '@opentiny/vue-search-box']
+      // Reduce SSR transform scope to speed up dev startup.
+      noExternal: ['@opentiny/vue-search-box']
     }
   },
   markdown: {
@@ -26,7 +60,7 @@ export default defineConfig({
       md.use(componentPreview)
     }
   },
-  head: [['link', { rel: 'icon', href: 'favicon.ico' }]],
+  head: [['link', { rel: 'icon', type: 'image/x-icon', href: `${env.VITE_BASE_URL || '/tiny-search-box/'}/favicon.ico` }]],
   themeConfig: {
     logo: '/logo.svg',
     nav: [

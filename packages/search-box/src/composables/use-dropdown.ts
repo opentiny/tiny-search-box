@@ -235,14 +235,17 @@ export function useDropdown({ props, emit, state, t, format, nextTick, vm, cance
       }
       // 无label的情况
     } else {
-      const { items, defaultField } = props
+      const { items, defaultField, defaultFieldReplace } = props
       // 先根据 regexp 匹配找到对应的配置项
-      const currentItem =
-        items.find((item) => {
-          const { regexp } = item
-          return regexp && regexp.test(state.inputValue)
-        }) || (defaultField ? items.find((item) => item.field === defaultField) : state.allTypeAttri)
-      const { replace, type, mergeTag, regexp } = currentItem
+      const matchedItem = items.find((item) => {
+        const { regexp } = item
+        return regexp && regexp.test(state.inputValue)
+      })
+      const defaultItem = defaultField ? items.find((item) => item.field === defaultField) : state.allTypeAttri
+      const currentItem = matchedItem || defaultItem
+      const normalizedCurrentItem =
+        !matchedItem && defaultFieldReplace ? { ...currentItem, replace: true } : currentItem
+      const { replace, type, mergeTag, regexp } = normalizedCurrentItem
       const tagList =
         (type !== 'checkbox' && replace) || (type === 'checkbox' && mergeTag)
           ? [inputValue]
@@ -265,7 +268,7 @@ export function useDropdown({ props, emit, state, t, format, nextTick, vm, cance
         for (const tag of tagList) {
           // 每个 tag 单独用 regexp 校验
           if (regexp.test(tag)) {
-            updateModelValue(currentItem, {}, label, tag)
+            updateModelValue(normalizedCurrentItem, {}, label, tag)
           } else {
             invalidTags.push(tag)
           }
@@ -274,14 +277,14 @@ export function useDropdown({ props, emit, state, t, format, nextTick, vm, cance
         if (invalidTags.length > 0) {
           emit('validate-error', {
             invalidValues: invalidTags,
-            field: currentItem.field,
-            label: currentItem.label,
+            field: normalizedCurrentItem.field,
+            label: normalizedCurrentItem.label,
             regexp: regexp.toString()
           })
         }
       } else {
         for (const tag of tagList) {
-          updateModelValue(currentItem, {}, label, tag)
+          updateModelValue(normalizedCurrentItem, {}, label, tag)
         }
       }
     }

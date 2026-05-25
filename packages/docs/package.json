@@ -5,8 +5,15 @@
   "private": true,
   "scripts": {
     "docs:dev": "vitepress dev",
+    "docs:dev:local": "cross-env USE_LOCAL_SEARCH_BOX=true vitepress dev",
     "docs:build": "vitepress build",
-    "docs:preview": "vitepress preview"
+    "docs:preview": "vitepress preview",
+    "test:e2e": "playwright test",
+    "test:e2e:headed": "playwright test --headed",
+    "test:e2e:ui": "playwright test --ui",
+    "test:e2e:report": "playwright show-report",
+    "test:e2e:codegen": "playwright codegen http://127.0.0.1:4174/examples/events",
+    "test:e2e:codegen:headed": "playwright codegen --device=\"Desktop Chrome\" http://127.0.0.1:4174/examples/events"
   },
   "dependencies": {
     "vue": "^3.5.13",
@@ -34,12 +41,16 @@
     "@opentiny/vue-locale": "^3.28.0",
     "@opentiny/vue-theme": "^3.28.0",
     "@vitepress-demo-preview/component": "^2.3.2",
-    "less": "^4.3.0"
+    "less": "^4.3.0",
+    "streamsaver": "^2.0.6",
+    "vue-i18n": "^9.14.0"
   },
   "devDependencies": {
+    "@playwright/test": "^1.55.0",
     "@rollup/plugin-commonjs": "^28.0.3",
     "@types/node": "^22.15.12",
     "@vitepress-demo-preview/plugin": "^1.4.0",
+    "cross-env": "^7.0.3",
     "vitepress": "^1.6.3"
   }
 }

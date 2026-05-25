@@ -1,8 +1,8 @@
-import { test, expect } from '@playwright/test'
+import { expect, test } from '@playwright/test'
 
 test('事件', async ({ page }) => {
   page.on('pageerror', (exception) => expect(exception).toBeNull())
-  await page.goto('search-box#events')
+  await page.goto('/examples/events')
 
   const container = page.locator('#events')
   const tags = page.locator('.tvp-search-box__tag')

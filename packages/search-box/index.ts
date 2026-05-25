@@ -10,7 +10,7 @@
  *
  */
 
-import TinySearchBox from "./src/index.ts";
+import TinySearchBox from "./src/index";
 import { t, setGlobalApp } from './src/utils/i18n'
 import zhCN from './src/utils/zh_CN'
 import enUS from './src/utils/en_US'
@@ -21,18 +21,39 @@ import { version } from "./package.json";
 
 /* istanbul ignore next */
 TinySearchBox.install = function (Vue) {
-  Vue.component(TinySearchBox.name, TinySearchBox);
+  const runtime: any = Vue
+
+  // Vue3 app instance: install(app)
+  if (runtime && runtime.config && runtime.config.globalProperties) {
+    setGlobalApp(runtime)
+  }
+
+  // Vue2 constructor: install(Vue)
+  // Capture a runtime vm/root with i18n once available, so users don't need setGlobalApp manually.
+  if (runtime && runtime.mixin && !runtime.__TINY_SEARCH_BOX_I18N_MIXIN__) {
+    runtime.__TINY_SEARCH_BOX_I18N_MIXIN__ = true
+    runtime.mixin({
+      beforeCreate() {
+        const vm = this as any
+        if (vm && (vm.$i18n || vm.$t || (vm.$root && (vm.$root.$i18n || vm.$root.$t)))) {
+          setGlobalApp(vm.$root || vm)
+        }
+      }
+    })
+  }
+
+  runtime.component(TinySearchBox.name, TinySearchBox);
 };
 
 TinySearchBox.version = version;
 
 /* istanbul ignore next */
-if (window && typeof window !== "undefined" && window.Vue) {
-  TinySearchBox.install(window.Vue);
+if (typeof window !== "undefined" && (window as typeof window & { Vue?: unknown }).Vue) {
+  TinySearchBox.install((window as typeof window & { Vue: any }).Vue);
 }
 
 // 导出
-export * from './src/index.type.ts'
+export * from './src/index.type'
 export { zhCN, enUS, t, setGlobalApp, TinySearchBoxFirstLevelPanel, TinySearchBoxSecondLevelPanel }
 
 export default TinySearchBox;
