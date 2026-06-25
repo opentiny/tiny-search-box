@@ -103,6 +103,7 @@ export default defineConfig({
           { text: '时间长度限制', link: '/examples/max-time-length' },
           { text: '合并多选标签', link: '/examples/merge-tag' },
           { text: '面板最大高度', link: '/examples/panel-max-height' },
+          { text: '虚拟滚动', link: '/examples/virtual-scroll' },
           { text: '潜在匹配项', link: '/examples/potential-match' },
           { text: '自定义默认搜索项', link: '/examples/default-field' },
           { text: '切分输入值', link: '/examples/split-input-value' },
