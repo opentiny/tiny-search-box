@@ -18,41 +18,48 @@
     <div
       v-else-if="!state.prevItem.type || state.prevItem.type === 'radio'"
       v-loading="isLoading"
-      :class="['tvp-search-box__radio-wrap', isLoading && 'tvp-search-box__loading-box']"
+      :class="['tvp-search-box__radio-wrap', 'tvp-search-box__virtual-list', isLoading && 'tvp-search-box__loading-box']"
+      :style="{ maxHeight: panelMaxHeight }"
+      ref="vsScrollEl"
+      @scroll="vsHandleScroll"
     >
-      <tiny-dropdown-item
-        v-for="(item, index) in state.backupList"
-        v-show="!item.isFilter || !state.inputValue"
-        :key="index + (item.field || item.label)"
-        :disabled="item.isChecked"
-        class="tvp-search-box__dropdown-item"
-        :item-data="item"
-        @item-click="() => selectRadioItem(item)"
-      >
-        <span v-if="item.match" :title="item.label">
-          <span v-for="text in item.match" :key="text">
-            <span
-              v-if="text.toLowerCase() === item.hightlighStr"
-              class="tvp-search-box__text-highlight"
-              >{{ text }}</span
-            >
-            <span v-else>{{ text }}</span>
-          </span>
-        </span>
-        <span v-else :title="item.label">{{ item.label }}</span>
-      </tiny-dropdown-item>
+      <div class="tvp-search-box__virtual-phantom" :style="{ height: vsTotalHeight + 'px' }">
+        <div
+          class="tvp-search-box__virtual-content"
+          :style="{ transform: 'translateY(' + vsOffsetY + 'px)' }"
+        >
+          <tiny-dropdown-item
+            v-for="(item, vsIndex) in vsVisibleItems"
+            :key="vsStartIndex + vsIndex + (item.field || item.label)"
+            :disabled="item.isChecked"
+            class="tvp-search-box__dropdown-item"
+            :item-data="item"
+            @item-click="() => selectRadioItem(item)"
+          >
+            <span v-if="item.match" :title="item.label">
+              <span v-for="(text, index) in item.match" :key="index">
+                <span
+                  v-if="text.toLowerCase() === item.hightlighStr"
+                  class="tvp-search-box__text-highlight"
+                  >{{ text }}</span
+                >
+                <span v-else>{{ text }}</span>
+              </span>
+            </span>
+            <span v-else :title="item.label">{{ item.label }}</span>
+          </tiny-dropdown-item>
+        </div>
+      </div>
     </div>
     <div
       v-else-if="state.prevItem.type === 'checkbox'"
       v-loading="isLoading"
       :class="isLoading && 'tvp-search-box__loading-box'"
     >
-      <div v-if="showCheckBoxList">
-        <div class="tvp-search-box__checkbox-wrap">
+      <div v-if="showCheckBoxList" class="tvp-search-box__checkbox-wrap" :style="{ maxHeight: panelMaxHeight }">
+        <div ref="vsScrollEl" class="tvp-search-box__virtual-list tvp-search-box__checkbox-scroll" @scroll="vsHandleScroll">
           <tiny-checkbox-group v-model="state.checkAll" class="tvp-search-box__checkbox">
-            <tiny-dropdown-item
-              class="tvp-search-box__dropdown-item tvp-search-box__checkbox-item"
-            >
+            <tiny-dropdown-item class="tvp-search-box__dropdown-item tvp-search-box__checkbox-item">
               <tiny-checkbox
                 v-model="state.checkAll"
                 :indeterminate="state.isIndeterminate"
@@ -65,20 +72,26 @@
             v-model="state.checkboxGroup"
             class="tvp-search-box__checkbox"
           >
-            <tiny-dropdown-item
-              v-for="(item, index) in state.backupList"
-              v-show="!item.isFilter"
-              :key="(item.field || item.label) + index"
-              class="tvp-search-box__dropdown-item tvp-search-box__checkbox-item"
-            >
-              <tiny-checkbox
-                :label="state.prevItem.label + item.label"
-                :title="item.label"
-                class="tvp-search-box__checkbox-item-label"
+            <div class="tvp-search-box__virtual-phantom" :style="{ height: vsTotalHeight + 'px' }">
+              <div
+                class="tvp-search-box__virtual-content"
+                :style="{ transform: 'translateY(' + vsOffsetY + 'px)' }"
               >
-                {{ item.label }}
-              </tiny-checkbox>
-            </tiny-dropdown-item>
+                <tiny-dropdown-item
+                  v-for="(item, vsIndex) in vsVisibleItems"
+                  :key="(item.field || item.label) + vsStartIndex + vsIndex"
+                  class="tvp-search-box__dropdown-item tvp-search-box__checkbox-item"
+                >
+                  <tiny-checkbox
+                    :label="state.prevItem.label + item.label"
+                    :title="item.label"
+                    class="tvp-search-box__checkbox-item-label"
+                  >
+                    {{ item.label }}
+                  </tiny-checkbox>
+                </tiny-dropdown-item>
+              </div>
+            </div>
           </tiny-checkbox-group>
         </div>
         <div class="tvp-search-box__checkbox-btn">
@@ -248,23 +261,36 @@
     </div>
 
     <div v-else-if="state.prevItem.type === 'map'" v-loading="isLoading">
-      <span v-if="state.isShowTagKey" class="tvp-search-box__filter-type">{{
-        t("tvp.tvpSearchbox.tagKey")
-      }}</span>
-      <span v-else class="tvp-search-box__filter-type">{{
-        t("tvp.tvpSearchbox.tagValue")
-      }}</span>
-      <tiny-dropdown-item
-        v-for="(item, index) in state.backupList"
-        v-show="!item.isFilter"
-        :key="item.label + item.value + index"
-        :disabled="item.isChecked"
-        class="tvp-search-box__dropdown-item"
-        :item-data="item"
-        @item-click="() => selectFirstMap(item, state.isShowTagKey)"
+      <div
+        ref="vsScrollEl"
+        class="tvp-search-box__virtual-list"
+        :style="{ maxHeight: panelMaxHeight }"
+        @scroll="vsHandleScroll"
       >
-        <span :title="item.label">{{ item.label }}</span>
-      </tiny-dropdown-item>
+        <span v-if="state.isShowTagKey" class="tvp-search-box__filter-type">{{
+          t("tvp.tvpSearchbox.tagKey")
+        }}</span>
+        <span v-else class="tvp-search-box__filter-type">{{
+          t("tvp.tvpSearchbox.tagValue")
+        }}</span>
+        <div class="tvp-search-box__virtual-phantom" :style="{ height: vsTotalHeight + 'px' }">
+          <div
+            class="tvp-search-box__virtual-content"
+            :style="{ transform: 'translateY(' + vsOffsetY + 'px)' }"
+          >
+            <tiny-dropdown-item
+              v-for="(item, vsIndex) in vsVisibleItems"
+              :key="item.label + item.value + vsStartIndex + vsIndex"
+              :disabled="item.isChecked"
+              class="tvp-search-box__dropdown-item"
+              :item-data="item"
+              @item-click="() => selectFirstMap(item, state.isShowTagKey)"
+            >
+              <span :title="item.label">{{ item.label }}</span>
+            </tiny-dropdown-item>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -283,10 +309,11 @@ import {
   TinyLoading
 } from '@opentiny/vue'
 import { t } from '../utils/i18n.ts'
+import { useVirtualScroll } from '../composables/use-virtual-scroll.ts'
 
 // 简单的 renderless 函数
-const renderless = (props, hooks, { emit }) => {
-  const { computed } = hooks
+const renderless = (props, hooks, { emit, nextTick, refs }) => {
+  const { computed, reactive, watch, onMounted } = hooks
 
   // 优先使用传入的 events/handleEvents 函数，如果没有则使用 emit
   const handleEvents = props.handleEvents || props.events || ((eventName, p1, p2) => {
@@ -329,6 +356,71 @@ const renderless = (props, hooks, { emit }) => {
     return props.state.backupList?.find((item) => !item.isFilter)
   })
 
+  // 虚拟滚动：根据当前类型计算过滤后的列表
+  const currentFilteredList = computed(() => {
+    const type = props.state.prevItem.type
+    const backupList = props.state.backupList || []
+
+    // radio 类型无输入时显示全部
+    if (!type || type === 'radio') {
+      if (!props.state.inputValue) return backupList
+      return backupList.filter((item) => !item.isFilter)
+    }
+
+    // checkbox 和 map 始终过滤 isFilter
+    return backupList.filter((item) => !item.isFilter)
+  })
+
+  const vs = useVirtualScroll(
+    { reactive, computed },
+    {
+      getList: () => currentFilteredList.value,
+      itemHeight: 32,
+      bufferSize: 5,
+      headerHeight: () => {
+        const type = props.state.prevItem.type
+        // checkbox 的"全选"和 map 的标题在滚动容器内，占 32px
+        if (type === 'checkbox' || type === 'map') return 32
+        return 0
+      }
+    }
+  )
+
+  // 输入变化时重置滚动位置
+  watch(
+    () => props.state.inputValue,
+    () => {
+      vs.vsState.scrollTop = 0
+      nextTick(() => {
+        if (refs.vsScrollEl) {
+          refs.vsScrollEl.scrollTop = 0
+        }
+      })
+    }
+  )
+
+  // 切换面板类型时重置滚动位置并重新测量视口高度
+  watch(
+    () => props.state.prevItem,
+    () => {
+      vs.vsState.scrollTop = 0
+      nextTick(() => {
+        if (refs.vsScrollEl) {
+          refs.vsScrollEl.scrollTop = 0
+          vs.handleScroll({ target: refs.vsScrollEl })
+        }
+      })
+    },
+    { deep: true }
+  )
+
+  // 挂载后测量实际视口高度，确保首次渲染数量正确
+  onMounted(() => {
+    if (refs.vsScrollEl) {
+      vs.handleScroll({ target: refs.vsScrollEl })
+    }
+  })
+
   return {
     setOperator,
     selectRadioItem,
@@ -339,6 +431,11 @@ const renderless = (props, hooks, { emit }) => {
     handleDateShow,
     isLoading,
     showCheckBoxList,
+    vsTotalHeight: vs.totalHeight,
+    vsStartIndex: vs.startIndex,
+    vsOffsetY: vs.offsetY,
+    vsVisibleItems: vs.visibleItems,
+    vsHandleScroll: vs.handleScroll,
     t
   }
 }
@@ -353,6 +450,11 @@ const api = [
   'handleDateShow',
   'isLoading',
   'showCheckBoxList',
+  'vsTotalHeight',
+  'vsStartIndex',
+  'vsOffsetY',
+  'vsVisibleItems',
+  'vsHandleScroll',
   't'
 ]
 
@@ -391,6 +493,10 @@ export default defineComponent({
       type: Function,
       default: null
     },
+    panelMaxHeight: {
+      type: String,
+      default: '999px'
+    }
   },
   setup(props, context) {
     return setup({ props, context, renderless, api })

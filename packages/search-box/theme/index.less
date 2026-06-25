@@ -265,28 +265,88 @@
   &__dropdown {
     display: block;
     flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
   }
 
   &__loading-box {
     min-height: 32px;
   }
 
-  &__radio-wrap {
-    max-height: 240px;
-    overflow: auto;
+  // 虚拟滚动容器
+  &__virtual-list {
+    overflow-y: auto;
+    overflow-x: hidden;
+    position: relative;
+
+    &::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+
+    &::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background: var(--tvp-SearchBox-color-bg-scrollbar-thumb);
+      border-radius: var(--tvp-SearchBox-border-radius-scrollbar-thumb);
+    }
+
+    // 移除 dropdown-item 的默认 margin，保证行高精确为 32px（双类名提升优先级覆盖 tiny-dropdown-item[class*=tiny-]）
+    .@{dropdown-tiny-cls}-item.@{dropdown-tiny-cls}-item {
+      margin-bottom: 0;
+      height: 32px;
+      overflow: hidden;
+    }
+
+    // 分组标题也设为 32px，与虚拟滚动 itemHeight 一致
+    .@{search-box-prefix-cls}__filter-type {
+      margin-top: 0;
+      height: 32px;
+      line-height: 32px;
+      display: block;
+      width: 100%;
+    }
+  }
+
+  // 虚拟滚动占位元素（撑开总滚动高度）
+  &__virtual-phantom {
+    position: relative;
+    width: 100%;
+  }
+
+  // 虚拟滚动内容容器（通过 translateY 定位到正确位置）
+  &__virtual-content {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+  }
+
+  // checkbox 虚拟滚动容器（在 checkbox-wrap 的 flex 布局中占满剩余空间）
+  &__checkbox-scroll {
+    flex: 1;
+    min-height: 0;
   }
 
   &__checkbox-wrap {
-    max-height: 186px;
+    display: flex;
+    flex-direction: column;
   }
 
   &__checkbox {
     flex-direction: column;
   }
 
+  &__radio-wrap {
+    // overflow 由 __virtual-list 统一控制，避免 overflow 简写覆盖 overflow-x: hidden
+  }
+
   &__bottom-btn,
   &__checkbox-btn {
     display: flex;
+    flex-shrink: 0;
     margin: 0 10px;
     border-top: 1px solid var(--tvp-SearchBox-dropdown-btn-group-border-color);
     margin-top: var(--tvp-SearchBox-dropdown-btn-group-margin-top);

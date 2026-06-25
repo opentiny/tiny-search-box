@@ -39,6 +39,18 @@ export default {
       codeFiles: ['panel-max-height.vue', 'data-source.ts']
     },
     {
+      demoId: 'virtual-scroll',
+      name: {
+        'zh-CN': '虚拟滚动',
+        'en-US': 'Virtual Scroll'
+      },
+      desc: {
+        'zh-CN': ' 当数据选项数量较多时，二级面板内置虚拟滚动机制，只渲染视口内可见的选项节点，保证滚动流畅不卡顿。 ',
+        'en-US': ' When the number of data options is large, the level-2 panel has a built-in virtual scroll mechanism that renders only the option nodes visible in the viewport, ensuring smooth scrolling without lag. '
+      },
+      codeFiles: ['virtual-scroll.vue', 'virtual-scroll-data.ts']
+    },
+    {
       demoId: 'split-input-value',
       name: {
         'zh-CN': '切分输入值',

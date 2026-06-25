@@ -141,6 +141,7 @@
                 v-else-if="state.prevItem.type !== 'custom'"
                 :state="state"
                 :picker-options="pickerOptions"
+                :panel-max-height="panelMaxHeight"
                 @events="handleEvents"
               ></TinySearchBoxSecondLevelPanel>
               <div
