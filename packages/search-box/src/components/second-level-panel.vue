@@ -37,7 +37,7 @@
             @item-click="() => selectRadioItem(item)"
           >
             <span v-if="item.match" :title="item.label">
-              <span v-for="text in item.match" :key="text">
+              <span v-for="(text, index) in item.match" :key="index">
                 <span
                   v-if="text.toLowerCase() === item.hightlighStr"
                   class="tvp-search-box__text-highlight"
