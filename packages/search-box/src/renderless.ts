@@ -60,7 +60,7 @@ const initState = ({ reactive, computed, api, i18n, watch, props, emit, vm }) =>
     filterList: [],
     checkboxGroup: [],
     prevItem: {},
-    backupPrevItem: '',
+    backupPrevItem: null,
     formRules: null,
     validType: 'text',
     numberShowMessage: true,
@@ -79,8 +79,8 @@ const initState = ({ reactive, computed, api, i18n, watch, props, emit, vm }) =>
     allTypeAttri: { label: t('tvp.tvpSearchbox.rulekeyword1'), field: 'tvpKeyword', type: 'radio' },
     operatorValue: ':',
     inputEditValue: '',
-    currentOperators: '',
-    currentEditValue: '',
+    currentOperators: null,
+    currentEditValue: [],
     currentModelValueIndex: -1,
     curMinNumVar: '',
     curMaxNumVar: '',
@@ -271,6 +271,7 @@ const initWatch = ({ watch, state, props, api, nextTick, vm }) => {
 
   // 监听语言变化，重新设置 placeholder
   let lastLocale = getI18nLocale()
+  let watchEstablished = false
 
   // Vue2 环境下，使用 vm.$watch 监听 i18n.locale
   if (vm?.$i18n) {
@@ -285,6 +286,7 @@ const initWatch = ({ watch, state, props, api, nextTick, vm }) => {
         },
         { immediate: false }
       )
+      watchEstablished = true
     } catch (e) {
       console.warn('[TinySearchBox] Unable to watch i18n.locale via vm.$watch:', e)
     }
@@ -303,12 +305,13 @@ const initWatch = ({ watch, state, props, api, nextTick, vm }) => {
         },
         { immediate: false }
       )
+      watchEstablished = true
     } catch (e) {
       console.warn('[TinySearchBox] Unable to watch i18n.locale via watch:', e)
     }
   }
 
-  // 备用方案：通过轮询检查语言变化
+  // 备用方案：仅在 watch 机制不可用时通过轮询检查语言变化
   const checkLocaleChange = () => {
     const currentLocale = getI18nLocale()
     if (currentLocale !== lastLocale) {
@@ -317,9 +320,8 @@ const initWatch = ({ watch, state, props, api, nextTick, vm }) => {
     }
   }
 
-  // 使用定时器定期检查语言变化，存储在 state 中以便清理（降低频率到 200ms）
-  if (typeof window !== 'undefined') {
-    state.localeCheckInterval = setInterval(checkLocaleChange, 200)
+  if (typeof window !== 'undefined' && !watchEstablished) {
+    state.localeCheckInterval = setInterval(checkLocaleChange, 1000)
   }
 
   // 监听 props.modelValue 变化时也检查语言

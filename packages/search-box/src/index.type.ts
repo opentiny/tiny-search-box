@@ -2,7 +2,7 @@
  * tag类型, radio-默认单选， noValue-非正常tag，tag值为空，  checkbox-多选，map-键值tag, numRange-数字范围tag,
  * dateRange-日期范围tag。tag 的分类是根据键值的结果划分
  */
-export type ISearchBoxTagType = 'radio' | 'noValue' | 'checkbox' | 'map' | 'numRange' | 'dateRange' | 'dateTimeRange'
+export type ISearchBoxTagType = 'radio' | 'noValue' | 'checkbox' | 'map' | 'numRange' | 'dateRange' | 'datetimeRange'
 /**
  * 候选tag数据配置项
  */

@@ -403,7 +403,7 @@
             </div>
           </template>
           <div
-            v-else
+            v-else-if="state.popoverVisible"
             class="tvp-search-box__panel-box"
           >
             <slot
