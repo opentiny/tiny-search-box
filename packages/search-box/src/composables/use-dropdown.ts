@@ -67,6 +67,14 @@ export function useDropdown({ props, emit, state, t, format, nextTick, vm, cance
     const inputRef = instance.$refs?.inputRef
     state.prevItem = item
     state.backupPrevItem = item
+
+    // noValue 类型：直接创建空值标签，无需打开二级面板
+    if (item.type === 'noValue') {
+      state.operatorValue = ':'
+      updateModelValue(item, item, label, '')
+      return
+    }
+
     const { operators } = item
     if (operators?.length) {
       state.operatorValue = ''

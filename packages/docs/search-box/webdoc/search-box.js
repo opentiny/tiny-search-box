@@ -182,9 +182,9 @@ export default {
       },
       desc: {
         'zh-CN':
-          ' 内置自动匹配功能，通过 :show-no-data-tip="false" 隐藏面板的无数据提示，通过 search 监听搜索事件， change 监听搜索值变化事件。 ',
+          ' 内置自动匹配功能，通过 search 监听搜索事件， change 监听搜索值变化事件。 ',
         'en-US':
-          ' Built-in auto-matching function. No Data Prompt for Hiding Panels via  :show-no-data-tip="false" . Use  search  to listen to search events and  change  to listen to search value change events. '
+          ' Built-in auto-matching function. Use  search  to listen to search events and  change  to listen to search value change events. '
       },
       codeFiles: ['auto-match.vue', 'data-source.ts']
     },

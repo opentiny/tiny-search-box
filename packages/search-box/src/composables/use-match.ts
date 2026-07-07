@@ -53,6 +53,7 @@ export function useMatch({ props, state, emit, nextTick }) {
     }
 
     if (inputValue.length === 0) {
+      resetBackupList()
       showDropdown(state)
       return
     }

@@ -1,7 +1,7 @@
 <template>
   <div tiny_mode="pc">
     <tiny-dropdown-item
-      v-show="state.inputValue.trim()"
+      v-show="isShowSearchOption"
       class="tvp-search-box__filter-item tvp-search-box__dropdown-item tvp-search-box__dropdown-item-init"
       :item-data="{ label: state.inputValue }"
       @item-click="() => selectInputValue(state.inputValue)"
@@ -121,6 +121,8 @@ import { t } from '../utils/i18n.ts'
 
 // 简单的 renderless 函数
 const renderless = (props, hooks, { emit }) => {
+  const { computed } = hooks
+
   // 优先使用传入的 events/handleEvents 函数，如果没有则使用 emit
   const handleEvents =
     props.handleEvents ||
@@ -128,6 +130,17 @@ const renderless = (props, hooks, { emit }) => {
     ((eventName, p1, p2) => {
       emit('events', eventName, p1, p2)
     })
+
+  // 「搜索"xxxx"」选项仅在输出框模式和单选模式下显示
+  const isShowSearchOption = computed(() => {
+    const { inputValue, popoverVisible, currentOperators, propItem, prevItem } = props.state
+    return (
+      inputValue.trim() &&
+      !popoverVisible &&
+      !currentOperators?.length &&
+      (!propItem.label || [undefined, 'radio'].includes(prevItem.type))
+    )
+  })
 
   const selectInputValue = (e) => {
     handleEvents('selectInputValue', e)
@@ -142,6 +155,7 @@ const renderless = (props, hooks, { emit }) => {
   }
 
   return {
+    isShowSearchOption,
     selectInputValue,
     selectPropItem,
     selectRadioItem,
@@ -149,7 +163,7 @@ const renderless = (props, hooks, { emit }) => {
   }
 }
 
-const api = ['selectInputValue', 'selectPropItem', 'selectRadioItem', 't']
+const api = ['isShowSearchOption', 'selectInputValue', 'selectPropItem', 'selectRadioItem', 't']
 
 export default defineComponent({
   name: $prefix + 'SearchBoxFirstLevelPanel',

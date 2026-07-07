@@ -3,7 +3,7 @@
 [![All Contributors](https://img.shields.io/badge/all_contributors-6-orange.svg?style=flat-square)](#contributors-)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 
-TinySearchBox is a comprehensive search component based on Vue3. It uses the TinyVue component library and follows the OpenTiny design specifications. It is easy to use and powerful. It supports single selection, multiple selection, time, time range and so on.
+TinySearchBox is a comprehensive search component based on Vue3. It uses the TinyVue component library and follows the OpenTiny design specifications. It is easy to use and powerful. It supports single selection, multiple selection, no value, date range, datetime range, number range, key-value, custom types and more.
 
 English | [简体中文](README.zh-CN.md)
 
@@ -12,7 +12,7 @@ English | [简体中文](README.zh-CN.md)
 TinySearchBox has the following advantages:
 
 - Gather the filtering criteria into one input box for higher filtering efficiency and a better user experience
-- Supports multiple types of conditional filtering such as single selection, multiple selection, time, time interval, number size, and number interval
+- Supports multiple types of conditional filtering such as single selection, multiple selection, date range, datetime range, number range, key-value, custom, and more
 - Powerful search functions, supporting fuzzy search, custom search, etc.
 
 ![TinySearchBox](TinySearchBox.png)
@@ -31,17 +31,9 @@ Import TinySearchBox:
 import TinySearchBox from '@opentiny/vue-search-box';
 ```
 
-Styles:
+Styles are built-in and automatically loaded when you import the component. **No need to manually import styles.**
 
-The component package includes built-in styles that are automatically loaded when you import the component. **No need to manually import styles.**
-
-If you need to manually control style loading, you can import separately:
-
-```javascript
-import '@opentiny/vue-search-box/index.css'
-```
-
-html：
+Usage:
 
 ```html
 <script setup>

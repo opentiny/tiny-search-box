@@ -28,7 +28,6 @@ export default {
       rangeEndLabel: '结束日期',
       rulekeyword1: '关键字',
       notBeNull: '值不能为空',
-      noData: '暂无匹配数据...',
       selectAll: '全选',
       confirm: '确定',
       cancel: '取消',

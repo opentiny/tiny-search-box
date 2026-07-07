@@ -31,7 +31,7 @@ export default {
         {
           name: 'empty-placeholder',
           type: 'string',
-          defaultValue: `'默认按照关键字搜索'`,
+          defaultValue: `''`,
           desc: {
             'zh-CN': '没有筛选项时的占位文本',
             'en-US': 'Placeholder text with no filtered items'
@@ -41,7 +41,7 @@ export default {
         {
           name: 'id-map-key',
           type: 'string',
-          defaultValue: '',
+          defaultValue: `'id'`,
           desc: {
             'zh-CN':
               '配置用来识别筛选项的 id 键取值来源，默认取自 props.items 数据的 id 键，一般用于接口返回的 props.items 数据字段不匹配，但是又需要其中一个键值来识别筛选项的情况；注意：不建议使用 label/value/field 等字段，会被覆盖',
@@ -100,7 +100,7 @@ export default {
           name: 'potential-options',
           type: '{ getMatchList: (arg1: string) => ISearchBoxMatchItem[] }',
           typeAnchorName: 'ISearchBoxMatchItem',
-          defaultValue: '{}',
+          defaultValue: 'null',
           desc: {
             'zh-CN': '潜在项匹配，接口返回潜在匹配项的数据列表，异步或同步皆可',
             'en-US':
@@ -113,24 +113,10 @@ export default {
           type: 'Boolean',
           defaultValue: 'true',
           desc: {
-            'zh-CN': '是否显示帮助图标。3.14.0及以上版本默认显示；低于此版本默认隐藏',
-            'en-US':
-              'Indicates whether to display the help icon. 3.14.0 and later versions are displayed by default. Hidden by default for versions earlier than'
+            'zh-CN': '是否显示帮助图标',
+            'en-US': 'Whether to display the help icon'
           },
           demoId: 'help'
-        },
-        {
-          name: 'show-no-data-tip',
-          type: 'Boolean',
-          defaultValue: 'true',
-          desc: {
-            'zh-CN': '控制显隐面板的无数据提示',
-            'en-US': 'Controls the no-data prompt on the hidden panel'
-          },
-          meta: {
-            stable: '3.18.0'
-          },
-          demoId: 'auto-match'
         },
         {
           name: 'split-input-value',
@@ -150,12 +136,22 @@ export default {
       events: [
         {
           name: 'change',
-          type: '(newFilters: ISearchBoxItem[], oldFilters: ISearchBoxItem[]) => void',
-          typeAnchorName: 'ISearchBoxItem',
+          type: '(newFilters: ISearchBoxTag[], oldFilters: ISearchBoxTag[]) => void',
+          typeAnchorName: 'ISearchBoxTag',
           defaultValue: '',
           desc: {
             'zh-CN': '绑定值变化触发的回调函数',
             'en-US': 'Callback function triggered by the change of the binding value'
+          },
+          demoId: 'auto-match'
+        },
+        {
+          name: 'clear',
+          type: '() => void',
+          defaultValue: '',
+          desc: {
+            'zh-CN': '点击清空按钮时触发',
+            'en-US': 'Triggered when the clear button is clicked'
           },
           demoId: 'auto-match'
         },
@@ -197,8 +193,8 @@ export default {
         },
         {
           name: 'search',
-          type: '(filters: ISearchBoxItem[]) => void',
-          typeAnchorName: 'ISearchBoxItem',
+          type: '(filters: ISearchBoxTag[]) => void',
+          typeAnchorName: 'ISearchBoxTag',
           defaultValue: '',
           desc: {
             'zh-CN': '按下回车或点击搜索按钮触发搜索功能的回调函数',
@@ -206,6 +202,38 @@ export default {
               'Callback function of the search function triggered by pressing Enter or clicking the search button'
           },
           demoId: 'auto-match'
+        },
+        {
+          name: 'second-level-enter',
+          type: '(item: ISearchBoxItem) => void',
+          typeAnchorName: 'ISearchBoxItem',
+          defaultValue: '',
+          desc: {
+            'zh-CN': '在一级面板选择属性后按回车时触发，返回当前选中的 item',
+            'en-US': 'Triggered when pressing Enter after selecting an attribute in the first-level panel, returns the selected item'
+          },
+          demoId: 'auto-match'
+        },
+        {
+          name: 'tag-click',
+          type: '(tag: ISearchBoxTag) => void',
+          typeAnchorName: 'ISearchBoxTag',
+          defaultValue: '',
+          desc: {
+            'zh-CN': '点击标签时触发，返回被点击的标签对象',
+            'en-US': 'Triggered when a tag is clicked, returns the clicked tag object'
+          },
+          demoId: 'editable'
+        },
+        {
+          name: 'validate-error',
+          type: '(error: { invalidValues: string[], field: string, label: string, regexp?: RegExp }) => void',
+          defaultValue: '',
+          desc: {
+            'zh-CN': '输入值校验失败时触发',
+            'en-US': 'Triggered when the input value fails validation'
+          },
+          demoId: 'validate-error'
         }
       ]
     }
@@ -216,31 +244,45 @@ export default {
       type: 'interface',
       code: `
 interface ISearchBoxItem {
-  field: string; // 搜索标签的label
-  label: string; // tag 键的显示值
-  type?: ISearchBoxTagType; // tag类型
-  options?: ISearchBoxOption[]; // 选项数据
-  regexp?: RegExp; // 此标签项的正则匹配
-  replace?: boolean; // 单选或多选设置
-  optionValueKey?: string; // 选中项键值
-  format?: string; // 日期类型显示格式
-  start?: number | Date; // 最小值或开始日期
-  end?: number | Date; // 最大值或结束日期
-  min?: number | Date; // 用于校验的最小值
-  max?: number | Date; // 用于校验的最大值
-  placeholder?: string; // 占位文本[3.18.0新增]
-  editAttrDisabled: boolean; // 编辑状态此属性禁用状态，常用以设置不可变更[3.19.0新增]
+  field: string; // 搜索字段，tag的键，'keyword' 作为组件内部保留字，请勿传入该值
+  label: string; // tag 键的显示值，实际结果是field
+  type?: ISearchBoxTagType; // 配置项可生产的tag类型
+  options?: ISearchBoxOption[]; // tag 值的选择项数据
+  regexp?: RegExp; // 自动识别匹配正则
+  replace?: boolean; // radio 单选类型可设置，设置为false时单选属性可以多次选择
+  optionValueKey?: string; // 单选或多选值的选中项键值
+  format?: string; // dateRange 类型日期显示和结果格式，dateRange时必选
+  start?: number | Date; // numRange 最小值，类型为number；dateRange开始日期，类型为Date
+  end?: number | Date; // numRange 最大值，类型为number；dateRange起始日期，类型为Date
+  min?: number | Date; // numRange 可填最小值，用于校验；dateRange可选最小值，用于校验
+  max?: number | Date; // numRange 可填最大值，用于校验；dateRange可选最大值，用于校验
+  placeholder?: string; // 每个item对应的提示文本[3.18.0新增]
+  editAttrDisabled?: boolean; // 编辑状态此属性禁用状态，常用以设置不可变更[3.19.0新增]
   searchKeys?: Array<string>; // 搜索的字段范围
   idMapKey?: string; // 标识字段映射[3.13.0新增]
-  operators?: Array<string>; // 分隔符数组[3.14.0新增]
+  operators?: Array<string>; // 标签分隔符数组[3.14.0新增]
   mergeTag?: boolean; // type=checkbox时生效，设置是否合并成一个标签[3.16.0新增]
   maxTimeLength?: number; // type=dateRange/datetimeRange时生效，设置用户只能选择某个时间跨度，只接受毫秒数[3.16.0新增]
   slotName?: string; // type=custom时生效，用于指定二级面板的插槽名[3.16.0新增]，对应的编辑态自定义面板插槽名为item.slotName + '-edit'[注：编辑态只有3.19.0版本及以上才有]
-  groupKey?: string; // 自定义分组名，默认为：属性类型 [3.16.0新增]
+  groupKey?: string; // 自定义分组名，默认为：'0' [3.16.0新增]
   [propName: string]: any;
 }
 
-type ISearchBoxTagType = 'radio' | 'noValue' | 'checkbox' | 'map' | 'numRange' | 'dateRange' | 'dateTimeRange' | 'custom'; // custom类型为3.16.0新增
+type ISearchBoxTagType = 'radio' | 'noValue' | 'checkbox' | 'map' | 'numRange' | 'dateRange' | 'datetimeRange' | 'custom'; // custom类型为3.16.0新增
+`
+    },
+    {
+      name: 'ISearchBoxOption',
+      type: 'interface',
+      code: `
+interface ISearchBoxOption {
+  label: string; // 选项显示值
+  field?: string; // 搜索目标字段，只有'label'才需要
+  allValues?: boolean; // 控制map类型二级选项是否出现内置所有值，map类型需要
+  emptyValue?: boolean; // 控制map类型二级选项是否出现内置空值，map类型需要
+  options?: Array<any>; // map类型二级选项数据
+  [propName: string]: any;
+}
 `
     },
     {
@@ -257,8 +299,6 @@ interface ISearchBoxTag {
   operator?: string; // 分隔符[3.14.0新增]
   [propName: string]: any;
 }
-
-type ISearchBoxTagType = 'radio' | 'noValue' | 'checkbox' | 'map' | 'numRange' | 'dateRange' | 'dateTimeRange';
 `
     },
     {
@@ -271,6 +311,39 @@ interface ISearchBoxMatchItem {
   value: string;
   type?: string;
 }
+`
+    },
+    {
+      name: 'ISearchBoxMatchOptions',
+      type: 'interface',
+      code: `
+interface ISearchBoxMatchOptions {
+  getMatchList: (arg1: string) => ISearchBoxMatchItem[];
+}
+`
+    },
+    {
+      name: 'ISearchBoxNewTag',
+      type: 'interface',
+      code: `
+interface ISearchBoxNewTag {
+  type: string;
+  field: string;
+  label: string;
+  value: string;
+  start?: string | number;
+  end?: string | number;
+  id?: string | number;
+  operator?: string;
+  options?: ISearchBoxTag[];
+}
+`
+    },
+    {
+      name: 'ISearchBoxSize',
+      type: 'type',
+      code: `
+type ISearchBoxSize = '' | 'small';
 `
     }
   ]
