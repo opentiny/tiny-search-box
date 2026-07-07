@@ -109,6 +109,7 @@ export default defineConfig({
           { text: '切分输入值', link: '/examples/split-input-value' },
           { text: '尺寸', link: '/examples/size' },
           { text: '事件', link: '/examples/events' },
+          { text: '校验错误', link: '/examples/validate-error' },
           { text: '后缀图标插槽', link: '/examples/suffix-icon' }
         ]
       },

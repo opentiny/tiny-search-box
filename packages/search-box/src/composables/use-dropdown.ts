@@ -144,11 +144,8 @@ export function useDropdown({ props, emit, state, t, format, nextTick, vm, cance
    *
    */
   const selectInputValue = (val: string) => {
-    if (state.propItem?.label) {
-      selectRadioItem({ label: val })
-    } else {
-      createTag()
-    }
+    createTag()
+    instance.$refs?.inputRef?.focus()
   }
 
   /**
