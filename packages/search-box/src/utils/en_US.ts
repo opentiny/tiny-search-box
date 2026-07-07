@@ -28,7 +28,6 @@ export default {
       rangeEndLabel: 'End date',
       rulekeyword1: 'Keywords',
       notBeNull: 'The value cannot be empty',
-      noData: 'There is currently no matching data available ..',
       selectAll: 'Select All',
       confirm: 'Confirm',
       cancel: 'Cancel',

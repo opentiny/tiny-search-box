@@ -20,7 +20,7 @@ hero:
 features:
   - icon: 📦
     title: 简洁美观
-    details: 仅需要一个输入框便可替代传统lable+input形式
+    details: 仅需要一个输入框便可替代传统label+input形式
   - icon: 📝
     title: 灵活配置
     details: 仅需参数配置，便可满足您的各种类型的搜索需求

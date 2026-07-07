@@ -1,8 +1,8 @@
 /**
  * tag类型, radio-默认单选， noValue-非正常tag，tag值为空，  checkbox-多选，map-键值tag, numRange-数字范围tag,
- * dateRange-日期范围tag。tag 的分类是根据键值的结果划分
+ * dateRange-日期范围tag, datetimeRange-日期时间范围tag, custom-自定义面板tag。tag 的分类是根据键值的结果划分
  */
-export type ISearchBoxTagType = 'radio' | 'noValue' | 'checkbox' | 'map' | 'numRange' | 'dateRange' | 'datetimeRange'
+export type ISearchBoxTagType = 'radio' | 'noValue' | 'checkbox' | 'map' | 'numRange' | 'dateRange' | 'datetimeRange' | 'custom'
 /**
  * 候选tag数据配置项
  */
@@ -74,13 +74,29 @@ export interface ISearchBoxItem {
    */
   idMapKey?: string
   /**
-   * 标签分隔符[3.14.0新增]
+   * 标签分隔符数组[3.14.0新增]
    */
-  operator?: string
+  operators?: Array<string>
   /**
    * type=checkbox时，设置是否合并成一个标签[3.16.0新增]
    */
   mergeTag?: boolean
+  /**
+   * 编辑状态此属性禁用状态，常用以设置不可变更
+   */
+  editAttrDisabled?: boolean
+  /**
+   * type=dateRange/datetimeRange时生效，设置用户只能选择某个时间跨度，只接受毫秒数
+   */
+  maxTimeLength?: number
+  /**
+   * type=custom时生效，用于指定二级面板的插槽名，对应的编辑态自定义面板插槽名为item.slotName + '-edit'
+   */
+  slotName?: string
+  /**
+   * 自定义分组名，默认为：'0'
+   */
+  groupKey?: string
   [propName: string]: any
 }
 
@@ -149,7 +165,7 @@ interface ISearchBoxMatchItem {
 }
 
 export interface ISearchBoxMatchOptions {
-  getMatchList: (arg1: string) => ISearchBoxMatchItem[] // 潜在匹配对象返回的方法
+  getMatchList: (arg1: string) => ISearchBoxMatchItem[] | Promise<ISearchBoxMatchItem[]> // 潜在匹配对象返回的方法，支持同步或异步
 }
 
 export interface ISearchBoxNewTag {

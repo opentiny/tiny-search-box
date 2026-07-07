@@ -29,17 +29,12 @@ yarn add @opentiny/vue-search-box
 ### 包说明
 
 - **普通主题包**：`@opentiny/vue-search-box`
-  - Vue2 版本：`2.27.1`
-  - Vue3 版本：`3.27.1`
+  - Vue2 版本：`2.29.0`
+  - Vue3 版本：`3.29.0`
   
 - **SaaS 主题包**：`@opentiny/vue-search-box-saas`
-  - Vue2 版本：`2.27.1`
-  - Vue3 版本：`3.27.1`
-
-### 手动引入样式（可选）
-
-如果需要手动控制样式加载，可以单独引入：
-
+  - Vue2 版本：`2.29.0`
+  - Vue3 版本：`3.29.0`
 
 ## 基本使用
 
@@ -187,7 +182,7 @@ app.mount('#app')
 - `map` - 键值对类型
 - `numRange` - 数字区间
 - `dateRange` - 日期区间
-- `dateTimeRange` - 日期时间区间
+- `datetimeRange` - 日期时间区间
 - `custom` - 自定义类型
 
 ### 示例配置
@@ -242,8 +237,10 @@ const items = [
 - `clear` - 清空所有标签时触发
 - `help` - 点击帮助按钮时触发
 - `first-level-select` - 选择第一级选项时触发
+- `second-level-enter` - 在一级面板选择属性后按回车时触发
 - `exceed` - 输入超出最大长度时触发
 - `tag-click` - 点击已选中标签触发
+- `validate-error` - 输入值校验失败时触发
 
 ```vue
 <template>
