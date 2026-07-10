@@ -464,7 +464,13 @@
     }
 
     .@{form-tiny-cls}-item__error {
+      @apply relative;
       @apply text-xs;
+
+      .validate-icon {
+        @apply mr-1;
+        @apply fill-color-error;
+      }
     }
   }
 
