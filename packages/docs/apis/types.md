@@ -30,7 +30,7 @@ interface ISearchBoxItem {
 
 type ISearchBoxTagType =
   | 'radio'
-  | 'noValue'
+  | 'input'
   | 'checkbox'
   | 'map'
   | 'numRange'

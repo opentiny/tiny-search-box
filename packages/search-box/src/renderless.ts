@@ -90,7 +90,7 @@ const initState = ({ reactive, computed, api, i18n, watch, props, emit, vm }) =>
     visible: false,
     visibleTimer: null,
     hasFormError: false, // 表单校验错误状态
-    hasBackupList: computed(() => state.propItem.label && [undefined, 'radio', 'checkbox', 'map'].includes(state.prevItem.type)),
+    hasBackupList: computed(() => state.propItem.label && [undefined, null, '', 'radio', 'input', 'checkbox', 'map'].includes(state.prevItem.type)),
     isIndeterminate: computed(() => state.checkboxGroup.length > 0 && state.checkboxGroup.length !== state.filterList.length),
     checkAll: computed({
       get: () => state.checkboxGroup.length && state.checkboxGroup.length === state.filterList.length,
@@ -358,18 +358,6 @@ const initWatch = ({ watch, state, props, api, nextTick, vm }) => {
     },
     {
       deep: true,
-      immediate: true
-    }
-  )
-
-  watch(
-    () => state.inputValue,
-    (newVal) => {
-      if (!newVal && !state.propItem.type) {
-        state.visible = false
-      }
-    },
-    {
       immediate: true
     }
   )

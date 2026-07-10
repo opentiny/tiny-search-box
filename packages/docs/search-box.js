@@ -268,7 +268,7 @@ interface ISearchBoxItem {
   [propName: string]: any;
 }
 
-type ISearchBoxTagType = 'radio' | 'noValue' | 'checkbox' | 'map' | 'numRange' | 'dateRange' | 'datetimeRange' | 'custom'; // custom类型为3.16.0新增
+type ISearchBoxTagType = 'radio' | 'input' | 'checkbox' | 'map' | 'numRange' | 'dateRange' | 'datetimeRange' | 'custom'; // custom类型为3.16.0新增
 `
     },
     {

@@ -1,6 +1,6 @@
 {
   "name": "@opentiny/vue-search-box",
-  "version": "3.29.0",
+  "version": "3.29.1",
   "description": "",
   "homepage": "https://github.com/opentiny/tiny-search-box#readme",
   "bugs": {
@@ -30,8 +30,8 @@
     "@opentiny/vue-common": "~2.28.0",
     "@opentiny/vue-icon": "~2.28.0",
     "@opentiny/vue": "^2.28.0",
-    "@opentiny/vue-theme": "^3.28.0",
-    "@opentiny/vue-theme-saas": "^3.28.0"
+    "@opentiny/vue-theme": "^3.29.0",
+    "@opentiny/vue-theme-saas": "^3.29.0"
   },
   "scripts": {
     "build:all": "pnpm build:vue2 && pnpm build:vue2-saas && pnpm build:vue3 && pnpm build:vue3-saas",
@@ -40,6 +40,7 @@
     "build:vue2-saas": "vite build --config vite.config.vue2-saas.ts && node scripts/post-build.js vue2-saas",
     "build:vue3": "vite build --config vite.config.vue3.ts && node scripts/post-build.js vue3",
     "build:vue3-saas": "vite build --config vite.config.vue3-saas.ts && node scripts/post-build.js vue3-saas",
+    "test": "vitest run",
     "build:aurora": "pnpm build:all && node scripts/releaseAurora.js",
     "release:aurora": "node scripts/releaseAurora.js",
     "publish:vue2": "node scripts/publish.js vue2",
@@ -57,6 +58,7 @@
     "tailwindcss": "^3.4.14",
     "typescript": "^5.8.2",
     "vite": "^4.2.0",
+    "vitest": "^1.6.0",
     "vite-plugin-dts": "^4.3.0",
     "vite-plugin-vue2": "^2.0.2",
     "vue-template-compiler": "2.6.14",
