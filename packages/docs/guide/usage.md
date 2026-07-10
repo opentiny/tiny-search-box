@@ -177,8 +177,8 @@ app.mount('#app')
 组件支持多种搜索项类型：
 
 - `radio` - 单选（默认）
+- `input` - 输入型（等同于不设置 type）
 - `checkbox` - 多选
-- `noValue` - 无值类型
 - `map` - 键值对类型
 - `numRange` - 数字区间
 - `dateRange` - 日期区间
