@@ -89,6 +89,7 @@ export default defineConfig({
         text: '案例',
         items: [
           { text: '基本用法', link: '/examples/basic-usage' },
+          { text: 'input 输入型', link: '/examples/input-type' },
           { text: '默认包含筛选项', link: '/examples/v-model' },
           { text: '自动匹配', link: '/examples/auto-match' },
           { text: '自定义二级下拉面板', link: '/examples/custom-panel' },

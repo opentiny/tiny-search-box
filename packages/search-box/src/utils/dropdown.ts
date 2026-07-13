@@ -4,13 +4,15 @@
  * @param isShow 是否展示下拉框, 默认展示
  */
 export const showDropdown = (state, isShow = true) => {
+  clearTimeout(state.visibleTimer)
+  state.visibleTimer = null
   if (isShow) {
-    state.visibleTimer = setTimeout(() => {
-      state.visible = true
-    }, 0)
+    if (!state.visible) {
+      state.visibleTimer = setTimeout(() => {
+        state.visible = true
+      }, 0)
+    }
   } else {
-    clearTimeout(state.visibleTimer)
-    state.visibleTimer = null
     state.visible = false
   }
 }

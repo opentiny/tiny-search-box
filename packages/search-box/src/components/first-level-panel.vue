@@ -138,7 +138,7 @@ const renderless = (props, hooks, { emit }) => {
       inputValue.trim() &&
       !popoverVisible &&
       !currentOperators?.length &&
-      (!propItem.label || [undefined, 'radio'].includes(prevItem.type))
+      (!propItem.label || [undefined, null, '', 'radio', 'input'].includes(prevItem.type))
     )
   })
 

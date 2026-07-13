@@ -16,7 +16,7 @@
       </tiny-dropdown-item>
     </div>
     <div
-      v-else-if="!state.prevItem.type || state.prevItem.type === 'radio'"
+      v-else-if="!state.prevItem.type || ['radio', 'input'].includes(state.prevItem.type)"
       v-loading="isLoading"
       :class="['tvp-search-box__radio-wrap', 'tvp-search-box__virtual-list', isLoading && 'tvp-search-box__loading-box']"
       :style="{ maxHeight: panelMaxHeight }"
