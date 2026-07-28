@@ -2,6 +2,13 @@ import { showDropdown } from '../utils/dropdown.ts'
 import { getVerifyDateTag } from '../utils/validate.ts'
 import { emitChangeModelEvent } from '../utils/tag.ts'
 
+// 获取某天的起始时间戳（00:00:00.000），用于 datetime 类型按天禁用日期
+const getStartOfDay = (date) => {
+  const d = new Date(date)
+  d.setHours(0, 0, 0, 0)
+  return d.getTime()
+}
+
 export function useDatePicker({ props, state, emit, nextTick, vm }) {
   const instance = vm || state.instance
   const onConfirmDate = async (confirm: boolean, isDateTimeType = false) => {
@@ -26,6 +33,8 @@ export function useDatePicker({ props, state, emit, nextTick, vm }) {
   const pickerOptions = (startDate, endName = '') => ({
     disabledDate(time) {
       const { maxTimeLength = 0, min, max } = state.prevItem
+      // datetime 类型按天禁用日期，避免开始时间非 00:00:00 时结束时间无法选择当天
+      const isDateTime = state.prevItem.type === 'datetimeRange'
 
       const endDate = state[endName]
       const curTime = time.getTime()
@@ -35,11 +44,13 @@ export function useDatePicker({ props, state, emit, nextTick, vm }) {
           if (endName && endDate) {
             const end = new Date(endDate).getTime()
             const start = !min && max ? end - maxTimeLength : Math.max(min.getTime(), end - maxTimeLength)
-            return curTime < start || curTime > end
+            const lower = isDateTime ? getStartOfDay(start) : start
+            return curTime < lower || curTime > end
           } else if (!endName && startDate) {
             const start = new Date(startDate).getTime()
             const end = min && !max ? start + maxTimeLength : Math.min(max.getTime(), start + maxTimeLength)
-            return curTime < start || curTime > end
+            const lower = isDateTime ? getStartOfDay(start) : start
+            return curTime < lower || curTime > end
           } else {
             return (min && curTime < min.getTime()) || (max && curTime > max.getTime())
           }
@@ -47,11 +58,13 @@ export function useDatePicker({ props, state, emit, nextTick, vm }) {
           if (endName && endDate) {
             const end = new Date(endDate).getTime()
             const start = end - maxTimeLength
-            return curTime < start || curTime > end
+            const lower = isDateTime ? getStartOfDay(start) : start
+            return curTime < lower || curTime > end
           } else if (!endName && startDate) {
             const start = new Date(startDate).getTime()
             const end = start + maxTimeLength
-            return curTime < start || curTime > end
+            const lower = isDateTime ? getStartOfDay(start) : start
+            return curTime < lower || curTime > end
           } else {
             return false
           }
@@ -63,7 +76,8 @@ export function useDatePicker({ props, state, emit, nextTick, vm }) {
             return (min && curTime < min.getTime()) || curTime > end
           } else if (!endName && startDate) {
             const start = new Date(startDate).getTime()
-            return curTime < start || (max && curTime > max.getTime())
+            const lower = isDateTime ? getStartOfDay(start) : start
+            return curTime < lower || (max && curTime > max.getTime())
           } else {
             return curTime < min || curTime > max
           }
@@ -73,7 +87,8 @@ export function useDatePicker({ props, state, emit, nextTick, vm }) {
             return curTime > end
           } else if (!endName && startDate) {
             const start = new Date(startDate).getTime()
-            return curTime < start
+            const lower = isDateTime ? getStartOfDay(start) : start
+            return curTime < lower
           } else {
             return false
           }

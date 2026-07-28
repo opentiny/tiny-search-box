@@ -23,6 +23,7 @@ export default {
       rangeMaxErr: 'The maximum value must be greater than or equal to the minimum value, or empty',
       rangeNumberTitle: 'Please enter at least one value',
       rangeDateTitle: 'Please enter at least one date',
+      rangeDateMaxErr: 'The end date must be greater than or equal to the start date, or empty',
       timeLengthTitle: 'The optional time span is within {value} days',
       rangeBeginLabel: 'Start date',
       rangeEndLabel: 'End date',

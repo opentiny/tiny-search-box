@@ -2,6 +2,21 @@ import { createNewTag, getTagId } from './tag.ts'
 import { isNumber, omitObj } from './index.ts'
 
 /**
+ * 比较两个日期值的大小，返回 -1/0/1
+ * 兼容字符串、时间戳、Date 对象，避免字符串字典序在自定义 format 或带时区时误判
+ * @param a 日期值
+ * @param b 日期值
+ * @returns a<b 返回 -1，a>b 返回 1，相等返回 0
+ */
+export const compareDate = (a, b) => {
+  const ta = new Date(a).getTime()
+  const tb = new Date(b).getTime()
+  if (ta < tb) return -1
+  if (ta > tb) return 1
+  return 0
+}
+
+/**
  * 校验正常标签的值，并返回相应的新标签
  * @param instance searchbox 的 instance
  * @param state searchbox 的 state
@@ -128,9 +143,9 @@ export const getVerifyDateTag = async (instance, state, props, isDateTimeType) =
     const rest = omitObj(prevItem)
     let value = ''
     if (start && end) {
-      if (start > end) {
+      if (compareDate(start, end) > 0) {
         return
-      } else if (start === end) {
+      } else if (compareDate(start, end) === 0) {
         value = start
       } else {
         value = `${start}-${end}`

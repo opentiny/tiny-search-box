@@ -172,6 +172,7 @@
             :picker-options="pickerOptions(state.startDate, 'endDate')"
             class="tvp-search-box__date-picker"
             @visible-change="handleDateShow"
+            @change="onDateChange(false)"
           ></tiny-date-picker>
         </tiny-form-item>
         <div class="tvp-search-box__dropdown-end">
@@ -184,7 +185,7 @@
             :value-format="state.prevItem.format || state.dateRangeFormat"
             :picker-options="pickerOptions(state.startDate)"
             class="tvp-search-box__date-picker"
-            @change="handleDateShow"
+            @change="onDateChange(false)"
             @blur="handleDateShow"
           ></tiny-date-picker>
         </tiny-form-item>
@@ -193,7 +194,7 @@
         <tiny-button size="mini" @click="onConfirmDate(false)">
           {{ t("tvp.tvpSearchbox.cancel") }}
         </tiny-button>
-        <tiny-button size="mini" @click="onConfirmDate(true)">
+        <tiny-button size="mini" :disabled="isDateRangeInvalid" @click="onConfirmDate(true)">
           {{ t("tvp.tvpSearchbox.confirm") }}
         </tiny-button>
       </div>
@@ -229,7 +230,7 @@
             :value-format="state.prevItem.format || state.datetimeRangeFormat"
             :picker-options="pickerOptions(state.startDateTime, 'endDateTime')"
             class="tvp-search-box__date-picker"
-            @change="handleDateShow"
+            @change="onDateChange(true)"
             @blur="handleDateShow"
           ></tiny-date-picker>
         </tiny-form-item>
@@ -245,7 +246,7 @@
             :value-format="state.prevItem.format || state.datetimeRangeFormat"
             :picker-options="pickerOptions(state.startDateTime)"
             class="tvp-search-box__date-picker"
-            @change="handleDateShow"
+            @change="onDateChange(true)"
             @blur="handleDateShow"
           ></tiny-date-picker>
         </tiny-form-item>
@@ -254,7 +255,7 @@
         <tiny-button size="mini" @click="onConfirmDate(false, true)">
           {{ t("tvp.tvpSearchbox.cancel") }}
         </tiny-button>
-        <tiny-button size="mini" @click="onConfirmDate(true, true)">
+        <tiny-button size="mini" :disabled="isDateRangeInvalid" @click="onConfirmDate(true, true)">
           {{ t("tvp.tvpSearchbox.confirm") }}
         </tiny-button>
       </div>
@@ -310,6 +311,7 @@ import {
 } from '@opentiny/vue'
 import { t } from '../utils/i18n.ts'
 import { useVirtualScroll } from '../composables/use-virtual-scroll.ts'
+import { compareDate } from '../utils/validate.ts'
 
 // 简单的 renderless 函数
 const renderless = (props, hooks, { emit, nextTick, refs }) => {
@@ -347,6 +349,26 @@ const renderless = (props, hooks, { emit, nextTick, refs }) => {
   const handleDateShow = (e) => {
     handleEvents('handleDateShow', e)
   }
+
+  // 日期任一字段变化时，保持下拉面板展开并联动重校验两个字段
+  const onDateChange = (isDateTimeType) => {
+    handleEvents('handleDateShow')
+    handleEvents('validateDateRange', isDateTimeType)
+  }
+
+  // 日期范围是否无效：两个时间都填且结束早于开始时禁用确认按钮
+  const isDateRangeInvalid = computed(() => {
+    const type = props.state.prevItem.type
+    if (type === 'dateRange') {
+      const { startDate, endDate } = props.state
+      return Boolean(startDate && endDate && compareDate(endDate, startDate) < 0)
+    }
+    if (type === 'datetimeRange') {
+      const { startDateTime, endDateTime } = props.state
+      return Boolean(startDateTime && endDateTime && compareDate(endDateTime, startDateTime) < 0)
+    }
+    return false
+  })
 
   const isLoading = computed(() => {
     return props.state.hasBackupList && props.state.backupList?.length === 0
@@ -429,6 +451,8 @@ const renderless = (props, hooks, { emit, nextTick, refs }) => {
     onConfirmDate,
     selectFirstMap,
     handleDateShow,
+    onDateChange,
+    isDateRangeInvalid,
     isLoading,
     showCheckBoxList,
     vsTotalHeight: vs.totalHeight,
@@ -448,6 +472,8 @@ const api = [
   'onConfirmDate',
   'selectFirstMap',
   'handleDateShow',
+  'onDateChange',
+  'isDateRangeInvalid',
   'isLoading',
   'showCheckBoxList',
   'vsTotalHeight',

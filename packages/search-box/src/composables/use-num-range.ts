@@ -1,5 +1,5 @@
 import { showDropdown } from '../utils/dropdown.ts'
-import { getVerifyNumTag } from '../utils/validate.ts'
+import { getVerifyNumTag, compareDate } from '../utils/validate.ts'
 import { emitChangeModelEvent } from '../utils/tag.ts'
 
 export function useNumRange({ props, state, t, emit, nextTick, vm }) {
@@ -46,6 +46,8 @@ export function useNumRange({ props, state, t, emit, nextTick, vm }) {
             cb(new Error(t('tvp.tvpSearchbox.notBeNull')))
           } else if (!value && !state[startKey]) {
             cb(new Error(t('tvp.tvpSearchbox.rangeDateTitle')))
+          } else if (value && state[startKey] && compareDate(value, state[startKey]) < 0) {
+            cb(new Error(t('tvp.tvpSearchbox.rangeDateMaxErr')))
           } else {
             cb()
           }

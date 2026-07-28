@@ -318,6 +318,7 @@
                     :value-format="state.prevItem.format || state.dateRangeFormat"
                     :picker-options="pickerOptions(state.startDate, 'endDate')"
                     class="tvp-search-box__date-picker"
+                    @change="checkFormValidation()"
                   ></tiny-date-picker>
                 </tiny-form-item>
                 <div class="tvp-search-box__dropdown-end">
@@ -333,6 +334,7 @@
                     :value-format="state.prevItem.format || state.dateRangeFormat"
                     :picker-options="pickerOptions(state.startDate)"
                     class="tvp-search-box__date-picker"
+                    @change="checkFormValidation()"
                   ></tiny-date-picker>
                 </tiny-form-item>
               </div>
@@ -365,6 +367,7 @@
                     :value-format="state.prevItem.format || state.datetimeRangeFormat"
                     :picker-options="pickerOptions(state.startDateTime, 'endDateTime')"
                     class="tvp-search-box__date-picker"
+                    @change="checkFormValidation()"
                   ></tiny-date-picker>
                 </tiny-form-item>
                 <div class="tvp-search-box__dropdown-end">
@@ -382,6 +385,7 @@
                     :value-format="state.prevItem.format || state.datetimeRangeFormat"
                     :picker-options="pickerOptions(state.startDateTime)"
                     class="tvp-search-box__date-picker"
+                    @change="checkFormValidation()"
                   ></tiny-date-picker>
                 </tiny-form-item>
               </div>
