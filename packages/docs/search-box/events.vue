@@ -22,6 +22,7 @@ const items = reactive([
     // 该种单选情况没有可选项。
     label: '名称',
     field: 'testName',
+    asyncLoading: true,
     options: [] // 告知组件有异步options
   },
   {
@@ -30,9 +31,16 @@ const items = reactive([
     field: 'testName1'
   },
   {
+    // 空数组 options 且未声明 asyncLoading，不应显示 loading
+    label: '名称2',
+    field: 'testName2',
+    options: []
+  },
+  {
     label: '状态',
     type: 'checkbox',
     field: 'status',
+    asyncLoading: true,
     options: []
   },
   {
@@ -45,6 +53,7 @@ const items = reactive([
     field: 'testTag',
     type: 'map',
     searchKeys: ['label', 'id'],
+    asyncLoading: true,
     options: []
   }
 ])
@@ -69,8 +78,8 @@ const FirstLevelSelect = (field) => {
           label: 'tms-1'
         }
       ]
-    } else if (field === 'status' && items[2].options.length === 0) {
-      items[2].options = [
+    } else if (field === 'status' && items.find(i => i.field === 'status').options.length === 0) {
+      items.find(i => i.field === 'status').options = [
         {
           label: '运行中'
         },
@@ -81,8 +90,8 @@ const FirstLevelSelect = (field) => {
           label: '已注销'
         }
       ]
-    } else if (field === 'testTag' && items[4].options.length === 0) {
-      items[4].options = [
+    } else if (field === 'testTag' && items.find(i => i.field === 'testTag').options.length === 0) {
+      items.find(i => i.field === 'testTag').options = [
         {
           label: 'aaa',
           id: 'id-1',

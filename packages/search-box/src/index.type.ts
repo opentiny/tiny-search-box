@@ -97,6 +97,11 @@ export interface ISearchBoxItem {
    * 自定义分组名，默认为：'0'
    */
   groupKey?: string
+  /**
+   * 是否异步加载 options，设置为 true 时 options 为空数组会显示 loading 等待数据填充；
+   * 不设置或为 false 时 options 为空数组不显示 loading
+   */
+  asyncLoading?: boolean
   [propName: string]: any
 }
 

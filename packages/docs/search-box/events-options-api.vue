@@ -28,6 +28,7 @@ export default {
           // 该种单选情况没有可选项。
           label: '名称',
           field: 'testName',
+          asyncLoading: true,
           options: [] // 告知组件有异步options
         },
         {
@@ -36,9 +37,16 @@ export default {
           field: 'testName1'
         },
         {
+          // 空数组 options 且未声明 asyncLoading，不应显示 loading
+          label: '名称2',
+          field: 'testName2',
+          options: []
+        },
+        {
           label: '状态',
           type: 'checkbox',
           field: 'status',
+          asyncLoading: true,
           options: []
         },
         {
@@ -51,6 +59,7 @@ export default {
           field: 'testTag',
           type: 'map',
           searchKeys: ['label', 'id'],
+          asyncLoading: true,
           options: []
         }
       ],
@@ -80,8 +89,8 @@ export default {
               label: 'tms-1'
             }
           ]
-        } else if (field === 'status' && this.items[2].options.length === 0) {
-          this.items[2].options = [
+        } else if (field === 'status' && this.items.find(i => i.field === 'status').options.length === 0) {
+          this.items.find(i => i.field === 'status').options = [
             {
               label: '运行中'
             },
@@ -92,8 +101,8 @@ export default {
               label: '已注销'
             }
           ]
-        } else if (field === 'testTag' && this.items[4].options.length === 0) {
-          this.items[4].options = [
+        } else if (field === 'testTag' && this.items.find(i => i.field === 'testTag').options.length === 0) {
+          this.items.find(i => i.field === 'testTag').options = [
             {
               label: 'aaa',
               id: 'id-1',
