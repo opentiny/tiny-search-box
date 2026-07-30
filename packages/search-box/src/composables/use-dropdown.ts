@@ -41,6 +41,13 @@ export function useDropdown({ props, emit, state, t, format, nextTick, vm, cance
       })
     }
 
+    // 清除日期字段的残留校验状态，避免删除标签后重新打开面板时显示过期错误
+    if (type === 'dateRange' || type === 'datetimeRange') {
+      nextTick(() => {
+        instance?.$refs?.formRef?.clearValidate?.(['startDate', 'endDate', 'startDateTime', 'endDateTime'])
+      })
+    }
+
     if (type !== 'checkbox' && state.backupList?.length) {
       state.backupList?.forEach((option) => {
         option.isFilter = false

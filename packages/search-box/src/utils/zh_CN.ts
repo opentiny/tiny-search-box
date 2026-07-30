@@ -23,6 +23,7 @@ export default {
       rangeMaxErr: '最大值必须大于等于最小值，或者为空',
       rangeNumberTitle: '请至少输入一个值',
       rangeDateTitle: '请至少输入一个日期',
+      rangeDateMaxErr: '结束日期必须大于等于开始日期，或者为空',
       timeLengthTitle: '可选时间跨度为{value}天内',
       rangeBeginLabel: '开始日期',
       rangeEndLabel: '结束日期',

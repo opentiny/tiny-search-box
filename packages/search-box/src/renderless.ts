@@ -38,6 +38,7 @@ export const api = [
   'selectItemIsDisable',
   'selectPropChange',
   'confirmEditTag',
+  'checkFormValidation',
   'handleConfirm',
   'handleEditConfirm',
   'showDropdown',
@@ -170,6 +171,14 @@ const initAllApi = ({ api, state, t, props, emit, nextTick, vm, computed }) => {
 
   const isShowClose = computed(() => props.modelValue.length || state.propItem.label || state.inputValue)
 
+  // 日期范围任一字段变化时，重新校验开始和结束两个字段，实现联动标红
+  const validateDateRange = (isDateTimeType) => {
+    const verifyProps = isDateTimeType ? ['startDateTime', 'endDateTime'] : ['startDate', 'endDate']
+    nextTick(() => {
+      state.instance?.$refs?.formRef?.validateField(verifyProps, () => {})
+    })
+  }
+
   const eventsMap = () => ({
     selectInputValue,
     selectPropItem,
@@ -179,7 +188,8 @@ const initAllApi = ({ api, state, t, props, emit, nextTick, vm, computed }) => {
     sizeChange,
     onConfirmDate,
     selectFirstMap,
-    handleDateShow
+    handleDateShow,
+    validateDateRange
   })
 
   const setPlaceholder = (placeholderValue: string) => {

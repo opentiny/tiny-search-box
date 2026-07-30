@@ -91,13 +91,14 @@ export interface ISearchBoxItem {
   maxTimeLength?: number
   /**
    * type=dateRange/datetimeRange时生效，透传给内部 tiny-date-picker 的 picker-options 配置
-   * 支持 firstDayOfWeek / disabledDate / onPick / shortcuts 等属性，
+   * 支持 firstDayOfWeek / disabledDate / shortcuts 等属性，
    * 其中 disabledDate 会与组件内部基于 maxTimeLength / min / max 的禁用逻辑合并（任一返回 true 即禁用）
+   * 注：search-box 内部使用两个独立的单日期选择器（开始/结束），并非一个 daterange 范围选择器，
+   * 故仅针对 daterange 范围选择器生效的 onPick 回调在此不适用，配置后不会触发
    */
   pickerOptions?: {
     firstDayOfWeek?: number
     disabledDate?: (time: Date) => boolean
-    onPick?: (range: { minDate: Date; maxDate: Date }) => void
     shortcuts?: Array<{
       text: string
       onClick?: (picker: { $emit: (type: string, date: Date | Date[]) => void }) => void
