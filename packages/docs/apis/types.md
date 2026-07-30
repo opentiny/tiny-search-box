@@ -23,6 +23,7 @@ interface ISearchBoxItem {
   mergeTag?: boolean; // type=checkbox时生效，设置是否合并成一个标签
   editAttrDisabled?: boolean; // 编辑状态此属性禁用状态，常用以设置不可变更
   maxTimeLength?: number; // type=dateRange/datetimeRange时生效，设置用户只能选择某个时间跨度，只接受毫秒数
+  pickerOptions?: IPickerOptions; // type=dateRange/datetimeRange时生效，透传给内部 tiny-date-picker 的 picker-options 配置，支持 firstDayOfWeek / disabledDate / onPick / shortcuts，其中 disabledDate 会与组件内部禁用逻辑合并
   slotName?: string; // type=custom时生效，用于指定二级面板的插槽名，对应的编辑态自定义面板插槽名为item.slotName + '-edit'
   groupKey?: string; // 自定义分组名，默认为：'0'
   [propName: string]: any;
@@ -106,4 +107,22 @@ interface ISearchBoxNewTag {
 
 ```typescript
 type ISearchBoxSize = '' | 'small'
+```
+
+## IPickerOptions
+
+```typescript
+interface IPickerOptions {
+  firstDayOfWeek?: number; // 每周的第一天是星期几，默认值是7，也就是星期天
+  disabledDate?: (time: Date) => boolean; // 实现部分禁用，返回 true 表示禁用该日期；会与组件内部基于 maxTimeLength / min / max 的禁用逻辑合并（任一返回 true 即禁用）
+  onPick?: (range: { minDate: Date; maxDate: Date }) => void; // 选中日期后执行的回调，需要与 dateRange 或 datetimeRange 类型配合使用才生效
+  shortcuts?: Array<{
+    text: string; // 快捷项的显示文本
+    onClick?: (picker: { $emit: (type: string, date: Date | Date[]) => void }) => void; // 点击快捷项的回调，使用 type: 'startFrom'/'endAt' 时无需传入
+    type?: 'startFrom' | 'endAt'; // 'startFrom' 指定某日起始；'endAt' 指定某日为止
+    startDate?: Date; // 配合 type: 'endAt' 设置起始边界
+    endDate?: Date; // 配合 type: 'startFrom' 设置结束边界
+  }>;
+  [propName: string]: any;
+}
 ```

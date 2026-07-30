@@ -90,6 +90,24 @@ export interface ISearchBoxItem {
    */
   maxTimeLength?: number
   /**
+   * type=dateRange/datetimeRange时生效，透传给内部 tiny-date-picker 的 picker-options 配置
+   * 支持 firstDayOfWeek / disabledDate / onPick / shortcuts 等属性，
+   * 其中 disabledDate 会与组件内部基于 maxTimeLength / min / max 的禁用逻辑合并（任一返回 true 即禁用）
+   */
+  pickerOptions?: {
+    firstDayOfWeek?: number
+    disabledDate?: (time: Date) => boolean
+    onPick?: (range: { minDate: Date; maxDate: Date }) => void
+    shortcuts?: Array<{
+      text: string
+      onClick?: (picker: { $emit: (type: string, date: Date | Date[]) => void }) => void
+      type?: 'startFrom' | 'endAt'
+      startDate?: Date
+      endDate?: Date
+    }>
+    [propName: string]: any
+  }
+  /**
    * type=custom时生效，用于指定二级面板的插槽名，对应的编辑态自定义面板插槽名为item.slotName + '-edit'
    */
   slotName?: string
