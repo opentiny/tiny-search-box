@@ -121,6 +121,11 @@ export interface ISearchBoxItem {
    * 不设置或为 false 时 options 为空数组不显示 loading
    */
   asyncLoading?: boolean
+  /**
+   * 该选项生成的标签是否禁止删除；禁止删除后仍可编辑，但仅允许修改值，
+   * 不允许切换属性/类型（否则等同于变相删除）
+   */
+  disableDelete?: boolean
   [propName: string]: any
 }
 
