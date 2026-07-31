@@ -1,6 +1,7 @@
 import { emitChangeModelEvent } from '../utils/tag.ts'
 import { getVerifyNumTag, getVerifyDateTag, setStateNumRange, getVerifyTag } from '../utils/validate.ts'
 import { showDropdown } from '../utils/dropdown.ts'
+import { deepClone } from '../utils/index.ts'
 
 export function useEdit({ props, state, t, nextTick, format, emit, vm }) {
   const setDropdownProps = (curTag) => {
@@ -129,7 +130,21 @@ export function useEdit({ props, state, t, nextTick, format, emit, vm }) {
     if (newTag) {
       showDropdown(state, false)
       state.popoverVisible = false
-      emitChangeModelEvent({ emit, state, nextTick, index, newTag, isEdit: true })
+
+      // 当切换属性且新属性配置了 replace/mergeTag 时，需要替换掉同字段的已有 tag，
+      // 而不是仅替换被编辑的位置，避免出现同字段的重复 tag
+      const { replace, mergeTag } = prevItem
+      const replaceIndex = state.indexMap.get(newTag.label)
+      if ((replace || mergeTag) && replaceIndex !== undefined && replaceIndex !== index) {
+        const oldValue = deepClone(state.innerModelValue)
+        // 先删除同字段的旧 tag，再用新 tag 替换被编辑的位置
+        let newValue = state.innerModelValue.filter((_, i) => i !== replaceIndex)
+        const newIndex = index > replaceIndex ? index - 1 : index
+        newValue[newIndex] = newTag
+        emitChangeModelEvent({ emit, state, nextTick, newValue, oldValue, isEdit: true })
+      } else {
+        emitChangeModelEvent({ emit, state, nextTick, index, newTag, isEdit: true })
+      }
     } else {
       state.popoverVisible = true
     }
