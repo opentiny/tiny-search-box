@@ -128,6 +128,10 @@ export default defineConfig({
           { text: 'events', link: '/apis/events' },
           { text: 'slots', link: '/apis/slots' }
         ]
+      },
+      {
+        text: '更新日志',
+        items: [{ text: '版本变更记录', link: '/changelog/' }]
       }
       
     ],
