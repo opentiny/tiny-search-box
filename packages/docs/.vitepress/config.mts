@@ -82,7 +82,11 @@ export default defineConfig({
         text: '指南',
         items: [
           { text: '国际化支持', link: '/guide/i18n' },
-          { text: 'SaaS 模式开发', link: '/guide/saas' }
+          { text: 'SaaS 模式开发', link: '/guide/saas' },
+          {
+            text: '更新日志',
+            link: '/changelog/'
+          }
         ]
       },
       {
@@ -104,6 +108,7 @@ export default defineConfig({
           { text: '时间长度限制', link: '/examples/max-time-length' },
           { text: '日期选择器配置', link: '/examples/picker-options' },
           { text: '合并多选标签', link: '/examples/merge-tag' },
+          { text: '禁止删除标签', link: '/examples/disable-tag-delete' },
           { text: '面板最大高度', link: '/examples/panel-max-height' },
           { text: '虚拟滚动', link: '/examples/virtual-scroll' },
           { text: '潜在匹配项', link: '/examples/potential-match' },
@@ -128,6 +133,7 @@ export default defineConfig({
         text: '更新日志',
         items: [{ text: '版本变更记录', link: '/changelog/' }]
       }
+      
     ],
 
     socialLinks: [{ icon: 'github', link: 'https://github.com/opentiny/tiny-search-box' }]

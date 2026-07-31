@@ -14,7 +14,7 @@
     <tiny-tag
       v-for="(tag, index) in modelValue"
       :key="tag.field + index"
-      closable
+      :closable="!isTagDisabled(tag)"
       class="tvp-search-box__tag"
       :class="editable && tag.type !== 'map' ? 'tvp-search-box__tag-editor' : ''"
       :title="`${tag.label} ${tag.operator || ':'} ${tag.value}`"
@@ -183,7 +183,7 @@
                 <tiny-select
                   v-model="state.selectValue"
                   searchable
-                  :disabled="state.prevItem.editAttrDisabled"
+                  :disabled="state.prevItem.editAttrDisabled || state.prevItem.disableDelete"
                 >
                   <tiny-option
                     v-if="state.selectValue === state.allTypeAttri.label"

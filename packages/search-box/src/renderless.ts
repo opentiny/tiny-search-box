@@ -24,6 +24,7 @@ export const api = [
   'panelMaxHeight',
   'editable',
   'emptyPlaceholder',
+  'isTagDisabled',
   'deleteTag',
   'editTag',
   'backspaceDeleteTag',
@@ -165,7 +166,14 @@ export const renderless = (
 
 const initAllApi = ({ api, state, t, props, emit, nextTick, vm, computed }) => {
 
-  const { deleteTag, clearTag, backspaceDeleteTag } = useTag({ props, state, emit, nextTick })
+  // 判断某个标签是否禁止删除：依据其来源 item 的 disableDelete 配置
+  const isTagDisabled = (tag) => {
+    if (!tag) return false
+    const item = state.recordItems.find((it) => it.field === tag.field || it.label === tag.label)
+    return !!item?.disableDelete
+  }
+
+  const { deleteTag, clearTag, backspaceDeleteTag } = useTag({ props, state, emit, nextTick, isTagDisabled })
   const { editTag, confirmEditTag, selectPropChange, selectItemIsDisable, checkFormValidation } = useEdit({ props, state, t, nextTick, format, emit, vm })
   const { handleInput, selectFirstMap, cancelHandleInput } = useMatch({ props, state, emit, nextTick })
   const { selectPropItem, selectRadioItem, selectInputValue, createTag, helpClick, setOperator } = useDropdown({ props, emit, state, t, format, nextTick, vm, cancelHandleInput })
@@ -227,6 +235,7 @@ const initAllApi = ({ api, state, t, props, emit, nextTick, vm, computed }) => {
     t,
     state,
     isShowClose,
+    isTagDisabled,
     deleteTag,
     editTag,
     backspaceDeleteTag,

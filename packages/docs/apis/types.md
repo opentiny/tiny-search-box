@@ -27,6 +27,7 @@ interface ISearchBoxItem {
   slotName?: string; // type=custom时生效，用于指定二级面板的插槽名，对应的编辑态自定义面板插槽名为item.slotName + '-edit'
   groupKey?: string; // 自定义分组名，默认为：'0'
   asyncLoading?: boolean; // 是否异步加载 options，为 true 时空数组会显示 loading 等待数据；不设置或为 false 时空数组不显示 loading
+  disableDelete?: boolean; // 该选项生成的标签是否禁止删除；禁止删除后仍可编辑，但仅允许修改值，不允许切换属性/类型（否则等同于变相删除）
   [propName: string]: any;
 }
 
