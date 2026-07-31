@@ -228,6 +228,20 @@ export default {
       codeFiles: ['max-time-length.vue']
     },
     {
+      demoId: 'picker-options',
+      name: {
+        'zh-CN': '日期选择器配置',
+        'en-US': 'Date Picker Options'
+      },
+      desc: {
+        'zh-CN':
+          ' 通过  item.pickerOptions   透传给内部  tiny-date-picker  的  picker-options  ，支持快捷选项（shortcuts）、自定义周首日（firstDayOfWeek）、选中回调（onPick）以及禁用日期（disabledDate），其中 disabledDate 会与组件内部禁用逻辑合并。 ',
+        'en-US':
+          ' Use  item.pickerOptions  to pass through the  picker-options  of the internal  tiny-date-picker  , supporting shortcuts, firstDayOfWeek, onPick, and disabledDate. The disabledDate will be merged with the internal disabling logic. '
+      },
+      codeFiles: ['picker-options.vue']
+    },
+    {
       demoId: 'custom-panel',
       name: {
         'zh-CN': '自定义二级下拉面板',

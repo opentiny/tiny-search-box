@@ -1,5 +1,25 @@
 import { createNewTag, getTagId } from './tag.ts'
 import { isNumber, omitObj } from './index.ts'
+import { toDate } from './date.ts'
+
+/**
+ * 比较两个日期值的大小，返回 -1/0/1
+ * 兼容字符串、时间戳、Date 对象，避免字符串字典序在自定义 format 或带时区时误判
+ * 传入 dateFormat 时按格式严格解析（支持 yyyy年MM月dd日 等本地化格式），
+ * 任一无法解析时返回 NaN，避免被误判为相等（导致倒序/相等范围误判）
+ * @param a 日期值
+ * @param b 日期值
+ * @param dateFormat 可选，按指定格式解析字符串
+ * @returns a<b 返回 -1，a>b 返回 1，相等返回 0，无法解析返回 NaN
+ */
+export const compareDate = (a, b, dateFormat) => {
+  const ta = toDate(a, dateFormat)?.getTime()
+  const tb = toDate(b, dateFormat)?.getTime()
+  if (ta == null || isNaN(ta) || tb == null || isNaN(tb)) return NaN
+  if (ta < tb) return -1
+  if (ta > tb) return 1
+  return 0
+}
 
 /**
  * 校验正常标签的值，并返回相应的新标签
@@ -127,10 +147,11 @@ export const getVerifyDateTag = async (instance, state, props, isDateTimeType) =
     const { operators } = prevItem
     const rest = omitObj(prevItem)
     let value = ''
+    const dateFormat = prevItem.format || (isDateTimeType ? state.datetimeRangeFormat : state.dateRangeFormat)
     if (start && end) {
-      if (start > end) {
+      if (compareDate(start, end, dateFormat) > 0) {
         return
-      } else if (start === end) {
+      } else if (compareDate(start, end, dateFormat) === 0) {
         value = start
       } else {
         value = `${start}-${end}`

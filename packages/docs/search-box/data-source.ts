@@ -171,7 +171,7 @@ export const dataSource = [
     type: 'dateRange',
     format: 'yyyy/MM/dd', // 默认格式
     // 默认开始时间
-    start: new Date(),
+    start: new Date(new Date().getTime() + 1000 * 60 * 60 * 24),
     // 默认结束时间
     end: undefined,
     // 最小时间

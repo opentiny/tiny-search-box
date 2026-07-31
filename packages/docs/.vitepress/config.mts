@@ -102,6 +102,7 @@ export default defineConfig({
           { text: '数据项占位文本', link: '/examples/item-placeholder' },
           { text: '输入长度限制', link: '/examples/max-length' },
           { text: '时间长度限制', link: '/examples/max-time-length' },
+          { text: '日期选择器配置', link: '/examples/picker-options' },
           { text: '合并多选标签', link: '/examples/merge-tag' },
           { text: '面板最大高度', link: '/examples/panel-max-height' },
           { text: '虚拟滚动', link: '/examples/virtual-scroll' },

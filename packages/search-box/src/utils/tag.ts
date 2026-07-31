@@ -22,6 +22,10 @@ export const hasTagItem = (state, itemValue, itemLabel = '') => {
 export const resetInput = (state) => {
   state.propItem = {}
   state.inputValue = ''
+  state.startDate = null
+  state.endDate = null
+  state.startDateTime = null
+  state.endDateTime = null
 }
 
 /**
