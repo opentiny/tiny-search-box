@@ -26,6 +26,7 @@ interface ISearchBoxItem {
   pickerOptions?: IPickerOptions; // type=dateRange/datetimeRange时生效，透传给内部 tiny-date-picker 的 picker-options 配置，支持 firstDayOfWeek / disabledDate / shortcuts，其中 disabledDate 会与组件内部禁用逻辑合并
   slotName?: string; // type=custom时生效，用于指定二级面板的插槽名，对应的编辑态自定义面板插槽名为item.slotName + '-edit'
   groupKey?: string; // 自定义分组名，默认为：'0'
+  asyncLoading?: boolean; // 是否异步加载 options，为 true 时空数组会显示 loading 等待数据；不设置或为 false 时空数组不显示 loading
   [propName: string]: any;
 }
 

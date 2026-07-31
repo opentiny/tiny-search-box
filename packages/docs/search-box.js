@@ -265,6 +265,7 @@ interface ISearchBoxItem {
   maxTimeLength?: number; // type=dateRange/datetimeRange时生效，设置用户只能选择某个时间跨度，只接受毫秒数[3.16.0新增]
   slotName?: string; // type=custom时生效，用于指定二级面板的插槽名[3.16.0新增]，对应的编辑态自定义面板插槽名为item.slotName + '-edit'[注：编辑态只有3.19.0版本及以上才有]
   groupKey?: string; // 自定义分组名，默认为：'0' [3.16.0新增]
+  asyncLoading?: boolean; // 是否异步加载 options，为 true 时空数组会显示 loading 等待数据；不设置或为 false 时空数组不显示 loading [3.29.1版本以上支持]
   [propName: string]: any;
 }
 

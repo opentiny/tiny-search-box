@@ -93,10 +93,16 @@ const initState = ({ reactive, computed, api, i18n, watch, props, emit, vm }) =>
     hasFormError: false, // 表单校验错误状态
     hasBackupList: computed(() => {
       if (!state.propItem.label) return false
-      const { type, options } = state.prevItem
+      const { type, options, asyncLoading } = state.prevItem
       // input 类型需要 options 才算有 backupList，避免无 options 时卡在 loading
       if (type === 'input') return !!options?.length
-      return [undefined, null, '', 'radio', 'checkbox', 'map'].includes(type)
+      if ([undefined, null, '', 'radio', 'checkbox', 'map'].includes(type)) {
+        // 异步加载场景：声明 asyncLoading 时空数组也期望有列表，显示 loading 等待数据
+        if (asyncLoading) return true
+        // 非异步场景：options 为空则无 backupList，避免卡在 loading
+        return !!options?.length
+      }
+      return false
     }),
     isIndeterminate: computed(() => state.checkboxGroup.length > 0 && state.checkboxGroup.length !== state.filterList.length),
     checkAll: computed({
