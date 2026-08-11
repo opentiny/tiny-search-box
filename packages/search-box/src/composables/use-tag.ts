@@ -26,14 +26,14 @@ export function useTag({ props, state, emit, nextTick, isTagDisabled }) {
   const clearTag = () => {
     // 仅清除可删除的标签，保留被禁用删除的标签
     const remaining = props.modelValue.filter((item) => isTagDisabled(item))
-    if (remaining.length === props.modelValue.length) return
+    const hasDeletable = remaining.length !== props.modelValue.length
     showDropdown(state, false)
     props.modelValue.forEach((item) => {
       if (!isTagDisabled(item)) changeIsChecked(item)
     })
-    state.propItem = {}
-    state.inputValue = ''
-    emitChangeModelEvent({ emit, state, nextTick, newValue: remaining })
+    // 始终走 emitChangeModelEvent 以共享弹层关闭与输入重置（含日期等状态）；
+    // 仅当有可删除标签被清除时传 newValue 触发 change，避免无变化时多余事件
+    emitChangeModelEvent({ emit, state, nextTick, ...(hasDeletable ? { newValue: remaining } : {}) })
     emit('clear')
   }
 

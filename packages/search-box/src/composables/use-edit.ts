@@ -93,7 +93,7 @@ export function useEdit({ props, state, t, nextTick, format, emit, vm }) {
     state.selectValue = tag.label
     state.currentModelValueIndex = index
 
-    emit('tagClick', tag)
+    emit('tag-click', tag)
     setDropdownProps(tag)
   }
 
