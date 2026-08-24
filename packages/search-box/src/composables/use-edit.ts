@@ -4,7 +4,7 @@ import { showDropdown } from '../utils/dropdown.ts'
 import { deepClone } from '../utils/index.ts'
 
 export function useEdit({ props, state, t, nextTick, format, emit, vm }) {
-  const setDropdownProps = (curTag) => {
+  const setDropdownProps = (curTag, isSwitch = false) => {
     const { operator, value, start, end } = curTag
     const { options, operators, type, mergeTag } = state.prevItem
     if (type === 'custom') {
@@ -21,13 +21,14 @@ export function useEdit({ props, state, t, nextTick, format, emit, vm }) {
       state.endDateTime = format(end, datetimeRangeFormat)
     } else {
       if (mergeTag) {
-        const labels = curTag.options?.flatMap((item) => item.label) || []
+        // 切换属性时清空选中值；配置项的 options 是可选项而非已选项
+        const labels = isSwitch ? [] : curTag.options?.flatMap((item) => item.label) || []
         // 多选编辑态，tiny-select multiple 需要数组
         state.inputEditValue = labels
         state.currentEditSelectTags = labels
       } else {
         // 其他场景使用字符串
-        state.inputEditValue = Array.isArray(value) ? value.join(',') : (value || '')
+        state.inputEditValue = isSwitch ? '' : (Array.isArray(value) ? value.join(',') : (value || ''))
       }
       state.currentEditValue = options
     }
@@ -100,7 +101,7 @@ export function useEdit({ props, state, t, nextTick, format, emit, vm }) {
   const selectPropChange = (item, disabled) => {
     if (disabled) return
     state.prevItem = item
-    setDropdownProps(item)
+    setDropdownProps(item, true)
     // 切换属性类型时检查校验状态
     nextTick(() => {
       checkFormValidation()

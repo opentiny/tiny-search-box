@@ -20,8 +20,11 @@ export const showDropdown = (state, isShow = true) => {
     //   所以只能在关闭时——而非打开时——重置）
     if (state.visible && typeof document !== 'undefined') {
       // 1. 重置 DOM scrollTop，触发原生 scroll 事件更新 vsState
-      document
-        .querySelectorAll('.tvp-search-box__dropdown-menu .tvp-search-box__virtual-list')
+      //    限定在当前实例的 popperElm 范围内，避免多实例互相影响
+      const popperElm = state.instance?.$refs?.dropdownRef?.state?.popperElm
+      const container = popperElm || document
+      container
+        .querySelectorAll('.tvp-search-box__virtual-list')
         .forEach((el) => {
           el.scrollTop = 0
         })
