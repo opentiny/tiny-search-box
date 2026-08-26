@@ -22,6 +22,68 @@ export const compareDate = (a, b, dateFormat) => {
 }
 
 /**
+ * 直接运行 state.formRules 中的校验规则，不依赖 tiny-form 的 validateField。
+ * 兼容 validator 函数和 required + message 两种规则格式。
+ * 校验结果（错误信息）写入 state.formErrors，模板据此显示错误提示。
+ * @param state searchbox 的 state
+ * @param fieldNames 需要校验的字段名数组
+ * @returns 全部通过返回 true，否则返回 false
+ */
+export const runFieldValidation = (state, fieldNames) => {
+  const errors = { ...state.formErrors }
+  let allValid = true
+
+  for (const fieldName of fieldNames) {
+    const rule = state.formRules?.[fieldName]
+    if (!rule) {
+      errors[fieldName] = ''
+      continue
+    }
+
+    const value = state[fieldName]
+    let errorMsg = ''
+
+    // 处理 required 规则
+    if (rule.required) {
+      const isEmpty = value == null || value === '' || (Array.isArray(value) && value.length === 0)
+      if (isEmpty) {
+        errorMsg = rule.message || ''
+      }
+    }
+
+    // 处理 validator 函数
+    if (!errorMsg && typeof rule.validator === 'function') {
+      rule.validator({}, value, (err) => {
+        if (err) {
+          errorMsg = err.message || ''
+        }
+      })
+    }
+
+    errors[fieldName] = errorMsg
+    if (errorMsg) {
+      allValid = false
+    }
+  }
+
+  state.formErrors = errors
+  return allValid
+}
+
+/**
+ * 清除指定字段的校验错误信息
+ * @param state searchbox 的 state
+ * @param fieldNames 需要清除错误信息的字段名数组
+ */
+export const clearFormErrors = (state, fieldNames) => {
+  const errors = { ...state.formErrors }
+  for (const field of fieldNames) {
+    errors[field] = ''
+  }
+  state.formErrors = errors
+}
+
+/**
  * 校验正常标签的值，并返回相应的新标签
  * @param instance searchbox 的 instance
  * @param state searchbox 的 state
@@ -33,13 +95,8 @@ export const getVerifyTag = async (instance, state, props) => {
   const { operators } = prevItem
   const rest = omitObj(prevItem)
   let newTag = null
-  let isPass = true
 
-  await instance.$refs.formRef.validateField(['inputEditValue'], (errMsg) => {
-    if (errMsg) {
-      isPass = false
-    }
-  })
+  const isPass = runFieldValidation(state, ['inputEditValue'])
 
   if (isPass) {
     let id = null
@@ -87,13 +144,8 @@ export const getVerifyNumTag = async (instance, state, props) => {
   const start = state[minNum]
   const end = state[maxNum]
   const verifyProps = [minNum, maxNum]
-  let isPass = true
+  const isPass = runFieldValidation(state, verifyProps)
   let newTag = null
-  await instance.$refs.formRef.validateField(verifyProps, (errMsg) => {
-    if (errMsg) {
-      isPass = false
-    }
-  })
 
   if (isPass) {
     const { field, label: prevLabel, unit, type, operators } = prevItem
@@ -124,7 +176,6 @@ export const getVerifyDateTag = async (instance, state, props, isDateTimeType) =
   const { prevItem, startDate, endDate, startDateTime, endDateTime } = state
   let start = null
   let end = null
-  let isPass = true
   let newTag = null
   let verifyProps = null
   if (isDateTimeType) {
@@ -137,11 +188,7 @@ export const getVerifyDateTag = async (instance, state, props, isDateTimeType) =
     verifyProps = ['startDate', 'endDate']
   }
 
-  await instance.$refs.formRef.validateField(verifyProps, (errMsg) => {
-    if (errMsg) {
-      isPass = false
-    }
-  })
+  const isPass = runFieldValidation(state, verifyProps)
 
   if (isPass) {
     const { operators } = prevItem

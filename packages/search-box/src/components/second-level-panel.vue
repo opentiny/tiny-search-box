@@ -112,27 +112,31 @@
         <div class="tvp-search-box__dropdown-start">
           {{ t("tvp.tvpSearchbox.minValueText") }}{{ state.prevItem.unit ? `(${state.prevItem.unit})` : '' }}
         </div>
-        <tiny-form-item
-          :prop="state.curMinNumVar"
-          class="tvp-search-box__number-item"
-          :show-message="state.numberShowMessage"
+        <div
+          :class="['tvp-search-box__number-item', { 'is-error': state.formErrors[state.curMinNumVar] }]"
         >
           <tiny-input
             v-model="state[state.curMinNumVar]"
             type="number"
             class="tvp-search-box__number-input"
           ></tiny-input>
-        </tiny-form-item>
+          <div v-if="state.formErrors[state.curMinNumVar] && state.numberShowMessage" class="tvp-search-box__error-msg">
+            {{ state.formErrors[state.curMinNumVar] }}
+          </div>
+        </div>
         <div class="tvp-search-box__dropdown-end">
           {{ t("tvp.tvpSearchbox.maxValueText") }}{{ state.prevItem.unit ? `(${state.prevItem.unit})` : '' }}
         </div>
-        <tiny-form-item :prop="state.curMaxNumVar" class="tvp-search-box__number-item">
+        <div :class="['tvp-search-box__number-item', { 'is-error': state.formErrors[state.curMaxNumVar] }]">
           <tiny-input
             v-model="state[state.curMaxNumVar]"
             type="number"
             class="tvp-search-box__number-input"
           ></tiny-input>
-        </tiny-form-item>
+          <div v-if="state.formErrors[state.curMaxNumVar]" class="tvp-search-box__error-msg">
+            {{ state.formErrors[state.curMaxNumVar] }}
+          </div>
+        </div>
       </div>
       <div class="tvp-search-box__bottom-btn">
         <tiny-button size="mini" @click="sizeChange(false)">{{
@@ -160,10 +164,8 @@
         <div class="tvp-search-box__dropdown-start">
           {{ t("tvp.tvpSearchbox.rangeBeginLabel") }}
         </div>
-        <tiny-form-item
-          prop="startDate"
-          :show-message="Boolean(state.prevItem.maxTimeLength)"
-          class="tvp-search-box__date-item"
+        <div
+          :class="['tvp-search-box__date-item', { 'is-error': state.formErrors.startDate }]"
         >
           <tiny-date-picker
             v-model="state.startDate"
@@ -174,11 +176,14 @@
             @visible-change="handleDateShow"
             @change="onDateChange(false)"
           ></tiny-date-picker>
-        </tiny-form-item>
+          <div v-if="state.formErrors.startDate && state.prevItem.maxTimeLength" class="tvp-search-box__error-msg">
+            {{ state.formErrors.startDate }}
+          </div>
+        </div>
         <div class="tvp-search-box__dropdown-end">
           {{ t("tvp.tvpSearchbox.rangeEndLabel") }}
         </div>
-        <tiny-form-item prop="endDate" class="tvp-search-box__date-item">
+        <div :class="['tvp-search-box__date-item', { 'is-error': state.formErrors.endDate }]">
           <tiny-date-picker
             v-model="state.endDate"
             :format="state.prevItem.format || state.dateRangeFormat"
@@ -188,7 +193,10 @@
             @change="onDateChange(false)"
             @blur="handleDateShow"
           ></tiny-date-picker>
-        </tiny-form-item>
+          <div v-if="state.formErrors.endDate" class="tvp-search-box__error-msg">
+            {{ state.formErrors.endDate }}
+          </div>
+        </div>
       </div>
       <div class="tvp-search-box__bottom-btn">
         <tiny-button size="mini" @click="onConfirmDate(false)">
@@ -217,10 +225,8 @@
         <div class="tvp-search-box__dropdown-start">
           {{ t("tvp.tvpSearchbox.rangeBeginLabel") }}
         </div>
-        <tiny-form-item
-          prop="startDateTime"
-          :show-message="Boolean(state.prevItem.maxTimeLength)"
-          class="tvp-search-box__date-item"
+        <div
+          :class="['tvp-search-box__date-item', { 'is-error': state.formErrors.startDateTime }]"
         >
           <tiny-date-picker
             v-model="state.startDateTime"
@@ -233,11 +239,14 @@
             @change="onDateChange(true)"
             @blur="handleDateShow"
           ></tiny-date-picker>
-        </tiny-form-item>
+          <div v-if="state.formErrors.startDateTime && state.prevItem.maxTimeLength" class="tvp-search-box__error-msg">
+            {{ state.formErrors.startDateTime }}
+          </div>
+        </div>
         <div class="tvp-search-box__dropdown-end">
           {{ t("tvp.tvpSearchbox.rangeEndLabel") }}
         </div>
-        <tiny-form-item prop="endDateTime" class="tvp-search-box__date-item">
+        <div :class="['tvp-search-box__date-item', { 'is-error': state.formErrors.endDateTime }]">
           <tiny-date-picker
             v-model="state.endDateTime"
             type="datetime"
@@ -249,7 +258,10 @@
             @change="onDateChange(true)"
             @blur="handleDateShow"
           ></tiny-date-picker>
-        </tiny-form-item>
+          <div v-if="state.formErrors.endDateTime" class="tvp-search-box__error-msg">
+            {{ state.formErrors.endDateTime }}
+          </div>
+        </div>
       </div>
       <div class="tvp-search-box__bottom-btn">
         <tiny-button size="mini" @click="onConfirmDate(false, true)">
@@ -299,8 +311,7 @@
 <script>
 // Vue2 版本，使用 tiny-vue 的 renderless 架构
 import { defineComponent, setup, $props, $prefix } from '@opentiny/vue-common'
-import { 
-  TinyFormItem,
+import {
   TinyDropdownItem,
   TinyCheckbox,
   TinyCheckboxGroup,
@@ -491,7 +502,6 @@ export default defineComponent({
   name: $prefix + 'SearchBoxSecondLevelPanel',
   emits: ['events', 'click'],
   components: {
-    TinyFormItem,
     TinyDropdownItem,
     TinyCheckbox,
     TinyCheckboxGroup,

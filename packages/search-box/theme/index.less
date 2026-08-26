@@ -57,7 +57,7 @@
   }
 
   // 覆写select样式
-  .@{form-tiny-cls}-item.is-error .@{search-box-prefix-cls}-select .@{select-tiny-cls}__tags-group {
+  .@{search-box-prefix-cls}__number-item.is-error .@{search-box-prefix-cls}-select .@{select-tiny-cls}__tags-group {
     border-color: #f23030;
   }
   .@{search-box-prefix-cls}-select {
@@ -449,8 +449,8 @@
     color: var(--tvp-SearchBox-dropdown-desc-text-color);
   }
 
-  &__date-item.@{form-tiny-cls}-item,
-  &__number-item.@{form-tiny-cls}-item {
+  &__date-item,
+  &__number-item {
     padding-bottom: 8px;
     margin-bottom: 0;
 
@@ -459,11 +459,20 @@
       white-space: nowrap;
     }
 
-    .@{form-tiny-cls}-item__error {
-      font-size: 12px;
+    // 校验错误时的输入框红框
+    &.is-error {
+      .@{input-tiny-cls}__inner {
+        border-color: #f23030;
+      }
+      .@{select-tiny-cls}__tags-group {
+        border-color: #f23030;
+      }
     }
-    .@{form-tiny-cls}-item__validate-message {
+
+    .@{search-box-prefix-cls}__error-msg {
       font-size: 12px;
+      color: #f23030;
+      line-height: 1.5;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;

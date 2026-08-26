@@ -14,6 +14,7 @@ import { showDropdown, showPopover } from './utils/dropdown.ts'
 
 import { deepClone } from './utils/index.ts'
 import { resetInput } from './utils/tag.ts'
+import { runFieldValidation } from './utils/validate.ts'
 import i18n, { t, getCurrentLocale } from './utils/i18n.ts'
 export const api = [
   't',
@@ -92,6 +93,7 @@ const initState = ({ reactive, computed, api, i18n, watch, props, emit, vm }) =>
     visible: false,
     visibleTimer: null,
     hasFormError: false, // 表单校验错误状态
+    formErrors: {}, // 各字段校验错误信息，模板据此显示错误提示
     hasBackupList: computed(() => {
       if (!state.propItem.label) return false
       const { type, options, asyncLoading } = state.prevItem
@@ -189,7 +191,7 @@ const initAllApi = ({ api, state, t, props, emit, nextTick, vm, computed }) => {
   const validateDateRange = (isDateTimeType) => {
     const verifyProps = isDateTimeType ? ['startDateTime', 'endDateTime'] : ['startDate', 'endDate']
     nextTick(() => {
-      state.instance?.$refs?.formRef?.validateField(verifyProps, () => {})
+      runFieldValidation(state, verifyProps)
     })
   }
 

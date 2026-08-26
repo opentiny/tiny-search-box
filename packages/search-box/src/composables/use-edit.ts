@@ -1,5 +1,5 @@
 import { emitChangeModelEvent } from '../utils/tag.ts'
-import { getVerifyNumTag, getVerifyDateTag, setStateNumRange, getVerifyTag } from '../utils/validate.ts'
+import { getVerifyNumTag, getVerifyDateTag, setStateNumRange, getVerifyTag, runFieldValidation } from '../utils/validate.ts'
 import { showDropdown } from '../utils/dropdown.ts'
 import { deepClone } from '../utils/index.ts'
 
@@ -37,11 +37,7 @@ export function useEdit({ props, state, t, nextTick, format, emit, vm }) {
   }
 
   // 检查表单校验状态
-  const checkFormValidation = async () => {
-    if (!state.instance?.$refs?.formRef) {
-      return
-    }
-
+  const checkFormValidation = () => {
     const { prevItem } = state
     let verifyProps = []
 
@@ -60,14 +56,7 @@ export function useEdit({ props, state, t, nextTick, format, emit, vm }) {
       return
     }
 
-    let hasError = false
-    await state.instance.$refs.formRef.validateField(verifyProps, (errMsg) => {
-      if (errMsg) {
-        hasError = true
-      }
-    })
-
-    state.hasFormError = hasError
+    state.hasFormError = !runFieldValidation(state, verifyProps)
   }
 
   const editTag = (tag, index, e) => {
