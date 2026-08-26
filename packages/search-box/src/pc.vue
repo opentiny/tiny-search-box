@@ -27,16 +27,7 @@
       v-if="modelValue.length"
       class="tvp-search-box__placeholder"
     ></span>
-    <tiny-form
-      ref="formRef"
-      :model="state"
-      :rules="state.formRules"
-      :validate-type="state.validType"
-      :size="size === 'small' ? 'small' : ''"
-      label-width="0px"
-      message-type="block"
-      class="tvp-search-box__form"
-    >
+    <div class="tvp-search-box__form">
       <div class="tvp-search-box__input-wrapper">
         <section class="tvp-search-box__prop">
           <span v-show="state.propItem.label"
@@ -179,7 +170,7 @@
               <div class="tvp-search-box__dropdown-start">
                 {{ t('tvp.tvpSearchbox.attributeType') }}
               </div>
-              <tiny-form-item class="tvp-search-box__number-item">
+              <div class="tvp-search-box__number-item">
                 <tiny-select
                   v-model="state.selectValue"
                   searchable
@@ -204,14 +195,14 @@
                   >
                   </tiny-option>
                 </tiny-select>
-              </tiny-form-item>
+              </div>
               <div
                 v-if="state.prevItem.operators"
                 class="tvp-search-box__dropdown-end"
               >
                 {{ t('tvp.tvpSearchbox.operator') }}
               </div>
-              <tiny-form-item
+              <div
                 v-if="state.prevItem.operators"
                 class="tvp-search-box__number-item"
               >
@@ -224,17 +215,17 @@
                   >
                   </tiny-option>
                 </tiny-select>
-              </tiny-form-item>
+              </div>
               <div
                 v-if="state.prevItem.type !== 'numRange'"
                 class="tvp-search-box__dropdown-end"
               >
                 {{ t('tvp.tvpSearchbox.tagValue') }}
               </div>
-              <tiny-form-item
+              <div
                 v-if="!['numRange', 'dateRange', 'datetimeRange', 'custom'].includes(state.prevItem.type)"
-                prop="inputEditValue"
                 class="tvp-search-box__number-item"
+                :class="{ 'is-error': state.formErrors.inputEditValue }"
               >
                 <tiny-select
                   v-if="state.currentEditValue?.length > 0"
@@ -259,7 +250,10 @@
                   v-model="state.inputEditValue"
                   clearable
                 ></tiny-input>
-              </tiny-form-item>
+                <div v-if="state.formErrors.inputEditValue" class="tvp-search-box__error-msg">
+                  {{ state.formErrors.inputEditValue }}
+                </div>
+              </div>
               <div
                 v-if="state.prevItem.type === 'numRange'"
                 class="tvp-search-box__number"
@@ -267,30 +261,33 @@
                 <div class="tvp-search-box__dropdown-start">
                   {{ t('tvp.tvpSearchbox.minValueText') }}{{ state.prevItem.unit ? `(${state.prevItem.unit})` : '' }}
                 </div>
-                <tiny-form-item
-                  :prop="state.curMinNumVar"
-                  class="tvp-search-box__number-item"
-                  :show-message="state.numberShowMessage"
+                <div
+                  :class="['tvp-search-box__number-item', { 'is-error': state.formErrors[state.curMinNumVar] }]"
                 >
                   <tiny-input
                     v-model="state[state.curMinNumVar]"
                     type="number"
                     class="tvp-search-box__number-input"
                   ></tiny-input>
-                </tiny-form-item>
+                  <div v-if="state.formErrors[state.curMinNumVar] && state.numberShowMessage" class="tvp-search-box__error-msg">
+                    {{ state.formErrors[state.curMinNumVar] }}
+                  </div>
+                </div>
                 <div class="tvp-search-box__dropdown-end">
                   {{ t('tvp.tvpSearchbox.maxValueText') }}{{ state.prevItem.unit ? `(${state.prevItem.unit})` : '' }}
                 </div>
-                <tiny-form-item
-                  :prop="state.curMaxNumVar"
-                  class="tvp-search-box__number-item"
+                <div
+                  :class="['tvp-search-box__number-item', { 'is-error': state.formErrors[state.curMaxNumVar] }]"
                 >
                   <tiny-input
                     v-model="state[state.curMaxNumVar]"
                     type="number"
                     class="tvp-search-box__number-input"
                   ></tiny-input>
-                </tiny-form-item>
+                  <div v-if="state.formErrors[state.curMaxNumVar]" class="tvp-search-box__error-msg">
+                    {{ state.formErrors[state.curMaxNumVar] }}
+                  </div>
+                </div>
               </div>
               <div
                 v-if="state.prevItem.type === 'dateRange'"
@@ -308,10 +305,8 @@
                 <div class="tvp-search-box__dropdown-start">
                   {{ t('tvp.tvpSearchbox.rangeBeginLabel') }}
                 </div>
-                <tiny-form-item
-                  prop="startDate"
-                  :show-message="Boolean(state.prevItem.maxTimeLength)"
-                  class="tvp-search-box__date-item"
+                <div
+                  :class="['tvp-search-box__date-item', { 'is-error': state.formErrors.startDate }]"
                 >
                   <tiny-date-picker
                     v-model="state.startDate"
@@ -321,13 +316,15 @@
                     class="tvp-search-box__date-picker"
                     @change="checkFormValidation()"
                   ></tiny-date-picker>
-                </tiny-form-item>
+                  <div v-if="state.formErrors.startDate && state.prevItem.maxTimeLength" class="tvp-search-box__error-msg">
+                    {{ state.formErrors.startDate }}
+                  </div>
+                </div>
                 <div class="tvp-search-box__dropdown-end">
                   {{ t('tvp.tvpSearchbox.rangeEndLabel') }}
                 </div>
-                <tiny-form-item
-                  prop="endDate"
-                  class="tvp-search-box__date-item"
+                <div
+                  :class="['tvp-search-box__date-item', { 'is-error': state.formErrors.endDate }]"
                 >
                   <tiny-date-picker
                     v-model="state.endDate"
@@ -337,7 +334,10 @@
                     class="tvp-search-box__date-picker"
                     @change="checkFormValidation()"
                   ></tiny-date-picker>
-                </tiny-form-item>
+                  <div v-if="state.formErrors.endDate" class="tvp-search-box__error-msg">
+                    {{ state.formErrors.endDate }}
+                  </div>
+                </div>
               </div>
               <div
                 v-if="state.prevItem.type === 'datetimeRange'"
@@ -355,10 +355,8 @@
                 <div class="tvp-search-box__dropdown-start">
                   {{ t('tvp.tvpSearchbox.rangeBeginLabel') }}
                 </div>
-                <tiny-form-item
-                  prop="startDateTime"
-                  :show-message="Boolean(state.prevItem.maxTimeLength)"
-                  class="tvp-search-box__date-item"
+                <div
+                  :class="['tvp-search-box__date-item', { 'is-error': state.formErrors.startDateTime }]"
                 >
                   <tiny-date-picker
                     v-model="state.startDateTime"
@@ -370,13 +368,15 @@
                     class="tvp-search-box__date-picker"
                     @change="checkFormValidation()"
                   ></tiny-date-picker>
-                </tiny-form-item>
+                  <div v-if="state.formErrors.startDateTime && state.prevItem.maxTimeLength" class="tvp-search-box__error-msg">
+                    {{ state.formErrors.startDateTime }}
+                  </div>
+                </div>
                 <div class="tvp-search-box__dropdown-end">
                   {{ t('tvp.tvpSearchbox.rangeEndLabel') }}
                 </div>
-                <tiny-form-item
-                  prop="endDateTime"
-                  class="tvp-search-box__date-item"
+                <div
+                  :class="['tvp-search-box__date-item', { 'is-error': state.formErrors.endDateTime }]"
                 >
                   <tiny-date-picker
                     v-model="state.endDateTime"
@@ -388,7 +388,10 @@
                     class="tvp-search-box__date-picker"
                     @change="checkFormValidation()"
                   ></tiny-date-picker>
-                </tiny-form-item>
+                  <div v-if="state.formErrors.endDateTime" class="tvp-search-box__error-msg">
+                    {{ state.formErrors.endDateTime }}
+                  </div>
+                </div>
               </div>
             </div>
             <div class="tvp-search-box__bottom-btn">
@@ -422,16 +425,16 @@
           </div>
         </tiny-popover>
       </template>
-    </tiny-form>
+    </div>
   </div>
 </template>
 
 <script lang="ts">
 // Vue2 版本，使用 tiny-vue 的 renderless 架构
-import { defineComponent, setup, $props, isVue2 } from '@opentiny/vue-common'
+import { defineComponent, setup, $props, isVue2, hooks } from '@opentiny/vue-common'
 import { renderless, api } from './renderless'
 // 导入组件
-import { 
+import {
   TinyTag,
   TinyInput,
   TinyDropdown,
@@ -439,8 +442,6 @@ import {
   TinyButton,
   TinyTooltip,
   TinyDatePicker,
-  TinyForm,
-  TinyFormItem,
   TinyPopover,
   TinySelect,
   TinyOption,
@@ -534,8 +535,6 @@ export default defineComponent({
     TinyButton,
     TinyTooltip,
     TinyDatePicker,
-    TinyForm,
-    TinyFormItem,
     TinyPopover,
     TinySelect,
     TinyOption,
@@ -547,7 +546,62 @@ export default defineComponent({
     TinyIconHelpQuery: iconHelpQuery()
   },
   setup(props, context) {
-    return setup({ props, context, renderless, api })
+    const instance = hooks.getCurrentInstance()
+
+    // 找到真正的父级实例（与 vue-common 的 getRealParent 逻辑一致）
+    // 父级如果是 AsyncComponentWrapper 则跳过
+    const directParent = instance?.parent
+    const realParent =
+      directParent?.type?.name === 'AsyncComponentWrapper' && directParent?.parent
+        ? directParent.parent
+        : directParent
+
+    // 保存父级的 setupState.state
+    // vue-common 的 setup 内部会通过 setParentAttribute 将 search-box 的 state 写入父级，
+    // 由于 search-box 和 form-item 的 api 数组都包含 "state"，会导致父级 state 被覆盖
+    const savedParentState = realParent?.setupState?.state
+
+    // 调用 vue-common 的 setup（内部会调用 setParentAttribute 覆盖父级 state）
+    const attrs = setup({ props, context, renderless, api })
+
+    // 恢复父级的 setupState.state，防止 form-item 丢失 form/labelWidth/rules 等
+    if (realParent?.setupState && savedParentState) {
+      realParent.setupState.state = savedParentState
+    }
+    // 清除父级 ctx 上被 setParentAttribute 写入的 state
+    if (realParent?.ctx && 'state' in realParent.ctx) {
+      delete realParent.ctx.state
+    }
+
+    // 为内部组件（tiny-input 等）提供 form 上下文
+    // tiny-input 通过 form.size / form.disabled 直接访问（非 form.state.size）
+    // form 的 size/disabled 是 prop，需从 parentForm.size / parentForm.disabled 获取
+    // 使用 getter 函数确保响应式：每次访问时重新求值，依赖 props 和 parentForm 的变化
+    const parentForm = hooks.inject('form', null)
+    const getFormSize = () => props.size || parentForm?.state?.size || parentForm?.size || ''
+    const getFormDisabled = () => parentForm?.state?.disabled ?? parentForm?.disabled ?? false
+
+    const formState = hooks.reactive({
+      get size() { return getFormSize() },
+      get disabled() { return getFormDisabled() },
+      get labelWidth() { return parentForm?.state?.labelWidth },
+      get labelSuffix() { return parentForm?.state?.labelSuffix },
+      get showMessage() { return parentForm?.state?.showMessage },
+      get rules() { return parentForm?.state?.rules ?? parentForm?.rules }
+    })
+
+    hooks.provide('form', {
+      get size() { return getFormSize() },
+      get disabled() { return getFormDisabled() },
+      get displayOnly() { return parentForm?.displayOnly },
+      get rules() { return parentForm?.rules },
+      get labelWidth() { return parentForm?.labelWidth },
+      get labelSuffix() { return parentForm?.labelSuffix },
+      get showMessage() { return parentForm?.showMessage },
+      get state() { return formState }
+    })
+
+    return attrs
   }
 })
 </script>

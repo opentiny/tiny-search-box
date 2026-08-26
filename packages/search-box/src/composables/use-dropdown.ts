@@ -1,6 +1,6 @@
 import { hasTagItem, resetInput, createNewTag, getTagId, emitChangeModelEvent } from '../utils/tag.ts'
 import { showDropdown } from '../utils/dropdown.ts'
-import { setStateNumRange } from '../utils/validate.ts'
+import { setStateNumRange, clearFormErrors } from '../utils/validate.ts'
 import { deepClone, omitObj } from '../utils/index.ts'
 
 export function useDropdown({ props, emit, state, t, format, nextTick, vm, cancelHandleInput }) {
@@ -44,7 +44,7 @@ export function useDropdown({ props, emit, state, t, format, nextTick, vm, cance
     // 清除日期字段的残留校验状态，避免删除标签后重新打开面板时显示过期错误
     if (type === 'dateRange' || type === 'datetimeRange') {
       nextTick(() => {
-        instance?.$refs?.formRef?.clearValidate?.(['startDate', 'endDate', 'startDateTime', 'endDateTime'])
+        clearFormErrors(state, ['startDate', 'endDate', 'startDateTime', 'endDateTime'])
       })
     }
 
@@ -199,7 +199,11 @@ export function useDropdown({ props, emit, state, t, format, nextTick, vm, cance
   }
 
   const newTagUpdateModelValue = (prevItem, propItem, tag) => {
-    const item = state.backupList?.find((subItem) => subItem.label === tag)
+    const item = state.backupList?.find((subItem) => (subItem.value || subItem.label) === tag)
+    // 多选(checkbox)类型且有选项列表时，输入值必须在选项列表中存在才能创建
+    if (prevItem.type === 'checkbox' && state.backupList?.length && !item) {
+      return
+    }
     updateModelValue(prevItem, item, propItem.label, tag)
   }
 
@@ -273,6 +277,10 @@ export function useDropdown({ props, emit, state, t, format, nextTick, vm, cance
         for (const tag of tagList) {
           // 每个 tag 单独用 regexp 校验
           if (regexp.test(tag)) {
+            // 多选(checkbox)类型且有选项列表时，输入值必须在选项列表中存在才能创建
+            if (type === 'checkbox' && currentItem?.options?.length && !state.backupList.find((subItem) => (subItem.value || subItem.label) === tag)) {
+              continue
+            }
             updateModelValue(normalizedCurrentItem, {}, label, tag)
           } else {
             invalidTags.push(tag)
@@ -289,6 +297,10 @@ export function useDropdown({ props, emit, state, t, format, nextTick, vm, cance
         }
       } else {
         for (const tag of tagList) {
+          // 多选(checkbox)类型且有选项列表时，输入值必须在选项列表中存在才能创建
+          if (type === 'checkbox' && currentItem?.options?.length && !state.backupList.find((subItem) => (subItem.value || subItem.label) === tag)) {
+            continue
+          }
           updateModelValue(normalizedCurrentItem, {}, label, tag)
         }
       }
@@ -301,7 +313,6 @@ export function useDropdown({ props, emit, state, t, format, nextTick, vm, cance
     if (cancelHandleInput) {
       cancelHandleInput()
     }
-    showDropdown(state, false)
     if (!inputValue) {
       // 输入为空的情况
       hasNotInputValueCreateTag(propItem, prevItem)

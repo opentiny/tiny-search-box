@@ -58,7 +58,7 @@
   }
 
   // 覆写select样式
-  .@{form-tiny-cls}-item.is-error .@{search-box-prefix-cls}-select .@{select-tiny-cls}__tags-group {
+  .@{search-box-prefix-cls}__number-item.is-error .@{search-box-prefix-cls}-select .@{select-tiny-cls}__tags-group {
     @apply border-color-error;
   }
   .@{search-box-prefix-cls}-select {
@@ -453,8 +453,8 @@
     @apply text-color-text-secondary;
   }
 
-  &__date-item.@{form-tiny-cls}-item,
-  &__number-item.@{form-tiny-cls}-item {
+  &__date-item,
+  &__number-item {
     @apply pb-1;
     @apply mb-0;
 
@@ -463,14 +463,24 @@
       @apply whitespace-nowrap;
     }
 
-    .@{form-tiny-cls}-item__error {
+    // 校验错误时的输入框红框
+    &.is-error {
+      .@{input-tiny-cls}__inner {
+        @apply border-color-error;
+      }
+      .@{select-tiny-cls}__tags-group {
+        @apply border-color-error;
+      }
+    }
+
+    .@{search-box-prefix-cls}__error-msg {
       @apply relative;
       @apply text-xs;
-
-      .validate-icon {
-        @apply mr-1;
-        @apply fill-color-error;
-      }
+      @apply text-color-error;
+      line-height: 1.5;
+      @apply whitespace-nowrap;
+      @apply overflow-hidden;
+      @apply text-ellipsis;
     }
   }
 

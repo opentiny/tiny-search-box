@@ -9,5 +9,5 @@ import { ref } from 'vue';
 import { dataSource } from './data-source';
 
 const tags = ref([]);
-const defaultField = ref('testRegion');
+const defaultField = ref('testName');
 </script>
