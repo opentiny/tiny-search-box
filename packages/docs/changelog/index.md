@@ -2,6 +2,18 @@
 
 本页面记录 TinySearchBox 各大版本之间的功能更新与问题修复。
 
+## v3.31
+
+### Features
+
+- 更新官网文档依赖版本 (#64)
+
+### Bug Fixes
+
+- 移除内部 tiny-form 依赖，改用自定义校验，修复 form 上下文 size/disabled 继承 (#67)
+- 修复二次打开同类型面板虚拟滚动空白及 aria-hidden 无障碍警告 (#66)
+- 修复仅选 label 时点击清除无反应，统一 tag-click 事件命名 (#65)
+
 ## v3.30
 
 ### Features
