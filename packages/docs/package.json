@@ -17,7 +17,7 @@
   },
   "dependencies": {
     "vue": "^3.5.13",
-    "@opentiny/vue-search-box": "^3.30.0",
+    "@opentiny/vue-search-box": "^3.31.0",
     "@opentiny/vue": "~3.31.0",
     "@opentiny/vue-button": "~3.31.0",
     "@opentiny/vue-button-group": "~3.31.0",
