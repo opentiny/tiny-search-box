@@ -37,7 +37,6 @@ export const api = [
   'handleEvents',
   'pickerOptions',
   'resetInput',
-  'selectItemIsDisable',
   'selectPropChange',
   'confirmEditTag',
   'checkFormValidation',
@@ -94,6 +93,13 @@ const initState = ({ reactive, computed, api, i18n, watch, props, emit, vm }) =>
     visibleTimer: null,
     hasFormError: false, // 表单校验错误状态
     formErrors: {}, // 各字段校验错误信息，模板据此显示错误提示
+    mapEditKey: '', // map 类型编辑态：选中的 key
+    mapEditValue: '', // map 类型编辑态：选中的 value
+    mapEditValueOptions: computed(() => {
+      if (!state.prevItem?.options || !state.mapEditKey) return []
+      const keyItem = state.prevItem.options.find((o) => o.label === state.mapEditKey)
+      return keyItem?.options || []
+    }),
     hasBackupList: computed(() => {
       if (!state.propItem.label) return false
       const { type, options, asyncLoading } = state.prevItem
@@ -176,7 +182,7 @@ const initAllApi = ({ api, state, t, props, emit, nextTick, vm, computed }) => {
   }
 
   const { deleteTag, clearTag, backspaceDeleteTag } = useTag({ props, state, emit, nextTick, isTagDisabled })
-  const { editTag, confirmEditTag, selectPropChange, selectItemIsDisable, checkFormValidation } = useEdit({ props, state, t, nextTick, format, emit, vm })
+  const { editTag, confirmEditTag, selectPropChange, checkFormValidation } = useEdit({ props, state, t, nextTick, format, emit, vm })
   const { handleInput, selectFirstMap, cancelHandleInput } = useMatch({ props, state, emit, nextTick })
   const { selectPropItem, selectRadioItem, selectInputValue, createTag, helpClick, setOperator } = useDropdown({ props, emit, state, t, format, nextTick, vm, cancelHandleInput })
   const { selectCheckbox } = useCheckbox({ props, state, emit, nextTick })
@@ -249,7 +255,6 @@ const initAllApi = ({ api, state, t, props, emit, nextTick, vm, computed }) => {
     handleEvents,
     pickerOptions,
     resetInput,
-    selectItemIsDisable,
     selectPropChange,
     confirmEditTag,
     handleConfirm,

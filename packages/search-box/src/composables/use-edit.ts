@@ -1,4 +1,4 @@
-import { emitChangeModelEvent } from '../utils/tag.ts'
+import { emitChangeModelEvent, createNewTag } from '../utils/tag.ts'
 import { getVerifyNumTag, getVerifyDateTag, setStateNumRange, getVerifyTag, runFieldValidation } from '../utils/validate.ts'
 import { showDropdown } from '../utils/dropdown.ts'
 import { deepClone } from '../utils/index.ts'
@@ -7,8 +7,36 @@ export function useEdit({ props, state, t, nextTick, format, emit, vm }) {
   const setDropdownProps = (curTag, isSwitch = false) => {
     const { operator, value, start, end } = curTag
     const { options, operators, type, mergeTag } = state.prevItem
+
+    // 切换属性类型时，先清空所有编辑态的残留值，避免旧值与新类型 UI 重叠
+    if (isSwitch) {
+      const reset = {
+        inputEditValue: mergeTag ? [] : '',
+        currentEditSelectTags: [],
+        currentEditValue: [],
+        startDate: null,
+        endDate: null,
+        startDateTime: null,
+        endDateTime: null,
+        formErrors: {},
+        mapEditKey: '',
+        mapEditValue: ''
+      }
+      state.curMinNumVar && (reset[state.curMinNumVar] = '')
+      state.curMaxNumVar && (reset[state.curMaxNumVar] = '')
+      Object.assign(state, reset)
+    }
+
     if (type === 'custom') {
       return
+    } else if (type === 'map') {
+      if (!isSwitch) {
+        // 编辑已有 map tag：从 value（"key=value" 格式）中解析出 key 和 value
+        const val = String(curTag.value || '')
+        const eqIndex = val.indexOf('=')
+        state.mapEditKey = eqIndex >= 0 ? val.substring(0, eqIndex) : ''
+        state.mapEditValue = eqIndex >= 0 ? val.substring(eqIndex + 1) : ''
+      }
     } else if (type === 'numRange') {
       setStateNumRange(state, curTag, t)
     } else if (type === 'dateRange') {
@@ -60,7 +88,7 @@ export function useEdit({ props, state, t, nextTick, format, emit, vm }) {
   }
 
   const editTag = (tag, index, e) => {
-    if (!props.editable || (tag.type && tag.type === 'map')) {
+    if (!props.editable) {
       return
     }
 
@@ -87,8 +115,7 @@ export function useEdit({ props, state, t, nextTick, format, emit, vm }) {
     setDropdownProps(tag)
   }
 
-  const selectPropChange = (item, disabled) => {
-    if (disabled) return
+  const selectPropChange = (item) => {
     state.prevItem = item
     setDropdownProps(item, true)
     // 切换属性类型时检查校验状态
@@ -113,6 +140,12 @@ export function useEdit({ props, state, t, nextTick, format, emit, vm }) {
       newTag = await getVerifyDateTag(state.instance, state, props, false)
     } else if (prevItem.type === 'datetimeRange') {
       newTag = await getVerifyDateTag(state.instance, state, props, true)
+    } else if (prevItem.type === 'map') {
+      const { field, type, label } = prevItem
+      const { mapEditKey, mapEditValue } = state
+      if (mapEditKey && mapEditValue) {
+        newTag = createNewTag({ type, field, label, value: `${mapEditKey}=${mapEditValue}` })
+      }
     } else {
       newTag = await getVerifyTag(state.instance, state, props)
     }
@@ -142,28 +175,10 @@ export function useEdit({ props, state, t, nextTick, format, emit, vm }) {
     state.currentEditValue = []
   }
 
-  const selectItemIsDisable = (item) => {
-    if (item.type && item.type === 'map') {
-      return true
-    }
-
-    if (state.prevItem?.operators || item.operators) {
-      return state.prevItem.operators?.length !== item.operators?.length
-    }
-
-    const typeArr = ['radio', 'checkbox']
-    if (state.prevItem.type && typeArr.includes(state.prevItem.type)) {
-      return !item.type ? false : !typeArr.includes(item.type)
-    }
-
-    return state.prevItem?.type !== item.type
-  }
-
   return {
     editTag,
     confirmEditTag,
     selectPropChange,
-    selectItemIsDisable,
     checkFormValidation
   }
 }
