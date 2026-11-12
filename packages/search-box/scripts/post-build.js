@@ -32,7 +32,7 @@ function formatVersion(major, minor, patch) {
 // 获取 Vue2 版本号（2.xx）
 function getVue2Version() {
   const mainVersion = parseVersion(packageJson.version)
-  return formatVersion(2, mainVersion.minor, mainVersion.patch)
+  return packageJson.version.replace(/^\d+\./, '2.') // 测试分支：保留 alpha 后缀
 }
 
 // 获取 Vue3 版本号（与主版本一致）

@@ -60,7 +60,7 @@ function publish(config) {
     process.chdir(distPath)
 
     // 执行发布命令
-    execSync('npm publish --access public', {
+    execSync('npm publish --access public --tag alpha', {
       stdio: 'inherit',
       cwd: distPath
     })
