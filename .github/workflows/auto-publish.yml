@@ -10,6 +10,8 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -36,11 +38,47 @@ jobs:
         working-directory: ./packages/search-box
         run: pnpm build:all
 
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: search-box-dist
+          path: packages/search-box/dist/
+          include-hidden-files: true
+          if-no-files-found: error
+
+  publish:
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref_name }}
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: 9.14.4
+
+      - name: Setup Node.js for trusted publishing
+        uses: actions/setup-node@v4
+        with:
+          # OIDC 需要 Node >=22.14.0 和 npm >=11.5.1；Node 24.5.0 起内置 npm >=11.5.1
+          node-version: '>=24.5.0 <25'
+          registry-url: "https://registry.npmjs.org"
+
+      - name: Download build artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: search-box-dist
+          path: packages/search-box/dist/
+
       - name: Publish @opentiny/vue-search-box
         working-directory: ./packages/search-box
         run: pnpm publish:all
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Release
         if: contains(github.ref_name, 'alpha') == false

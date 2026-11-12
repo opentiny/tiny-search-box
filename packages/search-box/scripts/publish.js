@@ -1,4 +1,4 @@
-import { execSync } from 'child_process'
+import { execFileSync } from 'child_process'
 import { resolve } from 'path'
 import { fileURLToPath } from 'url'
 import { dirname } from 'path'
@@ -59,8 +59,20 @@ function publish(config) {
     // 切换到发布目录
     process.chdir(distPath)
 
-    // 执行发布命令
-    execSync('npm publish --access public', {
+    // npm 11 要求低于已有稳定版本的发布和预发布显式指定 dist-tag。
+    // 按实际产物版本选择渠道，确保 Vue2/Vue3 均使用明确的标签。
+    const { version: publishVersion } = JSON.parse(readFileSync(config.packageJson, 'utf-8'))
+    const prerelease = publishVersion.split('+')[0].split('-').slice(1).join('-')
+    // 正式版独立维护 Vue2 标签；预发布共用渠道，Vue3 后发布覆盖 Vue2。
+    const stableTag = publishVersion.startsWith('2.') ? 'v2-latest' : 'latest'
+    const distTag = prerelease ? prerelease.split('.')[0] : stableTag
+    if (!/^[a-zA-Z][0-9A-Za-z-]*$/.test(distTag)) {
+      throw new Error(`无法从版本 ${publishVersion} 推导有效的发布渠道`)
+    }
+    console.log(`   dist-tag: ${distTag}`)
+
+    // 使用独立参数，避免将版本派生值作为 shell 命令执行。
+    execFileSync('npm', ['publish', '--access', 'public', '--tag', distTag], {
       stdio: 'inherit',
       cwd: distPath
     })

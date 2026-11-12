@@ -13,26 +13,9 @@ const packageJson = JSON.parse(readFileSync(resolve(rootDir, 'package.json'), 'u
 // 从命令行参数获取构建类型
 const buildType = process.argv[2] // 'vue2', 'vue2-saas', 'vue3', 'vue3-saas'
 
-// 解析版本号，提取 minor 和 patch 版本
-// 例如：3.27.0 -> { major: 3, minor: 27, patch: 0 }
-function parseVersion(version) {
-  const parts = version.split('.')
-  return {
-    major: parseInt(parts[0] || '0', 10),
-    minor: parseInt(parts[1] || '0', 10),
-    patch: parseInt(parts[2] || '0', 10)
-  }
-}
-
-// 生成版本号字符串
-function formatVersion(major, minor, patch) {
-  return `${major}.${minor}.${patch}`
-}
-
-// 获取 Vue2 版本号（2.xx）
+// 获取 Vue2 版本号（2.xx），保留预发布后缀及构建元数据，避免 alpha/beta 连发撞号。
 function getVue2Version() {
-  const mainVersion = parseVersion(packageJson.version)
-  return formatVersion(2, mainVersion.minor, mainVersion.patch)
+  return packageJson.version.replace(/^\d+\./, '2.')
 }
 
 // 获取 Vue3 版本号（与主版本一致）
