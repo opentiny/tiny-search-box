@@ -63,7 +63,9 @@ function publish(config) {
     // 按实际产物版本选择渠道，确保 Vue2/Vue3 均使用明确的标签。
     const { version: publishVersion } = JSON.parse(readFileSync(config.packageJson, 'utf-8'))
     const prerelease = publishVersion.split('+')[0].split('-').slice(1).join('-')
-    const distTag = prerelease ? prerelease.split('.')[0] : 'latest'
+    // 正式版独立维护 Vue2 标签；预发布共用渠道，Vue3 后发布覆盖 Vue2。
+    const stableTag = publishVersion.startsWith('2.') ? 'v2-latest' : 'latest'
+    const distTag = prerelease ? prerelease.split('.')[0] : stableTag
     if (!/^[a-zA-Z][0-9A-Za-z-]*$/.test(distTag)) {
       throw new Error(`无法从版本 ${publishVersion} 推导有效的发布渠道`)
     }
