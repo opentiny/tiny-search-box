@@ -171,7 +171,9 @@ export function useMatch({ props, state, emit, nextTick }) {
       resetBackupList()
 
       state.backupList?.forEach((subItem) => {
-        const value = propItem.value + subItem.label
+        // 用刚写入的 state.propItem.value（当前 key）计算，避免解构的旧 propItem
+        // 在首次进入或切换 key 时用错前缀，导致勾选状态错乱、已有 tag 被重复创建
+        const value = state.propItem.value + subItem.label
         subItem.isChecked = hasTagItem(state, value)
       })
     } else {

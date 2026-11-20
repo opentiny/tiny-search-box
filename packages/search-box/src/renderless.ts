@@ -184,7 +184,7 @@ const initAllApi = ({ api, state, t, props, emit, nextTick, vm, computed }) => {
   const { deleteTag, clearTag, backspaceDeleteTag } = useTag({ props, state, emit, nextTick, isTagDisabled })
   const { editTag, confirmEditTag, selectPropChange, checkFormValidation } = useEdit({ props, state, t, nextTick, format, emit, vm })
   const { handleInput, selectFirstMap, cancelHandleInput } = useMatch({ props, state, emit, nextTick })
-  const { selectPropItem, selectRadioItem, selectInputValue, createTag, helpClick, setOperator } = useDropdown({ props, emit, state, t, format, nextTick, vm, cancelHandleInput })
+  const { selectPropItem, selectRadioItem, selectInputValue, createTag, helpClick, setOperator } = useDropdown({ props, emit, state, t, format, nextTick, vm, cancelHandleInput, selectFirstMap })
   const { selectCheckbox } = useCheckbox({ props, state, emit, nextTick })
   const { onConfirmDate, handleDateShow, pickerOptions } = useDatePicker({ props, state, emit, nextTick, vm })
   const { sizeChange, initFormRule } = useNumRange({ props, state, t, emit, nextTick, vm })
@@ -367,6 +367,14 @@ const initWatch = ({ watch, state, props, api, nextTick, vm }) => {
     () => props.modelValue,
     () => {
       checkLocaleChange()
+    }
+  )
+
+  // editable 运行时变化时重建表单校验规则（initFormRule 按 editable 整体重建，重复调用幂等）
+  watch(
+    () => props.editable,
+    () => {
+      api.initFormRule()
     }
   )
 
