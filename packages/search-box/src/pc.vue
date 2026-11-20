@@ -398,11 +398,13 @@
                 <div class="tvp-search-box__dropdown-start">
                   {{ t('tvp.tvpSearchbox.tagKey') }}
                 </div>
-                <div class="tvp-search-box__number-item">
+                <div
+                  :class="['tvp-search-box__number-item', { 'is-error': state.formErrors.mapEditKey }]"
+                >
                   <tiny-select
                     v-model="state.mapEditKey"
                     clearable
-                    @change="() => { state.mapEditValue = '' }"
+                    @change="() => { state.mapEditValue = ''; checkFormValidation() }"
                   >
                     <tiny-option
                       v-for="item in (state.prevItem.options || [])"
@@ -411,14 +413,20 @@
                       :value="item.label"
                     ></tiny-option>
                   </tiny-select>
+                  <div v-if="state.formErrors.mapEditKey" class="tvp-search-box__error-msg">
+                    {{ state.formErrors.mapEditKey }}
+                  </div>
                 </div>
                 <div class="tvp-search-box__dropdown-end">
                   {{ t('tvp.tvpSearchbox.tagValue') }}
                 </div>
-                <div class="tvp-search-box__number-item">
+                <div
+                  :class="['tvp-search-box__number-item', { 'is-error': state.formErrors.mapEditValue }]"
+                >
                   <tiny-select
                     v-model="state.mapEditValue"
                     clearable
+                    @change="checkFormValidation()"
                   >
                     <tiny-option
                       v-for="item in state.mapEditValueOptions"
@@ -427,6 +435,9 @@
                       :value="item.label"
                     ></tiny-option>
                   </tiny-select>
+                  <div v-if="state.formErrors.mapEditValue" class="tvp-search-box__error-msg">
+                    {{ state.formErrors.mapEditValue }}
+                  </div>
                 </div>
               </div>
             </div>

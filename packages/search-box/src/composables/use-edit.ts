@@ -75,7 +75,9 @@ export function useEdit({ props, state, t, nextTick, format, emit, vm }) {
       verifyProps = ['startDate', 'endDate']
     } else if (prevItem.type === 'datetimeRange') {
       verifyProps = ['startDateTime', 'endDateTime']
-    } else if (!['custom', 'map'].includes(prevItem.type)) {
+    } else if (prevItem.type === 'map') {
+      verifyProps = ['mapEditKey', 'mapEditValue']
+    } else if (prevItem.type !== 'custom') {
       verifyProps = ['inputEditValue']
     }
 
