@@ -16,7 +16,7 @@
       :key="tag.field + index"
       :closable="!isTagDisabled(tag)"
       class="tvp-search-box__tag"
-      :class="editable && tag.type !== 'map' ? 'tvp-search-box__tag-editor' : ''"
+      :class="editable ? 'tvp-search-box__tag-editor' : ''"
       :title="`${tag.label} ${tag.operator || ':'} ${tag.value}`"
       @close="deleteTag(tag)"
       @click.stop="editTag(tag, index, $event)"
@@ -181,8 +181,7 @@
                     :key="state.allTypeAttri.label"
                     :label="t('tvp.tvpSearchbox.allProperty')"
                     :value="state.allTypeAttri.label"
-                    :disabled="selectItemIsDisable(state.allTypeAttri)"
-                    @click="selectPropChange(state.allTypeAttri, selectItemIsDisable(state.allTypeAttri))"
+                    @click="selectPropChange(state.allTypeAttri)"
                   >
                   </tiny-option>
                   <tiny-option
@@ -190,8 +189,7 @@
                     :key="item.label"
                     :label="item.label"
                     :value="item.label"
-                    :disabled="selectItemIsDisable(item)"
-                    @click="selectPropChange(item, selectItemIsDisable(item))"
+                    @click="selectPropChange(item)"
                   >
                   </tiny-option>
                 </tiny-select>
@@ -217,13 +215,13 @@
                 </tiny-select>
               </div>
               <div
-                v-if="state.prevItem.type !== 'numRange'"
+                v-if="!['numRange', 'map'].includes(state.prevItem.type)"
                 class="tvp-search-box__dropdown-end"
               >
                 {{ t('tvp.tvpSearchbox.tagValue') }}
               </div>
               <div
-                v-if="!['numRange', 'dateRange', 'datetimeRange', 'custom'].includes(state.prevItem.type)"
+                v-if="!['numRange', 'dateRange', 'datetimeRange', 'custom', 'map'].includes(state.prevItem.type)"
                 class="tvp-search-box__number-item"
                 :class="{ 'is-error': state.formErrors.inputEditValue }"
               >
@@ -390,6 +388,55 @@
                   ></tiny-date-picker>
                   <div v-if="state.formErrors.endDateTime" class="tvp-search-box__error-msg">
                     {{ state.formErrors.endDateTime }}
+                  </div>
+                </div>
+              </div>
+              <div
+                v-if="state.prevItem.type === 'map'"
+                class="tvp-search-box__number"
+              >
+                <div class="tvp-search-box__dropdown-start">
+                  {{ t('tvp.tvpSearchbox.tagKey') }}
+                </div>
+                <div
+                  :class="['tvp-search-box__number-item', { 'is-error': state.formErrors.mapEditKey }]"
+                >
+                  <tiny-select
+                    v-model="state.mapEditKey"
+                    clearable
+                    @change="() => { state.mapEditValue = ''; checkFormValidation() }"
+                  >
+                    <tiny-option
+                      v-for="item in (state.prevItem.options || [])"
+                      :key="item.label"
+                      :label="item.label"
+                      :value="item.label"
+                    ></tiny-option>
+                  </tiny-select>
+                  <div v-if="state.formErrors.mapEditKey" class="tvp-search-box__error-msg">
+                    {{ state.formErrors.mapEditKey }}
+                  </div>
+                </div>
+                <div class="tvp-search-box__dropdown-end">
+                  {{ t('tvp.tvpSearchbox.tagValue') }}
+                </div>
+                <div
+                  :class="['tvp-search-box__number-item', { 'is-error': state.formErrors.mapEditValue }]"
+                >
+                  <tiny-select
+                    v-model="state.mapEditValue"
+                    clearable
+                    @change="checkFormValidation()"
+                  >
+                    <tiny-option
+                      v-for="item in state.mapEditValueOptions"
+                      :key="item.label"
+                      :label="item.label"
+                      :value="item.label"
+                    ></tiny-option>
+                  </tiny-select>
+                  <div v-if="state.formErrors.mapEditValue" class="tvp-search-box__error-msg">
+                    {{ state.formErrors.mapEditValue }}
                   </div>
                 </div>
               </div>

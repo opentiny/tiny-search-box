@@ -3,7 +3,7 @@ import { showDropdown } from '../utils/dropdown.ts'
 import { setStateNumRange, clearFormErrors } from '../utils/validate.ts'
 import { deepClone, omitObj } from '../utils/index.ts'
 
-export function useDropdown({ props, emit, state, t, format, nextTick, vm, cancelHandleInput }) {
+export function useDropdown({ props, emit, state, t, format, nextTick, vm, cancelHandleInput, selectFirstMap }) {
   const instance = vm || state.instance
   const showValueItem = (item) => {
     const { start, end, type } = item
@@ -176,6 +176,18 @@ export function useDropdown({ props, emit, state, t, format, nextTick, vm, cance
       // 触发 second-level-enter 事件，传递当前选中的 item 和对应的 options
       emit('second-level-enter', prevItem)
 
+      // map 类型：key 面板回车应进入 value 面板选择值，而不是把 key 当 value 直接创建 tag
+      if (prevItem.type === 'map') {
+        if (state.isShowTagKey) {
+          const firstKey = prevItem.options?.[0]
+          firstKey && selectFirstMap(firstKey, true)
+        } else {
+          const firstValue = state.backupList?.find((item) => !item.isChecked)
+          firstValue && selectFirstMap(firstValue, false)
+        }
+        return
+      }
+
       if (!prevItem.options || !prevItem.options.length) {
         return
       }
@@ -210,6 +222,15 @@ export function useDropdown({ props, emit, state, t, format, nextTick, vm, cance
   const hasInputValueCreateTag = (inputValue, propItem, prevItem) => {
     // 有label的情况
     if (propItem.label) {
+      // map 类型：tag 必须是 key=value 结构。key 面板输入不创建 tag；
+      // value 面板输入则组合为 key=输入值 创建
+      if (prevItem.type === 'map') {
+        if (!state.isShowTagKey) {
+          updateModelValue(prevItem, undefined, propItem.label, state.propItem.value + inputValue)
+        }
+        return
+      }
+
       const { regexp, replace, type, mergeTag } = prevItem
       const tagList =
         (type !== 'checkbox' && replace) || (type === 'checkbox' && mergeTag)

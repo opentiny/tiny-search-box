@@ -78,6 +78,17 @@ export function useNumRange({ props, state, t, emit, nextTick, vm }) {
         message: t('tvp.tvpSearchbox.notBeNull'),
         trigger: ['change', 'blur']
       }
+      // map 类型编辑：key/value 均为必选，避免确认时静默失败
+      state.formRules.mapEditKey = {
+        required: true,
+        message: t('tvp.tvpSearchbox.notBeNull'),
+        trigger: ['change']
+      }
+      state.formRules.mapEditValue = {
+        required: true,
+        message: t('tvp.tvpSearchbox.notBeNull'),
+        trigger: ['change']
+      }
     }
   }
 
