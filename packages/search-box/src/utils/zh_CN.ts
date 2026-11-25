@@ -29,6 +29,8 @@ export default {
       rangeEndLabel: '结束日期',
       rulekeyword1: '关键字',
       notBeNull: '值不能为空',
+      maxlengthErr: '输入长度不能超过{0}个字符',
+      noData: '暂无数据',
       selectAll: '全选',
       confirm: '确定',
       cancel: '取消',

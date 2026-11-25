@@ -29,6 +29,8 @@ export default {
       rangeEndLabel: 'End date',
       rulekeyword1: 'Keywords',
       notBeNull: 'The value cannot be empty',
+      maxlengthErr: 'The input length cannot exceed {0} characters',
+      noData: 'No data',
       selectAll: 'Select All',
       confirm: 'Confirm',
       cancel: 'Cancel',

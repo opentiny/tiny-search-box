@@ -4,7 +4,7 @@
       v-model="tags"
       :items="dataSource"
       :maxlength="maxlength"
-      @exceed="handleExceed"
+      editable
     />
   </div>
 </template>
@@ -24,20 +24,9 @@ export default {
         {
           label: '名称',
           field: 'testName',
-          replace: true,
-          options: [
-            {
-              label: '不能超过8个字符',
-            },
-          ],
         },
       ],
     };
-  },
-  methods: {
-    handleExceed(number) {
-      alert(`不能超过${number}个字符`);
-    },
   },
 };
 </script>

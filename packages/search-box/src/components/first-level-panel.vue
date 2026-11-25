@@ -131,13 +131,16 @@ const renderless = (props, hooks, { emit }) => {
       emit('events', eventName, p1, p2)
     })
 
-  // 「搜索"xxxx"」选项仅在输出框模式和单选模式下显示
+  // 「搜索"xxxx"」选项仅在输出框模式和单选模式下显示；
+  // 已选中字段且该字段存在选项列表（类型选项）时，输入只用于过滤选项，不再显示「搜索"xxxx"」
   const isShowSearchOption = computed(() => {
     const { inputValue, popoverVisible, currentOperators, propItem, prevItem } = props.state
+    const hasSelectedOptionsField = Boolean(propItem.label) && Boolean(prevItem?.options?.length)
     return (
       inputValue.trim() &&
       !popoverVisible &&
       !currentOperators?.length &&
+      !hasSelectedOptionsField &&
       (!propItem.label || [undefined, null, '', 'radio', 'input'].includes(prevItem.type))
     )
   })

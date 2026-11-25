@@ -207,9 +207,9 @@ export default {
         'en-US': 'Input Length Limit'
       },
       desc: {
-        'zh-CN': ' 通过  maxlength   原生属性限制输入不超过8个字符长度，配合  exceed  监听输入超出限定长度的事件。 ',
+        'zh-CN': ' 通过  maxlength   原生属性限制输入不超过8个字符长度。 ',
         'en-US':
-          ' The   maxlength   native attribute is used to restrict the input to a maximum of eight characters. This attribute is used together with   exceed   to listen to the event that the input exceeds the specified length. '
+          ' The   maxlength   native attribute is used to restrict the input to a maximum of eight characters. '
       },
       codeFiles: ['max-length.vue']
     },

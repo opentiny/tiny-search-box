@@ -78,6 +78,18 @@ export function useNumRange({ props, state, t, emit, nextTick, vm }) {
         message: t('tvp.tvpSearchbox.notBeNull'),
         trigger: ['change', 'blur']
       }
+      // 编辑面板值输入与主输入框 maxlength 行为对齐：单选校验字符串长度，多选(mergeTag)逐项校验
+      if (props.maxlength) {
+        state.formRules.inputEditValue.validator = (rule, value, cb) => {
+          const values = Array.isArray(value) ? value : [value]
+          const isExceeded = values.some((item) => typeof item === 'string' && item.length > props.maxlength)
+          if (isExceeded) {
+            cb(new Error(t('tvp.tvpSearchbox.maxlengthErr', [props.maxlength])))
+          } else {
+            cb()
+          }
+        }
+      }
       // map 类型编辑：key/value 均为必选，避免确认时静默失败
       state.formRules.mapEditKey = {
         required: true,

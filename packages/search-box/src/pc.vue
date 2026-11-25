@@ -51,7 +51,7 @@
               v-model="state.inputValue"
               class="tvp-search-box__input"
               :placeholder="state.placeholder"
-              :maxlength="maxlength && maxlength + 1"
+              :maxlength="maxlength"
               @keydown.delete.stop="backspaceDeleteTag"
               @keydown.enter.stop="createTag"
               @input="handleInput"
@@ -173,6 +173,7 @@
               <div class="tvp-search-box__number-item">
                 <tiny-select
                   v-model="state.selectValue"
+                  is-drop-inherit-width
                   searchable
                   :disabled="state.prevItem.editAttrDisabled || state.prevItem.disableDelete"
                 >
@@ -204,7 +205,7 @@
                 v-if="state.prevItem.operators"
                 class="tvp-search-box__number-item"
               >
-                <tiny-select v-model="state.operatorValue">
+                <tiny-select v-model="state.operatorValue" is-drop-inherit-width>
                   <tiny-option
                     v-for="item in state.currentOperators"
                     :key="item"
@@ -227,13 +228,16 @@
               >
                 <tiny-select
                   v-if="state.currentEditValue?.length > 0"
+                  :key="state.prevItem.field"
                   v-model="state.inputEditValue"
+                  is-drop-inherit-width
                   class="tvp-search-box-select"
                   :multiple="Boolean(state.prevItem.mergeTag)"
                   :allow-create="state.prevItem?.allowCreate"
                   filterable
                   default-first-option
                   clearable
+                  @change="checkFormValidation()"
                 >
                   <tiny-option
                     v-for="item in state.currentEditValue"
@@ -245,8 +249,11 @@
                 </tiny-select>
                 <tiny-input
                   v-else
+                  :key="state.prevItem.field"
                   v-model="state.inputEditValue"
+                  :maxlength="maxlength"
                   clearable
+                  @change="checkFormValidation()"
                 ></tiny-input>
                 <div v-if="state.formErrors.inputEditValue" class="tvp-search-box__error-msg">
                   {{ state.formErrors.inputEditValue }}
@@ -403,6 +410,7 @@
                 >
                   <tiny-select
                     v-model="state.mapEditKey"
+                    is-drop-inherit-width
                     clearable
                     @change="() => { state.mapEditValue = ''; checkFormValidation() }"
                   >
@@ -425,6 +433,7 @@
                 >
                   <tiny-select
                     v-model="state.mapEditValue"
+                    is-drop-inherit-width
                     clearable
                     @change="checkFormValidation()"
                   >
@@ -573,7 +582,7 @@ export default defineComponent({
       default: ''
     }
   },
-  emits: ['update:modelValue', 'change', 'search', 'exceed', 'first-level-select', 'second-level-enter', 'clear', 'tag-click', 'help', 'validate-error'],
+  emits: ['update:modelValue', 'change', 'search', 'first-level-select', 'second-level-enter', 'clear', 'tag-click', 'help', 'validate-error'],
   components: {
     TinyTag,
     TinyInput,

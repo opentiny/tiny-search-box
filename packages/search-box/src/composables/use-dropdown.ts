@@ -219,6 +219,8 @@ export function useDropdown({ props, emit, state, t, format, nextTick, vm, cance
     updateModelValue(prevItem, item, propItem.label, tag)
   }
 
+  const escapeRegExp = (string) => string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+
   const hasInputValueCreateTag = (inputValue, propItem, prevItem) => {
     // 有label的情况
     if (propItem.label) {
@@ -232,6 +234,20 @@ export function useDropdown({ props, emit, state, t, format, nextTick, vm, cance
       }
 
       const { regexp, replace, type, mergeTag } = prevItem
+
+      // 选中字段带选项列表时（与「搜索＂xxx＂」选项的隐藏条件保持一致）：
+      // 回车选中匹配选项的第一项，无匹配项时回车不创建 tag；
+      // checkbox(mergeTag) 类型支持输入自定义值创建，保持原有行为
+      if (Array.isArray(prevItem.options) && prevItem.options.length && !(type === 'checkbox' && mergeTag)) {
+        // 直接按当前输入匹配，避免回车先于 handleInput 防抖触发时 isFilter 状态过期
+        const matchPatt = new RegExp(escapeRegExp(inputValue), 'i')
+        const firstMatchedOption = state.backupList?.find((item) => matchPatt.test(item.label))
+        if (firstMatchedOption) {
+          selectRadioItem(firstMatchedOption)
+        }
+        return
+      }
+
       const tagList =
         (type !== 'checkbox' && replace) || (type === 'checkbox' && mergeTag)
           ? [inputValue]
@@ -339,12 +355,6 @@ export function useDropdown({ props, emit, state, t, format, nextTick, vm, cance
       hasNotInputValueCreateTag(propItem, prevItem)
     } else {
       // 输入不为空的情况
-      const { maxlength } = props
-      if (maxlength && maxlength < inputValue.length) {
-        emit('exceed', maxlength)
-        return
-      }
-
       hasInputValueCreateTag(inputValue, propItem, prevItem)
     }
   }

@@ -45,12 +45,6 @@ export function useMatch({ props, state, emit, nextTick }) {
     const { recordItems, propItem } = state
     const raw = typeof e === 'string' ? e : (e && e.target && typeof e.target.value === 'string' ? e.target.value : state.inputValue || '')
     const inputValue = String(raw)?.trim()
-    const { maxlength } = props
-
-    if (maxlength && maxlength < inputValue.length) {
-      emit('exceed', maxlength)
-      return
-    }
 
     if (inputValue.length === 0) {
       resetBackupList()
