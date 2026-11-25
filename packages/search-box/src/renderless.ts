@@ -378,6 +378,14 @@ const initWatch = ({ watch, state, props, api, nextTick, vm }) => {
     }
   )
 
+  // maxlength 运行时变化时重建表单校验规则（validator 在 initFormRule 时读取 maxlength，重复调用幂等）
+  watch(
+    () => props.maxlength,
+    () => {
+      api.initFormRule()
+    }
+  )
+
   // 监听器
   watch(
     () => props.items,

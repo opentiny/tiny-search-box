@@ -240,10 +240,16 @@ export function useDropdown({ props, emit, state, t, format, nextTick, vm, cance
       // checkbox(mergeTag) 类型支持输入自定义值创建，保持原有行为
       if (Array.isArray(prevItem.options) && prevItem.options.length && !(type === 'checkbox' && mergeTag)) {
         // 直接按当前输入匹配，避免回车先于 handleInput 防抖触发时 isFilter 状态过期
-        const matchPatt = new RegExp(escapeRegExp(inputValue), 'i')
+        const matchPatt = new RegExp(escapeRegExp(inputValue.trim()), 'i')
         const firstMatchedOption = state.backupList?.find((item) => matchPatt.test(item.label))
         if (firstMatchedOption) {
           selectRadioItem(firstMatchedOption)
+        } else {
+          // 无匹配时同步选项可见性：回车已取消 handleInput 防抖，
+          // 面板还停留在上一次输入的过滤结果，需按当前输入过滤为空
+          state.backupList?.forEach((item) => {
+            item.isFilter = true
+          })
         }
         return
       }
@@ -345,7 +351,9 @@ export function useDropdown({ props, emit, state, t, format, nextTick, vm, cance
   }
 
   const createTag = () => {
-    const { inputValue, propItem, prevItem } = state
+    const { propItem, prevItem } = state
+    // 与 handleSearch 保持一致：先去除首尾空格，避免尾部空格导致匹配失败或创建带空格的 tag
+    const inputValue = state.inputValue?.trim() ?? ''
     // 取消 handleInput 的防抖，防止快速输入后回车导致面板弹出
     if (cancelHandleInput) {
       cancelHandleInput()

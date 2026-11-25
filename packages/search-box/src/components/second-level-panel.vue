@@ -413,10 +413,10 @@ const renderless = (props, hooks, { emit, nextTick, refs }) => {
     return backupList.filter((item) => !item.isFilter)
   })
 
-  // 选项被输入过滤完且不在加载中时显示「暂无数据」空态，避免面板空白
+  // 仅当选中字段确有选项列表(hasBackupList)且被输入过滤为空时显示「暂无数据」，
+  // 无选项的自由输入字段不显示，避免面板空白
   const showNoData = computed(() => {
-    const { backupList } = props.state
-    return Array.isArray(backupList) && !isLoading.value && !currentFilteredList.value.length
+    return props.state.hasBackupList && !isLoading.value && !currentFilteredList.value.length
   })
 
   const vs = useVirtualScroll(
