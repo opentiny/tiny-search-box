@@ -23,7 +23,8 @@ export function useCheckbox({ props, state, emit, nextTick }) {
           const checkboxLabel = `${prevLabel}${label}`
           const hasItem = checkboxGroup.includes(checkboxLabel)
           if (hasItem) {
-            delete item.isFilter
+            // 重置为 false 而非 delete，保证属性始终存在且响应式（Vue2 动态删除属性不响应）
+            item.isFilter = false
             const id = getTagId(props, prevItem, item)
             const newOptions = { label: item.label, ...id }
             value += !value ? label : ` | ${label}`

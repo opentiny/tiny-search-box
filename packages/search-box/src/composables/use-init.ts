@@ -6,6 +6,10 @@ export function useInit({ props, state }) {
     state.groupItems = {}
     state.recordItems.forEach((item) => {
       const { groupKey = '0' } = item
+      // 初始化时预置所有选项的 isFilter，确保属性在进入响应式 state 前已存在（Vue2 动态新增属性不响应）
+      item.options?.forEach((subItem) => {
+        subItem.isFilter = false
+      })
       if (state.groupItems[groupKey]) {
         state.groupItems[groupKey].push({ ...item })
       } else {
