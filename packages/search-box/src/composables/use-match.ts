@@ -45,12 +45,6 @@ export function useMatch({ props, state, emit, nextTick }) {
     const { recordItems, propItem } = state
     const raw = typeof e === 'string' ? e : (e && e.target && typeof e.target.value === 'string' ? e.target.value : state.inputValue || '')
     const inputValue = String(raw)?.trim()
-    const { maxlength } = props
-
-    if (maxlength && maxlength < inputValue.length) {
-      emit('exceed', maxlength)
-      return
-    }
 
     if (inputValue.length === 0) {
       resetBackupList()
@@ -78,7 +72,8 @@ export function useMatch({ props, state, emit, nextTick }) {
 
     state.filterList = state.backupList?.filter((item) => {
       if (patt.test(item.label)) {
-        delete item.isFilter
+        // 重置为 false 而非 delete，保证属性始终存在且响应式（Vue2 动态删除属性不响应）
+        item.isFilter = false
         if (hasTagItem(state, item.label)) {
           state.checkboxGroup.push(`${state.prevItem.label}${item.label}`)
         }
@@ -155,7 +150,10 @@ export function useMatch({ props, state, emit, nextTick }) {
   }
 
   const resetBackupList = () => {
-    state.backupList?.forEach((item) => item.isFilter && delete item.isFilter)
+    // 重置为 false 而非 delete，保证属性始终存在且响应式（Vue2 动态删除属性不响应）
+    state.backupList?.forEach((item) => {
+      item.isFilter = false
+    })
   }
 
   const selectFirstMap = (item, isFirst) => {

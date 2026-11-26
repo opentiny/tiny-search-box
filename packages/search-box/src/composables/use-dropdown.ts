@@ -219,6 +219,8 @@ export function useDropdown({ props, emit, state, t, format, nextTick, vm, cance
     updateModelValue(prevItem, item, propItem.label, tag)
   }
 
+  const escapeRegExp = (string) => string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+
   const hasInputValueCreateTag = (inputValue, propItem, prevItem) => {
     // 有label的情况
     if (propItem.label) {
@@ -232,6 +234,26 @@ export function useDropdown({ props, emit, state, t, format, nextTick, vm, cance
       }
 
       const { regexp, replace, type, mergeTag } = prevItem
+
+      // 选中字段带选项列表时（与「搜索＂xxx＂」选项的隐藏条件保持一致）：
+      // 回车选中匹配选项的第一项，无匹配项时回车不创建 tag；
+      // checkbox(mergeTag) 类型支持输入自定义值创建，保持原有行为
+      if (Array.isArray(prevItem.options) && prevItem.options.length && !(type === 'checkbox' && mergeTag)) {
+        // 直接按当前输入匹配，避免回车先于 handleInput 防抖触发时 isFilter 状态过期
+        const matchPatt = new RegExp(escapeRegExp(inputValue.trim()), 'i')
+        const firstMatchedOption = state.backupList?.find((item) => matchPatt.test(item.label))
+        if (firstMatchedOption) {
+          selectRadioItem(firstMatchedOption)
+        } else {
+          // 无匹配时同步选项可见性：回车已取消 handleInput 防抖，
+          // 面板还停留在上一次输入的过滤结果，需按当前输入过滤为空
+          state.backupList?.forEach((item) => {
+            item.isFilter = true
+          })
+        }
+        return
+      }
+
       const tagList =
         (type !== 'checkbox' && replace) || (type === 'checkbox' && mergeTag)
           ? [inputValue]
@@ -269,7 +291,8 @@ export function useDropdown({ props, emit, state, t, format, nextTick, vm, cance
       // 先根据 regexp 匹配找到对应的配置项
       const matchedItem = items.find((item) => {
         const { regexp } = item
-        return regexp && regexp.test(state.inputValue)
+        // 使用与创建 tag 一致的 trim 后输入值进行字段匹配
+        return regexp && regexp.test(inputValue)
       })
       const defaultItem = defaultField ? items.find((item) => item.field === defaultField) : state.allTypeAttri
       const currentItem = matchedItem || defaultItem
@@ -284,6 +307,8 @@ export function useDropdown({ props, emit, state, t, format, nextTick, vm, cance
       if (currentItem?.options?.length) {
         state.backupList = [...currentItem.options]
         state.backupList?.forEach((item) => {
+          // 预置 isFilter，避免 Vue2 下动态新增属性不被侦测导致过滤不响应
+          item.isFilter = false
           const label = item.value || item.label
           if (tagList.includes(label)) {
             item.isChecked = true
@@ -329,7 +354,9 @@ export function useDropdown({ props, emit, state, t, format, nextTick, vm, cance
   }
 
   const createTag = () => {
-    const { inputValue, propItem, prevItem } = state
+    const { propItem, prevItem } = state
+    // 与 handleSearch 保持一致：先去除首尾空格，避免尾部空格导致匹配失败或创建带空格的 tag
+    const inputValue = state.inputValue?.trim() ?? ''
     // 取消 handleInput 的防抖，防止快速输入后回车导致面板弹出
     if (cancelHandleInput) {
       cancelHandleInput()
@@ -339,12 +366,6 @@ export function useDropdown({ props, emit, state, t, format, nextTick, vm, cance
       hasNotInputValueCreateTag(propItem, prevItem)
     } else {
       // 输入不为空的情况
-      const { maxlength } = props
-      if (maxlength && maxlength < inputValue.length) {
-        emit('exceed', maxlength)
-        return
-      }
-
       hasInputValueCreateTag(inputValue, propItem, prevItem)
     }
   }

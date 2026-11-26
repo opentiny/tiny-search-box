@@ -378,6 +378,14 @@ const initWatch = ({ watch, state, props, api, nextTick, vm }) => {
     }
   )
 
+  // maxlength 运行时变化时重建表单校验规则（validator 在 initFormRule 时读取 maxlength，重复调用幂等）
+  watch(
+    () => props.maxlength,
+    () => {
+      api.initFormRule()
+    }
+  )
+
   // 监听器
   watch(
     () => props.items,
@@ -397,6 +405,10 @@ const initWatch = ({ watch, state, props, api, nextTick, vm }) => {
           const updated = state.recordItems.find((it) => it.field === currentField) || state.prevItem
           state.prevItem = updated || {}
           state.backupList = updated && updated.options ? [...updated.options] : []
+          // 预置 isFilter，避免 Vue2 下动态新增属性不被侦测导致过滤不响应
+          state.backupList?.forEach((item) => {
+            item.isFilter = false
+          })
           state.filterList = state.backupList ? [...state.backupList] : []
           showDropdown(state) // 保持展开
         }

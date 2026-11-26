@@ -50,6 +50,9 @@
           </tiny-dropdown-item>
         </div>
       </div>
+      <div v-if="showNoData" class="tvp-search-box__no-data">
+        {{ t("tvp.tvpSearchbox.noData") }}
+      </div>
     </div>
     <div
       v-else-if="state.prevItem.type === 'checkbox'"
@@ -102,6 +105,9 @@
             {{ t("tvp.tvpSearchbox.confirm") }}
           </tiny-button>
         </div>
+      </div>
+      <div v-else-if="showNoData" class="tvp-search-box__no-data">
+        {{ t("tvp.tvpSearchbox.noData") }}
       </div>
     </div>
     <div v-else-if="state.prevItem.type === 'numRange'" class="tvp-search-box__panel-box">
@@ -407,6 +413,12 @@ const renderless = (props, hooks, { emit, nextTick, refs }) => {
     return backupList.filter((item) => !item.isFilter)
   })
 
+  // 仅当选中字段确有选项列表(hasBackupList)且被输入过滤为空时显示「暂无数据」，
+  // 无选项的自由输入字段不显示，避免面板空白
+  const showNoData = computed(() => {
+    return props.state.hasBackupList && !isLoading.value && !currentFilteredList.value.length
+  })
+
   const vs = useVirtualScroll(
     { reactive, computed },
     {
@@ -469,6 +481,7 @@ const renderless = (props, hooks, { emit, nextTick, refs }) => {
     isDateRangeInvalid,
     isLoading,
     showCheckBoxList,
+    showNoData,
     vsTotalHeight: vs.totalHeight,
     vsStartIndex: vs.startIndex,
     vsOffsetY: vs.offsetY,
@@ -490,6 +503,7 @@ const api = [
   'isDateRangeInvalid',
   'isLoading',
   'showCheckBoxList',
+  'showNoData',
   'vsTotalHeight',
   'vsStartIndex',
   'vsOffsetY',
