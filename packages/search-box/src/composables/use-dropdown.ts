@@ -291,7 +291,8 @@ export function useDropdown({ props, emit, state, t, format, nextTick, vm, cance
       // 先根据 regexp 匹配找到对应的配置项
       const matchedItem = items.find((item) => {
         const { regexp } = item
-        return regexp && regexp.test(state.inputValue)
+        // 使用与创建 tag 一致的 trim 后输入值进行字段匹配
+        return regexp && regexp.test(inputValue)
       })
       const defaultItem = defaultField ? items.find((item) => item.field === defaultField) : state.allTypeAttri
       const currentItem = matchedItem || defaultItem
@@ -306,6 +307,8 @@ export function useDropdown({ props, emit, state, t, format, nextTick, vm, cance
       if (currentItem?.options?.length) {
         state.backupList = [...currentItem.options]
         state.backupList?.forEach((item) => {
+          // 预置 isFilter，避免 Vue2 下动态新增属性不被侦测导致过滤不响应
+          item.isFilter = false
           const label = item.value || item.label
           if (tagList.includes(label)) {
             item.isChecked = true
